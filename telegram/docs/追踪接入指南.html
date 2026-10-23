@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>追踪接入指南 · 信达支付</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f7fa;color:#1a2a4a;line-height:1.75;font-size:14px}
+a{color:#1677ff;text-decoration:none}
+code{background:#eef2f7;color:#c7254e;padding:2px 6px;border-radius:4px;font-family:Consolas,Monaco,monospace;font-size:13px}
+pre{background:#1e1e2e;color:#e4e4e7;padding:16px;border-radius:8px;overflow-x:auto;font-size:13px;line-height:1.6;margin:12px 0}
+.topbar{position:fixed;top:0;left:0;right:0;height:60px;background:linear-gradient(135deg,#16a085,#0e7490);color:#fff;display:flex;align-items:center;padding:0 24px;z-index:100;box-shadow:0 2px 12px rgba(14,116,144,.2)}
+.topbar .logo{font-size:18px;font-weight:800;letter-spacing:2px}
+.topbar .subtitle{margin-left:12px;font-size:13px;opacity:.85;padding-left:12px;border-left:1px solid rgba(255,255,255,.3)}
+.topbar .right{margin-left:auto}.topbar .right a{color:#fff;font-size:13px;padding:6px 14px;border:1px solid rgba(255,255,255,.35);border-radius:20px}
+.layout{display:flex;max-width:1280px;margin:80px auto 40px;padding:0 20px;gap:24px;align-items:flex-start}
+.sidebar{width:220px;flex-shrink:0;background:#fff;border-radius:12px;padding:16px 0;box-shadow:0 2px 12px rgba(15,23,42,.06);position:sticky;top:80px}
+.toc-cat{padding:12px 20px 6px;font-size:11px;color:#7a8699;font-weight:800;letter-spacing:1.5px}
+.toc-item{display:block;padding:8px 20px 8px 28px;font-size:13.5px;color:#475569;border-left:3px solid transparent}
+.toc-item:hover{background:#ecfeff;color:#0e7490}
+.main{flex:1;min-width:0}
+.page-header{background:#fff;border-radius:12px;padding:28px 32px;margin-bottom:20px;box-shadow:0 2px 12px rgba(15,23,42,.06)}
+.page-header h1{font-size:24px;font-weight:800;color:#0e7490;margin-bottom:8px}
+.page-header p{color:#7a8699;font-size:13.5px}
+.block{background:#fff;border-radius:12px;margin-bottom:20px;box-shadow:0 2px 12px rgba(15,23,42,.06);overflow:hidden}
+.block-head{padding:20px 32px;border-bottom:1px solid #eef2f7;background:#ecfeff}
+.block-head h2{font-size:18px;font-weight:800;color:#0e7490;padding-left:12px;border-left:4px solid #16a085;line-height:1.3}
+.block-body{padding:24px 32px}
+.block-body h3{font-size:15px;font-weight:700;color:#1a2a4a;margin:20px 0 10px}
+.block-body p{margin:8px 0;color:#475569;font-size:14px;line-height:1.75}
+.block-body ul,.block-body ol{margin:8px 0 8px 22px;color:#475569}
+.block-body li{margin:5px 0}
+.note{background:#fff7e6;border-left:3px solid #f59e0b;padding:10px 14px;border-radius:6px;color:#92400e;font-size:13px;margin:12px 0}
+.note.red{background:#fef2f2;border-left-color:#dc2626;color:#991b1b}
+.note.green{background:#f0fdf4;border-left-color:#16a34a;color:#166534}
+.note.blue{background:#eff6ff;border-left-color:#2563eb;color:#1e40af}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th{background:#ecfeff;color:#1a2a4a;font-weight:700;text-align:left;padding:10px 12px;border-bottom:2px solid #a5f3fc}
+td{padding:10px 12px;border-bottom:1px solid #eef2f7;color:#475569;vertical-align:top}
+.step{display:flex;gap:14px;margin:16px 0;padding:16px;background:#fafbfd;border-radius:10px;border-left:3px solid #16a085}
+.step .num{flex-shrink:0;width:32px;height:32px;background:#16a085;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+.step .text{flex:1;color:#475569;font-size:13.5px;line-height:1.7}
+.step .text b{color:#1a2a4a;display:block;margin-bottom:4px;font-size:14px}
+footer{text-align:center;padding:30px 0;color:#94a3b8;font-size:12.5px}
+@media(max-width:820px){.layout{flex-direction:column;padding:0 12px;margin-top:72px}.sidebar{width:100%;position:static}.block-head,.block-body{padding:16px 20px}}
+</style></head>
+<body>
+<header class="topbar">
+  <span class="logo">信达支付</span>
+  <span class="subtitle">追踪接入指南</span>
+  <div class="right"><a href="/help/">📚 返回帮助中心</a></div>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="toc-cat">📑 目录</div>
+    <a class="toc-item" href="#s1">1. 追踪是什么</a>
+    <a class="toc-item" href="#s2">2. 追踪原理</a>
+    <a class="toc-item" href="#s3">3. 接入 SDK</a>
+    <a class="toc-item" href="#s4">4. 上报转化</a>
+    <a class="toc-item" href="#s5">5. 完整案例</a>
+    <a class="toc-item" href="#s6">6. 常见问题</a>
+  </aside>
+  <main class="main">
+    <div class="page-header">
+      <h1>🔍 追踪接入指南</h1>
+      <p>落地页加一行代码 · 追踪每封营销邮件的转化效果</p>
+    </div>
+
+    <section class="block" id="s1">
+    <div class="block-head"><h2>1. 追踪是什么</h2></div>
+    <div class="block-body">
+    <p>给营销邮件加追踪后，可以看到每个收件人：</p>
+    <ul>
+      <li>👁 <b>是否打开了邮件</b></li>
+      <li>🖱 <b>点击了哪个链接</b></li>
+      <li>🌐 <b>是否访问了你的落地页</b></li>
+      <li>⭐ <b>是否完成了购买/注册等转化</b></li>
+    </ul>
+    <div class="note green"><b>💡 为什么重要</b>：没有追踪 = 不知道营销效果。有追踪 = 知道哪封邮件、哪个链接、哪个客户最有效，能针对性优化。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s2">
+    <div class="block-head"><h2>2. 追踪原理</h2></div>
+    <div class="block-body">
+    <h3>打开追踪</h3>
+    <p>邮件里插入 1×1 透明图片（追踪像素）。收件人打开邮件时，图片被加载 → 服务器记录"打开"。</p>
+
+    <h3>点击追踪</h3>
+    <p>邮件里所有 <code>&lt;a&gt;</code> 链接被系统<b>自动改写</b>：</p>
+    <pre style="background:#1e1e2e;color:#e4e4e7;padding:16px;border-radius:8px;font-size:13px;line-height:1.6;">
+原链接：https://your-site.com/sale
+    ↓ 系统改写成
+追踪链：https://pay.yunzexinda.com/mail_track/track/click.php?t=TOKEN&url=BASE64
+    ↓ 用户点击后
+click.php 记录事件 → 302 跳转到真实 URL + 加 mt_rid 参数
+最终：https://your-site.com/sale?mt_rid=TOKEN</pre>
+
+    <h3>落地页 / 转化追踪</h3>
+    <p>落地页加载 SDK 脚本 → SDK 读 URL 里的 <code>mt_rid</code> → 自动上报"访问落地页"。页面里调 <code>mtTrack.event()</code> 上报自定义转化。</p>
+    </div>
+    </section>
+
+    <section class="block" id="s3">
+    <div class="block-head"><h2>3. 接入 SDK</h2></div>
+    <div class="block-body">
+    <p>把 SDK 脚本加到落地页 <code>&lt;head&gt;</code> 里（<b>一行代码</b>）：</p>
+    <pre style="background:#1e1e2e;color:#e4e4e7;padding:16px;border-radius:8px;font-size:13px;line-height:1.6;">
+&lt;script src="https://pay.yunzexinda.com/mail_track/track/sdk.js"&gt;&lt;/script&gt;</pre>
+
+    <h3>SDK 会自动做 3 件事</h3>
+    <ol>
+      <li>从 URL 读取 <code>?mt_rid=xxx</code> 参数（邮件追踪标识）</li>
+      <li>自动上报一次 <b>landing</b> 事件（落地页访问）</li>
+      <li>暴露全局 <code>mtTrack.event()</code> 让你手动上报转化</li>
+    </ol>
+
+    <div class="note blue"><b>💡 如果落地页不是自己的？</b>
+    <ul style="margin-top:6px;">
+      <li>是别人网站 → 无法追踪落地页，但"打开"和"点击"依然能追踪</li>
+      <li>是自己的网站 → 建议加 SDK，效果最完整</li>
+    </ul>
+    </div>
+    </div>
+    </section>
+
+    <section class="block" id="s4">
+    <div class="block-head"><h2>4. 上报转化事件</h2></div>
+    <div class="block-body">
+    <p>用户在你站点完成关键动作时（下单成功、注册成功、领券成功），调用：</p>
+    <pre style="background:#1e1e2e;color:#e4e4e7;padding:16px;border-radius:8px;font-size:13px;line-height:1.6;">
+mtTrack.event('purchase', {amount: 199, order: 'ORD123'});</pre>
+
+    <h3>参数说明</h3>
+    <table>
+    <tr><th>参数</th><th>类型</th><th>说明</th></tr>
+    <tr><td>name</td><td>字符串</td><td>事件名，如 purchase / register / coupon</td></tr>
+    <tr><td>data.amount</td><td>数字</td><td>金额（可选）</td></tr>
+    <tr><td>data.order</td><td>字符串</td><td>订单号（可选）</td></tr>
+    </table>
+
+    <h3>常见事件名参考</h3>
+    <ul>
+      <li><code>purchase</code> — 购买完成</li>
+      <li><code>register</code> — 注册成功</li>
+      <li><code>coupon_claim</code> — 领优惠券</li>
+      <li><code>recharge</code> — 充值成功</li>
+      <li><code>subscribe</code> — 订阅邮件</li>
+    </ul>
+
+    <h3>位置示例</h3>
+    <p>放在你的"支付成功回调"或"下单成功页"：</p>
+    <pre style="background:#1e1e2e;color:#e4e4e7;padding:16px;border-radius:8px;font-size:13px;line-height:1.6;">
+&lt;script&gt;
+  // 支付成功页
+  if (window.mtTrack) {
+    mtTrack.event('purchase', {
+      amount: 199.00,
+      order: '<?= $order_no ?>'
+    });
+  }
+&lt;/script&gt;</pre>
+
+    <div class="note red"><b>⚠️ 未加 SDK 时</b>：<code>window.mtTrack</code> 是 undefined，必须先加 SDK 脚本。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s5">
+    <div class="block-head"><h2>5. 完整案例</h2></div>
+    <div class="block-body">
+    <h3>场景：给客户发优惠邮件，追踪到下单</h3>
+
+    <h4>第 1 步 · 准备落地页</h4>
+    <p>落地页 <code>https://your-site.com/sale</code> 的 <code>&lt;head&gt;</code> 里加：</p>
+    <pre style="background:#1e1e2e;color:#e4e4e7;padding:16px;border-radius:8px;font-size:13px;line-height:1.6;">
+&lt;script src="https://pay.yunzexinda.com/mail_track/track/sdk.js"&gt;&lt;/script&gt;</pre>
+
+    <h4>第 2 步 · 发营销邮件</h4>
+    <p>在「邮件营销」创建活动，正文里放链接：</p>
+    <pre style="background:#1e1e2e;color:#e4e4e7;padding:16px;border-radius:8px;font-size:13px;line-height:1.6;">
+&lt;a href="https://your-site.com/sale"&gt;立即查看优惠 →&lt;/a&gt;</pre>
+    <p>系统会<b>自动改写</b>这个链接加追踪参数。</p>
+
+    <h4>第 3 步 · 支付成功页上报转化</h4>
+    <p>客户支付成功后，<code>https://your-site.com/success</code> 里加：</p>
+    <pre style="background:#1e1e2e;color:#e4e4e7;padding:16px;border-radius:8px;font-size:13px;line-height:1.6;">
+&lt;script&gt;
+  if (window.mtTrack) {
+    mtTrack.event('purchase', {amount: 199, order: 'ORD123'});
+  }
+&lt;/script&gt;</pre>
+
+    <h4>第 4 步 · 看结果</h4>
+    <p>回「邮件营销」活动详情页，追踪明细里会看到：</p>
+    <ul>
+      <li>打开邮件的人 × N</li>
+      <li>点击链接的人 × M</li>
+      <li>访问落地页的人 × K</li>
+      <li>完成购买的人 × J（转化）</li>
+    </ul>
+    </div>
+    </section>
+
+    <section class="block" id="s6">
+    <div class="block-head"><h2>6. 常见问题</h2></div>
+    <div class="block-body">
+
+    <h3>Q1：加了 SDK 但看不到数据？</h3>
+    <ul>
+      <li>SDK 是否在 <code>&lt;head&gt;</code> 里（不是 body）</li>
+      <li>页面是否从邮件里的链接进来（URL 有 <code>mt_rid</code> 参数）</li>
+      <li>F12 Network 里看有没有 POST 到 <code>report.php</code></li>
+      <li>查看是否被浏览器插件拦截（如 AdBlock）</li>
+    </ul>
+
+    <h3>Q2：落地页跨域可以吗？</h3>
+    <p>可以。追踪上报用的是 <code>sendBeacon</code>，不受跨域限制。</p>
+
+    <h3>Q3：能追踪 APP 内页面吗？</h3>
+    <p>不能直接追踪原生 APP，但 H5 页面（WebView 里打开的）可以，把 SDK 加进去就行。</p>
+
+    <h3>Q4：一个客户多次点击会算多次吗？</h3>
+    <p>会记多次事件，但统计指标是<b>去重人数</b>，所以不会重复计。</p>
+
+    <h3>Q5：SDK 会不会拖慢页面？</h3>
+    <p>不会。SDK 只有 1.4KB，异步加载，不影响页面性能。</p>
+
+    <h3>Q6：能用自己域名吗？</h3>
+    <p>当前 SDK 路径固定是 <code>pay.yunzexinda.com/mail_track/track/sdk.js</code>，暂时不能换。</p>
+
+    <h3>Q7：转化数据保留多久？</h3>
+    <p>同邮件营销数据，<b>7 天</b>后自动清除。请及时导出 CSV。</p>
+
+    </div>
+    </section>
+
+  </main>
+</div>
+<footer>信达支付系统 · 帮助中心 · <a href="/">返回官网</a></footer>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>邮件推送 · 信达支付</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f7fa;color:#1a2a4a;line-height:1.75;font-size:14px}
+a{color:#1677ff;text-decoration:none}
+code{background:#eef2f7;color:#c7254e;padding:2px 6px;border-radius:4px;font-family:Consolas,Monaco,monospace;font-size:13px}
+.topbar{position:fixed;top:0;left:0;right:0;height:60px;background:linear-gradient(135deg,#1677ff,#0d47a1);color:#fff;display:flex;align-items:center;padding:0 24px;z-index:100;box-shadow:0 2px 12px rgba(13,71,161,.2)}
+.topbar .logo{font-size:18px;font-weight:800;letter-spacing:2px}
+.topbar .subtitle{margin-left:12px;font-size:13px;opacity:.85;padding-left:12px;border-left:1px solid rgba(255,255,255,.3)}
+.topbar .right{margin-left:auto}.topbar .right a{color:#fff;font-size:13px;padding:6px 14px;border:1px solid rgba(255,255,255,.35);border-radius:20px}
+.layout{display:flex;max-width:1280px;margin:80px auto 40px;padding:0 20px;gap:24px;align-items:flex-start}
+.sidebar{width:220px;flex-shrink:0;background:#fff;border-radius:12px;padding:16px 0;box-shadow:0 2px 12px rgba(15,23,42,.06);position:sticky;top:80px}
+.toc-cat{padding:12px 20px 6px;font-size:11px;color:#7a8699;font-weight:800;letter-spacing:1.5px}
+.toc-item{display:block;padding:8px 20px 8px 28px;font-size:13.5px;color:#475569;border-left:3px solid transparent}
+.toc-item:hover{background:#f0f7ff;color:#1677ff}
+.main{flex:1;min-width:0}
+.page-header{background:#fff;border-radius:12px;padding:28px 32px;margin-bottom:20px;box-shadow:0 2px 12px rgba(15,23,42,.06)}
+.page-header h1{font-size:24px;font-weight:800;color:#0d47a1;margin-bottom:8px}
+.page-header p{color:#7a8699;font-size:13.5px}
+.block{background:#fff;border-radius:12px;margin-bottom:20px;box-shadow:0 2px 12px rgba(15,23,42,.06);overflow:hidden}
+.block-head{padding:20px 32px;border-bottom:1px solid #eef2f7;background:#fafbfd}
+.block-head h2{font-size:18px;font-weight:800;color:#0d47a1;padding-left:12px;border-left:4px solid #1677ff;line-height:1.3}
+.block-body{padding:24px 32px}
+.block-body h3{font-size:15px;font-weight:700;color:#1a2a4a;margin:20px 0 10px}
+.block-body p{margin:8px 0;color:#475569;font-size:14px;line-height:1.75}
+.block-body ul,.block-body ol{margin:8px 0 8px 22px;color:#475569}
+.block-body li{margin:5px 0}
+.note{background:#fff7e6;border-left:3px solid #f59e0b;padding:10px 14px;border-radius:6px;color:#92400e;font-size:13px;margin:12px 0}
+.note.red{background:#fef2f2;border-left-color:#dc2626;color:#991b1b}
+.note.green{background:#f0fdf4;border-left-color:#16a34a;color:#166534}
+.note.blue{background:#eff6ff;border-left-color:#2563eb;color:#1e40af}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th{background:#f0f5ff;color:#1a2a4a;font-weight:700;text-align:left;padding:10px 12px;border-bottom:2px solid #e0e7f0}
+td{padding:10px 12px;border-bottom:1px solid #eef2f7;color:#475569;vertical-align:top}
+.step{display:flex;gap:14px;margin:16px 0;padding:16px;background:#fafbfd;border-radius:10px;border-left:3px solid #1677ff}
+.step .num{flex-shrink:0;width:32px;height:32px;background:#1677ff;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+.step .text{flex:1;color:#475569;font-size:13.5px;line-height:1.7}
+.step .text b{color:#1a2a4a;display:block;margin-bottom:4px;font-size:14px}
+footer{text-align:center;padding:30px 0;color:#94a3b8;font-size:12.5px}
+@media(max-width:820px){.layout{flex-direction:column;padding:0 12px;margin-top:72px}.sidebar{width:100%;position:static}.block-head,.block-body{padding:16px 20px}}
+</style></head>
+<body>
+<header class="topbar">
+  <span class="logo">信达支付</span>
+  <span class="subtitle">邮件推送</span>
+  <div class="right"><a href="/help/">📚 返回帮助中心</a></div>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="toc-cat">📑 目录</div>
+    <a class="toc-item" href="#s1">1. 邮件推送是什么</a>
+    <a class="toc-item" href="#s2">2. 配置 SMTP</a>
+    <a class="toc-item" href="#s3">3. 常用邮箱参数</a>
+    <a class="toc-item" href="#s4">4. 测试推送</a>
+    <a class="toc-item" href="#s5">5. 防垃圾邮件</a>
+    <a class="toc-item" href="#s6">6. 常见问题</a>
+  </aside>
+  <main class="main">
+    <div class="page-header">
+      <h1>📧 邮件推送说明</h1>
+      <p>订单到账自动发邮件 · 点一下即可确认到账</p>
+    </div>
+
+    <section class="block" id="s1">
+    <div class="block-head"><h2>1. 邮件推送是什么</h2></div>
+    <div class="block-body">
+    <p>客户付款后，系统自动发一封邮件到<b>你配置的收件邮箱</b>，邮件里带 <b>【✅ 确认到账】</b> 按钮，点一下订单就完成。</p>
+    <h3>为什么需要？</h3>
+    <ul>
+      <li>不依赖手机 App，走邮件更稳</li>
+      <li>可以用多个收件邮箱（多个管理员都能收）</li>
+      <li>邮件链接点击即完成订单，比 App 上报更直接</li>
+    </ul>
+    <div class="note green"><b>推荐组合</b>：监听 App + 邮件推送 双保险，一条失败另一条兜底。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s2">
+    <div class="block-head"><h2>2. 配置 SMTP 发件邮箱</h2></div>
+    <div class="block-body">
+    <div class="step"><div class="num">1</div><div class="text">
+      <b>打开页面</b>后台 → 推送 → <b>邮件推送</b>
+    </div></div>
+    <div class="step"><div class="num">2</div><div class="text">
+      <b>填 SMTP 服务器</b>例如 <code>smtp.gmail.com</code>（见第 3 章常用参数）
+    </div></div>
+    <div class="step"><div class="num">3</div><div class="text">
+      <b>填端口 + 加密</b>465 → SSL（推荐） / 587 → TLS
+    </div></div>
+    <div class="step"><div class="num">4</div><div class="text">
+      <b>填发件邮箱 + 密码</b>注意：<b>大多数邮箱要用"授权码"</b>而不是登录密码
+    </div></div>
+    <div class="step"><div class="num">5</div><div class="text">
+      <b>点「保存配置」</b>看到绿色 ✅ 表示保存成功
+    </div></div>
+    <div class="step"><div class="num">6</div><div class="text">
+      <b>点「发送测试邮件」</b>收件邮箱填你另一个邮箱，验证是否发送成功
+    </div></div>
+    <div class="note"><b>⚠️ 收件邮箱</b>：即客户订单通知收件箱。可以填你自己的 Gmail、QQ、企业邮。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s3">
+    <div class="block-head"><h2>3. 常用邮箱参数</h2></div>
+    <div class="block-body">
+    <table>
+    <tr><th>邮箱</th><th>SMTP</th><th>端口</th><th>加密</th><th>备注</th></tr>
+    <tr><td>Gmail</td><td>smtp.gmail.com</td><td>465</td><td>SSL</td><td>开两步验证 + 应用专用密码</td></tr>
+    <tr><td>QQ 邮箱</td><td>smtp.qq.com</td><td>465</td><td>SSL</td><td>设置 → 账户 → 开启 SMTP → 拿授权码</td></tr>
+    <tr><td>163 邮箱</td><td>smtp.163.com</td><td>465</td><td>SSL</td><td>设置 → POP3/SMTP → 拿授权码</td></tr>
+    <tr><td>iCloud</td><td>smtp.mail.me.com</td><td>587</td><td>TLS</td><td>Apple ID 里生成应用专用密码</td></tr>
+    <tr><td>Outlook</td><td>smtp.office365.com</td><td>587</td><td>TLS</td><td>用登录密码（企业号需管理员开）</td></tr>
+    <tr><td>企业邮</td><td>smtp.exmail.qq.com</td><td>465</td><td>SSL</td><td>用邮箱密码即可</td></tr>
+    </table>
+    <div class="note red"><b>⚠️ 95% 失败原因</b>：把"登录密码"当成"授权码"填了。授权码要去邮箱后台<b>单独生成</b>。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s4">
+    <div class="block-head"><h2>4. 测试推送</h2></div>
+    <div class="block-body">
+    <h3>4.1 页内测试</h3>
+    <p>邮件推送页面 → 「发送测试邮件」→ 填收件邮箱 → 收到即成功。</p>
+
+    <h3>4.2 统一测试中心</h3>
+    <p>后台 → <b>功能测试中心</b> → 「📧 邮件推送测试」→ 一键验证。</p>
+
+    <h3>4.3 真实订单测试</h3>
+    <ol>
+      <li>用「系统通道测试下单」发起一笔 1 元订单</li>
+      <li>用你自己的微信/支付宝付款</li>
+      <li>监听 App 上报 → 系统发邮件 → 收到即成功</li>
+    </ol>
+    </div>
+    </section>
+
+    <section class="block" id="s5">
+    <div class="block-head"><h2>5. 防垃圾邮件</h2></div>
+    <div class="block-body">
+    <p>首次发件时邮件很可能被识别成垃圾邮件，做以下步骤：</p>
+    <ol>
+      <li><b>首次发件后</b>去收件邮箱的<b>垃圾邮件箱</b>找</li>
+      <li>找到后点 <b>「这不是垃圾邮件」</b></li>
+      <li>把发件邮箱 <b>加入白名单/联系人</b></li>
+      <li>重复发 2-3 次测试邮件，后续就会进正常收件箱</li>
+    </ol>
+    <div class="note"><b>长期建议</b>：用<b>企业邮箱</b>或<b>自有域名邮箱</b>发件（可信度比个人邮箱高）。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s6">
+    <div class="block-head"><h2>6. 常见问题</h2></div>
+    <div class="block-body">
+
+    <h3>Q1：测试邮件一直失败？</h3>
+    <ul>
+      <li>密码填错（要授权码不是登录密码）</li>
+      <li>端口和加密方式不匹配（465→SSL，587→TLS）</li>
+      <li>邮箱服务商没开启 SMTP 服务</li>
+      <li>服务器出口被墙（大陆服务器连 Gmail 需代理）</li>
+    </ul>
+
+    <h3>Q2：邮件发出去了但收件人没收到？</h3>
+    <ul>
+      <li>检查垃圾邮件箱</li>
+      <li>检查邮箱地址拼写</li>
+      <li>换其他邮箱服务测试（如 QQ → Gmail）</li>
+    </ul>
+
+    <h3>Q3：多个收件邮箱可以吗？</h3>
+    <p>可以，用英文逗号分隔。但注意：<b>任一邮箱点【确认到账】后其他链接立即失效</b>，多个邮箱要协调好。</p>
+
+    <h3>Q4：邮件里的链接 24 小时后失效？</h3>
+    <p>是的。链接有效期 24 小时，过期需手动补单。</p>
+
+    <h3>Q5：邮件发送频率有上限吗？</h3>
+    <p>取决于你的 SMTP 服务商（Gmail 免费 500/天、QQ 50/天）。订单量大的建议用企业邮。</p>
+
+    </div>
+    </section>
+
+  </main>
+</div>
+<footer>信达支付系统 · 帮助中心 · <a href="/">返回官网</a></footer>
+</body>
+</html>

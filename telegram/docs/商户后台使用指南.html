@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>商户老板后台使用指南</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f4f6fb; color: #334155; line-height: 1.7; font-size: 15px; padding: 16px; padding-bottom: 40px; }
+    .card { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); margin-bottom: 20px; }
+    h1 { font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 12px; text-align: center; }
+    h2 { font-size: 18px; font-weight: 800; color: #1677ff; margin-top: 28px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #eff6ff; padding-bottom: 8px; }
+    h3 { font-size: 16px; font-weight: 700; color: #1e293b; margin-top: 20px; margin-bottom: 8px; }
+    p { margin-bottom: 12px; color: #475569; }
+    ul, ol { padding-left: 20px; margin-bottom: 16px; color: #475569; }
+    li { margin-bottom: 8px; }
+    .highlight { background: #f0f7ff; border-left: 4px solid #1677ff; padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 14px; margin: 16px 0; color: #1e40af; }
+    .warn { background: #fff7ed; border-left: 4px solid #f59e0b; padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 14px; margin: 16px 0; color: #92400e; }
+    code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace; color: #e11d48; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="card">
+    <h1>👑 商户老板后台使用指南</h1>
+    <p style="text-align: center; color: #64748b; font-size: 14px;">从开号到收款，3 分钟全面掌握</p>
+</div>
+
+<div class="card">
+    <h2>📱 把后台变成手机 App</h2>
+    <p>无需下载安装包，添加到桌面即可全屏运行，不占内存。</p>
+    <ul>
+        <li><b>苹果手机 (iPhone)：</b>使用 Safari 浏览器打开后台网址 -> 点击底部【分享】图标 -> 选择【添加到主屏幕】。</li>
+        <li><b>安卓手机：</b>使用 Chrome 或 夸克浏览器打开 -> 点击菜单【三条杠】 -> 选择【添加到主屏幕】。</li>
+    </ul>
+</div>
+
+<div class="card">
+    <h2>🔔 开启语音播报（防漏单）</h2>
+    <p>如果怕漏掉订单，请务必开启语音播报：</p>
+    <ol>
+        <li>在手机 App 底部点击 <b>【我的】</b>。</li>
+        <li>找到 <b>【新订单语音播报】</b>，把开关打开。</li>
+        <li>手机弹出“是否允许通知”时，点击 <b>【允许】</b>。</li>
+        <li>开启后，有订单会自动响铃并震动。</li>
+    </ol>
+</div>
+
+<div class="card">
+    <h2>💳 如何给员工（下级）开通账号？</h2>
+    <p>你可以无限添加下级员工为你收款：</p>
+    <ol>
+        <li>电脑或手机后台，点击左侧菜单的 <b>【下级商户】</b> -> <b>【创建下级】</b>。</li>
+        <li>填写员工账号、密码，点击提交。</li>
+        <li>创建成功后，在列表中点击 <b>【一键复制】</b>。</li>
+        <li>把复制好的<b>专属链接、账号、密码</b>通过微信发给员工。员工必须点这个专属链接才能登录。</li>
+    </ol>
+    <div class="highlight">
+        💡 员工登录后，你可以在列表中看到他今天收了多少款。如果员工要挂 APK，在列表里点击【进入后台】帮他分配激活码。
+    </div>
+</div>
+
+<div class="card">
+    <h2>🤖 如何配置 TG 机器人推送？</h2>
+    <p>想让机器人自动在群里播报订单，或者发送确认按钮：</p>
+    <ol>
+        <li>去后台左侧菜单找到 <b>【推送中心】</b> -> <b>【机器人管理】</b>。</li>
+        <li>按页面提示，去 Telegram 找 <code>@BotFather</code> 申请一个机器人 Token 填入。</li>
+        <li>点击 <b>【获取我的 TG ID】</b>，发给机器人 <code>/id</code> 拿到数字 ID，填到页面上。</li>
+        <li>打开 <b>【新订单推送渠道】</b> 的开关。</li>
+    </ol>
+</div>
+
+<div class="card">
+    <h2>📧 邮件推送确认配置</h2>
+    <p>如果你不想用 TG，也可以用邮件接收订单：</p>
+    <ol>
+        <li>进入 <b>【推送中心】</b> -> <b>【邮件推送设置】</b>。</li>
+        <li>填入你的接收邮箱。</li>
+        <li><b>标准商户必做：</b>填入你的 SMTP 服务器、账号、授权码（比如 QQ 邮箱的授权码），否则平台无法帮你代发。</li>
+    </ol>
+</div>
+
+<div class="card">
+    <h2>💵 服务续费与充值说明</h2>
+    <ul>
+        <li><b>服务说明：</b>开户即用，不抽成，不按笔收费，收多少拿多少。</li>
+        <li><b>如何充值：</b>左侧菜单 <b>【服务与充值】</b> -> <b>【USDT 充值】</b>，系统会自动生成充值地址，转入后自动到账。</li>
+    </ul>
+</div>
+
+</body>
+</html>

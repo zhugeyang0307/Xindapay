@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BotFather 机器人设置教程 · 信达支付</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;max-width:900px;margin:0 auto;padding:40px 24px;line-height:1.8;color:#1a2a4a;background:#fff;-webkit-font-smoothing:antialiased}
+h1{font-size:28px;font-weight:800;margin:0 0 24px;padding-bottom:16px;border-bottom:3px solid #1e88e5;color:#0a1e3f;letter-spacing:-.3px}
+h2{font-size:22px;font-weight:800;margin:36px 0 18px;padding-left:12px;border-left:4px solid #1e88e5;color:#0a1e3f}
+h3{font-size:17px;font-weight:700;margin:26px 0 12px;color:#1e88e5}
+h4{font-size:15px;font-weight:700;margin:20px 0 10px;color:#3a4a5e}
+p{margin:12px 0;font-size:14.5px}
+ul,ol{margin:12px 0;padding-left:26px;font-size:14.5px}
+li{margin:6px 0}
+code{background:#f5f7fa;padding:2px 8px;border-radius:4px;font-family:Menlo,Consolas,monospace;font-size:13px;color:#c7254e}
+pre{background:#f7f9fc;border:1px solid #eef0f5;border-radius:8px;padding:16px 18px;overflow-x:auto;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#2a3a4e}
+pre code{background:none;padding:0;color:#2a3a4e}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+th,td{border:1px solid #e2e8f0;padding:10px 14px;text-align:left}
+th{background:#f7f9fc;font-weight:700;color:#0a1e3f}
+tr:nth-child(even) td{background:#fafbfc}
+blockquote{border-left:4px solid #00c9a7;background:#f0fdf9;margin:16px 0;padding:12px 18px;color:#3a4a5e;border-radius:0 8px 8px 0;font-size:14px}
+strong{font-weight:700;color:#0a1e3f}
+.step{background:#f0f7ff;border-left:4px solid #1e88e5;padding:14px 18px;margin:14px 0;border-radius:0 8px 8px 0;font-size:14px}
+.copy{background:#fff8e1;border:1px dashed #ffa726;padding:12px 16px;border-radius:8px;margin:10px 0;font-size:13.5px;color:#5a4a1e;font-family:Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+hr{border:none;border-top:1px solid #eef0f5;margin:32px 0}
+</style>
+</head>
+<body>
+
+<h1>BotFather 机器人设置完整教程</h1>
+
+<blockquote>
+<p>本文档教你如何给 Telegram 机器人设置：<strong>头像、简介、关于、命令菜单、群隐私</strong></p>
+<p>适用于：主机器人 <code>@xindawangluo1_bot</code>、客服机器人 <code>@xindapay1H5_bot</code></p>
+</blockquote>
+
+<h2>一、BotFather 是什么</h2>
+<p>BotFather 是 <strong>Telegram 官方</strong>的机器人管理工具。所有 Telegram 机器人都通过它创建、配置、管理。</p>
+<ul>
+<li>找它：TG 搜索 <code>@BotFather</code>（带蓝勾）</li>
+<li>点 START 开始</li>
+<li>所有命令都是 <code>/xxx</code> 格式</li>
+</ul>
+
+<h2>二、命令速查</h2>
+
+<table>
+<thead><tr><th>命令</th><th>作用</th></tr></thead>
+<tbody>
+<tr><td><code>/newbot</code></td><td>创建新机器人</td></tr>
+<tr><td><code>/mybots</code></td><td>列出我所有的机器人</td></tr>
+<tr><td><code>/setname</code></td><td>改机器人名称</td></tr>
+<tr><td><code>/setdescription</code></td><td>改简介（用户点开前看到）</td></tr>
+<tr><td><code>/setabouttext</code></td><td>改关于（资料页显示）</td></tr>
+<tr><td><code>/setuserpic</code></td><td>改头像</td></tr>
+<tr><td><code>/setcommands</code></td><td>设置命令菜单</td></tr>
+<tr><td><code>/setprivacy</code></td><td>群隐私模式开关</td></tr>
+<tr><td><code>/token</code></td><td>查看 Token</td></tr>
+<tr><td><code>/revoke</code></td><td>重置 Token</td></tr>
+<tr><td><code>/deletebot</code></td><td>删除机器人</td></tr>
+</tbody>
+</table>
+
+<h2>三、详细步骤（推荐用 /mybots 菜单）</h2>
+
+<blockquote>
+<p>所有操作都可以通过 <code>/mybots</code> 的<strong>按钮界面</strong>完成，不用记命令。</p>
+</blockquote>
+
+<h3>1. 换头像</h3>
+
+<div class="step">
+<strong>操作：</strong><br>
+1. TG 搜 <code>@BotFather</code> → 发送 <code>/mybots</code><br>
+2. 点你要设置的机器人<br>
+3. 点 <strong>Edit Bot</strong><br>
+4. 点 <strong>Edit Botpic</strong><br>
+5. 上传图片
+</div>
+
+<p><strong>图片要求：</strong></p>
+<table>
+<thead><tr><th>项</th><th>要求</th></tr></thead>
+<tbody>
+<tr><td>格式</td><td>PNG / JPG</td></tr>
+<tr><td>尺寸</td><td>512×512（最小 200×200）</td></tr>
+<tr><td>形状</td><td>正方形（Telegram 会自动裁成圆形）</td></tr>
+<tr><td>建议</td><td>品牌 logo + 主色 + 简洁文字</td></tr>
+</tbody>
+</table>
+
+<h3>2. 设置简介（Description）</h3>
+
+<p>用户在<strong>点 START 之前</strong>看到的介绍文字。</p>
+
+<div class="step">
+<strong>操作：</strong><br>
+1. <code>/mybots</code> → 选机器人<br>
+2. <strong>Edit Bot</strong> → <strong>Edit Description</strong><br>
+3. 粘贴文字 → 发送
+</div>
+
+<p><strong>限制：</strong>最多 512 字符，纯文本（支持 emoji，不支持 HTML）</p>
+
+<h4>主机器人推荐文案（@xindawangluo1_bot）</h4>
+<div class="copy">信达支付系统 · 官方主机器人
+
+🎯 一站式数字化业务搭建
+💳 支付系统 / TG 收款 / APK 监听
+🤖 自建机器人推送订单
+📄 对接文档 + 技术支持
+
+发送 /start 查看菜单</div>
+
+<h4>客服机器人推荐文案（@xindapay1H5_bot）</h4>
+<div class="copy">信达支付系统 · 官方客服
+
+🎯 一站式数字化业务搭建
+💳 支持微信/支付宝个人码 H5 跳转
+🤖 订单推送到个人私聊 / TG 群
+📱 APK 监听自动回调
+
+发 /start 开始，有问题直接问~</div>
+
+<h3>3. 设置关于（About）</h3>
+
+<p>在机器人<strong>资料页</strong>显示的简短说明（在简介下方）。</p>
+
+<div class="step">
+<strong>操作：</strong><br>
+1. <code>/mybots</code> → 选机器人<br>
+2. <strong>Edit Bot</strong> → <strong>Edit About</strong><br>
+3. 粘贴文字 → 发送
+</div>
+
+<p><strong>限制：</strong>最多 120 字符</p>
+
+<div class="copy">主机器人：信达支付系统官方主机器人 · TG 收款 / 源码授权
+客服机器人：信达支付系统官方客服 · 7×24 小时在线</div>
+
+<h3>4. 设置命令菜单</h3>
+
+<p>用户点输入框左侧 <code>/</code> 或菜单按钮时弹出的快捷命令列表。</p>
+
+<div class="step">
+<strong>操作：</strong><br>
+1. <code>/mybots</code> → 选机器人<br>
+2. <strong>Edit Bot</strong> → <strong>Edit Commands</strong><br>
+3. 发送命令列表（每行一条）
+</div>
+
+<h4>推荐命令列表</h4>
+<div class="copy">start - 打开主页
+help - 使用帮助
+id - 查看我的 TG ID
+menu - 打开菜单</div>
+
+<h3>5. 群隐私模式（重要）</h3>
+
+<p>默认机器人<strong>只能收到 @自己 的消息</strong>，看不到群里其他消息。关掉后能在群里正常用命令。</p>
+
+<div class="step">
+<strong>操作：</strong><br>
+1. <code>/mybots</code> → 选机器人<br>
+2. <strong>Bot Settings</strong> → <strong>Group Privacy</strong><br>
+3. 点 <strong>Turn off</strong><br>
+4. 看到 "Privacy mode is disabled" 即可
+</div>
+
+<blockquote>
+<strong>什么时候需要关？</strong><br>
+• 希望群里 <code>/id</code>、<code>/加操作人</code> 等命令被识别<br>
+• 希望机器人看到所有群消息<br>
+<br>
+<strong>什么时候不用关？</strong><br>
+• 只用于点按钮确认（callback 不受隐私限制）
+</blockquote>
+
+<h2>四、两个机器人的完整配置</h2>
+
+<h3>主机器人 @xindawangluo1_bot</h3>
+<table>
+<thead><tr><th>项</th><th>值</th></tr></thead>
+<tbody>
+<tr><td>名称</td><td>信达网络科技</td></tr>
+<tr><td>用户名</td><td>@xindawangluo1_bot</td></tr>
+<tr><td>简介</td><td>见上方第 2 节</td></tr>
+<tr><td>About</td><td>信达支付系统官方主机器人 · TG 收款 / 源码授权</td></tr>
+<tr><td>命令</td><td>见上方第 4 节</td></tr>
+<tr><td>群隐私</td><td>关闭</td></tr>
+<tr><td>头像</td><td>深蓝渐变 + 信达 logo</td></tr>
+</tbody>
+</table>
+
+<h3>客服机器人 @xindapay1H5_bot</h3>
+<table>
+<thead><tr><th>项</th><th>值</th></tr></thead>
+<tbody>
+<tr><td>名称</td><td>信达网络科技 7×24 客服</td></tr>
+<tr><td>用户名</td><td>@xindapay1H5_bot</td></tr>
+<tr><td>简介</td><td>见上方第 2 节</td></tr>
+<tr><td>About</td><td>信达支付系统官方客服 · 7×24 小时在线</td></tr>
+<tr><td>命令</td><td>见上方第 4 节</td></tr>
+<tr><td>群隐私</td><td>关闭</td></tr>
+<tr><td>头像</td><td>青绿渐变 + 客服图标</td></tr>
+</tbody>
+</table>
+
+<h2>五、头像制作建议</h2>
+
+<h4>尺寸</h4>
+<ul>
+<li>512×512 px（推荐）</li>
+<li>格式：PNG 透明 或 JPG</li>
+<li>文件大小：< 1MB</li>
+</ul>
+
+<h4>设计要点</h4>
+<ul>
+<li><strong>避免复杂文字</strong>：小尺寸显示时看不清</li>
+<li><strong>居中构图</strong>：Telegram 自动裁成圆形，边缘会被切</li>
+<li><strong>高对比度</strong>：深底浅字 或 浅底深字</li>
+<li><strong>品牌色</strong>：深蓝 #0d47a1 + 青绿 #00c9a7</li>
+</ul>
+
+<h4>在线工具</h4>
+<ul>
+<li>Canva（canva.com）—— 免费模板</li>
+<li>Figma（figma.com）—— 专业设计</li>
+<li>稿定设计（gaoding.com）—— 中文友好</li>
+</ul>
+
+<h2>六、常见问题</h2>
+
+<h4>Q1：设置完不生效？</h4>
+<p>部分设置需要用户<strong>重新打开对话</strong>才能看到。让用户退回聊天列表，再重新点进来即可。</p>
+
+<h4>Q2：简介能加链接吗？</h4>
+<p>不能。简介/About 都是纯文本，不支持 HTML/链接。</p>
+
+<h4>Q3：命令菜单能加 emoji 吗？</h4>
+<p>不能。命令菜单格式固定 <code>命令 - 描述</code>，描述部分是纯文本。</p>
+
+<h4>Q4：改名字后老用户还能找到吗？</h4>
+<p>能。用户名不变则链接不变。但显示名称会立即更新。</p>
+
+<h4>Q5：改 Token 会怎样？</h4>
+<p><code>/revoke</code> 重置 Token 后，所有使用该 Token 的服务立即失效，需要用新 Token 重新配置。</p>
+
+<h4>Q6：群隐私关闭后有什么副作用？</h4>
+<p>机器人会收到群里<strong>所有消息</strong>。如果你用 AI 客服，会消耗更多 API 额度。建议只在需要时开。</p>
+
+<h4>Q7：能创建多少个机器人？</h4>
+<p>一个 TG 账号最多创建 <strong>20 个机器人</strong>。</p>
+
+<hr>
+
+<p style="text-align:center;color:#7a8699;font-size:13px">
+文档完 · 2026-10-13 · 信达支付系统
+</p>
+
+</body>
+</html>

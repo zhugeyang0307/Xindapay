@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TG推送限流说明 · 信达支付</title>
+
+<style>
+body { background: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 40px 20px; color: #334155; line-height: 1.8; }
+.container { max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+h1 { color: #0f172a; font-size: 26px; margin-top: 0; padding-bottom: 20px; border-bottom: 2px solid #f1f5f9; }
+h2 { color: #1e293b; font-size: 18px; margin-top: 30px; border-left: 4px solid #3b82f6; padding-left: 10px; }
+h3 { color: #1e293b; font-size: 16px; margin-top: 20px; }
+p, li { font-size: 15px; color: #475569; }
+a { color: #3b82f6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { background: #f1f5f9; color: #e11d48; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 14px; }
+pre { background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 8px; overflow-x: auto; }
+</style>
+</head>
+<body>
+<a href="/help/index.html" class="back-float" style="position:fixed;top:20px;left:20px;background:#fff;color:#3b82f6!important;padding:10px 20px;border-radius:30px;font-size:14px;font-weight:bold;text-decoration:none!important;box-shadow:0 4px 15px rgba(0,0,0,0.08);border:1px solid #e2e8f0;z-index:9999;display:flex;align-items:center;">← 返回目录</a>
+
+
+<style>
+.back-float {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: #ffffff;
+    color: #3b82f6 !important;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+    z-index: 9999;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.back-float:hover {
+    background: #eff6ff;
+    transform: translateX(-3px);
+    box-shadow: 0 6px 20px rgba(59,130,246,0.15);
+}
+</style>
+
+
+<div class="container">
+<h1>信达支付系统 · TG 推送限流说明与解决方案</h1>
+
+<blockquote>生成时间：2026-10-13</blockquote>
+
+<h2>一、TG 官方限制（实测）</h2>
+
+<table>
+<thead><tr><th>维度</th><th>限制</th></tr></thead><tbody>
+<tr><td>单群消息频率</td><td>约 20 条 / 分钟</td></tr>
+<tr><td>单 bot 全局</td><td>约 30 条 / 秒</td></tr>
+<tr><td>触发惩罚</td><td>首次 30-60 秒</td></tr>
+<tr><td>编辑消息</td><td>同样受限</td></tr>
+</tbody></table>
+
+<p>报错样例：{&quot;ok&quot;:false,&quot;error_code&quot;:429,&quot;description&quot;:&quot;Too Many Requests: retry after 41&quot;}</p>
+
+<h2>二、系统解决方案</h2>
+
+<h3>方案 1：Redis 队列 + 每群独立限速</h3>
+
+<p>商户下单 → 秒写入 Redis → Worker 单线程消费（每群 ≥3.5 秒/条）→ TG 永不限流</p>
+
+<h3>方案 2：多码绑多群</h3>
+
+<p>商户上传 N 个收款码，每码绑不同群，订单按码分流。</p>
+
+<p><strong>容量 = N × 17 条/分钟</strong></p>
+
+<h3>方案 3：组合方案（终极）</h3>
+
+<p>Redis 队列 + 多群分流 + 每群独立限速</p>
+
+<h2>三、容量估算</h2>
+
+<table>
+<thead><tr><th>群数量</th><th>每分钟</th><th>每天</th></tr></thead><tbody>
+<tr><td>1 个群</td><td>17 条</td><td>约 2.4 万单</td></tr>
+<tr><td>4 个群</td><td>68 条</td><td>约 9.8 万单</td></tr>
+<tr><td>10 个群</td><td>170 条</td><td>约 24 万单</td></tr>
+</tbody></table>
+
+<h2>四、商户操作步骤</h2>
+
+<ol>
+<li>创建 TG 群 → 拉 bot 进群 → 设管理员</li>
+<li>群里发 <code>/id</code> 获取群 ID（格式 <code>-100xxxxxxxxxx</code>）</li>
+<li>商户后台 → 收款方式管理 → 上传码 → 绑定群 + 操作人 TG ID</li>
+<li>保存</li>
+<li>每多绑 1 个群，容量增加 17 条/分钟</li>
+</ol>
+
+<h2>五、常见问题</h2>
+
+<p><strong>Q1：点【确认到账】提示&quot;无权操作&quot;？</strong></p>
+<p>A：你的 TG ID 不在该群操作人列表。群里发 <code>/加操作人 @你的用户名</code> 添加。</p>
+
+<p><strong>Q2：订单消息延迟？</strong></p>
+<p>A：队列排队，最多 3.5 秒 × 队列长度。增加群数量可减少延迟。</p>
+
+<p><strong>Q3：订单推送失败？</strong></p>
+<p>A：检查 bot 是否被踢出群、是否被禁言、群 ID 是否正确。查日志：<code>queue/logs/worker.log</code></p>
+
+<p><strong>Q4：为什么不能一次推很多条？</strong></p>
+<p>A：TG 官方限制，任何 bot 都无法绕过。唯一方案：多群分流 + 队列。</p>
+
+<h2>六、注意事项</h2>
+
+<ol>
+<li>不要试图绕过限流，TG 检测到会封 bot</li>
+<li>不要多个 bot 打同一个群，会叠加限流</li>
+<li>每群至少留 1 个操作人</li>
+<li>群 ID 是负数（-100xxxxxxxxxx）</li>
+<li>操作人 TG ID 是正数（7xxxxxxxxx）</li>
+</ol>
+
+<hr>
+<p>文档完</p>
+
+
+</div>
+</body>
+</html>

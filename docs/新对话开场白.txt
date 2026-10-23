@@ -1,0 +1,306 @@
+# 下个对话开场白 — 机器人文档按钮 + 部署 + GitHub 同步
+
+═══════════════════════════════════════════════════════
+项目：XindaPayusdt — SaaS 支付系统服务商
+═══════════════════════════════════════════════════════
+
+模式：多商户独立收款，平台不参与收款，商户按月付系统使用费 100 USDT/月
+      含 3 台 APK 设备，额外 50 USDT/月/台，费率 0
+      支持 3 级子商户，码商代收（下级码收款，下级余额扣款）
+
+本地：D:\XindaPay_mail\pay.yunzexinda.com
+线上：香港 124.156.163.186（SSH 别名 server124，经新加坡 jinmei 跳板）
+本地 DB：root/root · xindapay
+线上 DB：xindapay/REPLACE_WITH_DB_PASSWORD
+PHP：D:\phpstudy_pro\Extensions\php\php8.2.9nts\php.exe
+MySQL：D:\phpstudy_pro\Extensions\MySQL8.0.12\bin\mysql.exe
+文档备份：E:\XindaPay\XindaPayusdt\
+
+═══════════════════════════════════════════════════════
+【任务 1】机器人：文档按钮导航
+═══════════════════════════════════════════════════════
+
+## 现有代码结构（customer_bot.php 共 1677 行）
+
+主入口：handleCustomerOnly($upd)  第 1215 行开始
+- 1216-1320 行：callback_query 处理（点按钮的逻辑）
+- 1322-1342 行：管理员回复转发客户
+- 1344-1355 行：初始化变量（chat_id / user_id / text / isAdmin）
+- 1357-1380 行：/start /help /帮助 /菜单 — 显示欢迎 + 4 个按钮
+- 1382-1516 行：各命令处理（/对接文档 /操作文档 等，逐个 if）
+- 1519-1526 行：/结束人工
+- 1528-1659 行：非命令消息 → AI 客服 + 转发管理员
+- 1661-1673 行：管理员私聊 → AI 回复
+- 1675-1677 行：其他 → 忽略
+
+## 关键函数
+
+pickDoc($name) — 在文件第 4 行
+  逻辑：先找 telegram/docs/{name}.html，找不到找 {name}.md
+  返回：文件绝对路径 或 ''
+
+Telegram 类方法（lib/Telegram.php）：
+- sendMessage($chat_id, $text, $reply_markup = null)
+- sendDocument($chat_id, $filePath, $caption = '')
+- answerCallback($callbackId, $text)
+
+## 当前文档存放
+
+telegram/docs/ 现在只有 3 份：
+- 商户对接文档.html
+- 机器人操作说明.md
+- 操作文档.md
+
+help/docs/ 有 18 份完整文档（本会话刚写完）：
+- 商户手册.html / 商户操作手册.html / 2FA开启教程.html
+- 订单管理说明.html / 收款码管理.html / 收款码智能路由.html
+- 下级操作手册.html / 下级推送指南.html
+- listener.html
+- 邮件推送说明.html / 邮件营销系统.html / 邮件模板管理.html
+- 追踪接入指南.html / 邮件AI写作指南.html
+- 机器人创建.html / BotFather设置说明.html / 机器人操作说明.html
+- TG推送限流.html
+- 商户对接文档.html
+
+## 要做的事
+
+### 步骤 1：复制 18 份文档到 telegram/docs/
+源：help/docs/*.html
+目标：telegram/docs/
+（不上传线上前，先把本地补齐）
+
+### 步骤 2：改 /start 菜单为分类导航
+
+原菜单（1358-1380 行）：
+  只显示 4 个按钮：商户对接文档 / 机器人操作说明 / 操作文档 / 下载全部文档
+
+改成 7 大类按钮：
+  🚀 新手入门（3 份）
+  💼 商户经营（3 份）
+  👥 下级商户（2 份）
+  📱 APK 监听（1 份）
+  📧 邮件系统（5 份）
+  🤖 TG 机器人（4 份）
+  🔌 技术对接（3 份）
+  ➕ 一行「📦 下载全部文档」按钮
+
+点分类 → 展开该分类下的文档按钮
+每个文档按钮：点后发送文件 + 附网页链接（https://pay.yunzexinda.com/help/docs/xxx.html）
+
+### 步骤 3：新增 callback 分支
+
+在 1216-1320 行的 callback 处理区新增：
+- cb_cat_start / cb_cat_business / cb_cat_sub / cb_cat_apk / cb_cat_mail / cb_cat_bot / cb_cat_api
+  → 显示该分类的文档列表
+- cb_send_{docname}
+  → 发送对应文档 + 链接
+- cb_back_menu
+  → 返回主菜单
+
+### 步骤 4：文档字典
+
+在 handleCustomerOnly() 顶部定义：
+$DOC_MAP = [
+  'start' => [
+    'name' => '🚀 新手入门',
+    'docs' => [
+      '商户手册' => '📘 商户手册（总纲）',
+      '商户操作手册' => '👨‍💼 商户操作手册',
+      '2FA开启教程' => '🔐 2FA 谷歌验证器',
+    ],
+  ],
+  'business' => [...],
+  ...
+];
+
+### 步骤 5：更新 DeepSeek.php 知识库（可选）
+
+现有 systemPrompt 读 telegram/docs/*.md 的 3 个文件
+建议改成读 help/docs/*.html（但 HTML 标签多，token 消耗大）
+替代：把 18 份文档的纯文本摘要塞进知识库
+
+
+═══════════════════════════════════════════════════════
+【任务 1 补充】商户自建机器人也要发文档
+═══════════════════════════════════════════════════════
+
+## 背景
+
+有两个 Bot：
+- telegram/bot.php（主 Bot，59 KB）— 商户用，命令多
+- telegram/customer_bot.php（客服 Bot，78 KB）— 客户/游客用，AI 客服为主
+
+任务 1 说的是**客服 Bot**加文档按钮。
+这里说的是**商户自建 Bot（bot.php）**也要能发文档。
+
+## 需求
+
+商户在 Bot 里能获取这两份文档：
+1. **商户操作手册**（help/docs/商户操作手册.html）
+2. **下级操作手册**（help/docs/下级操作手册.html）
+
+形式（可参考客服 Bot 做法）：
+- 命令 /商户手册 /操作手册 → 发文件
+- 或 inline button 点击 → 发文件 + 网页链接
+- 网页链接：https://pay.yunzexinda.com/help/docs/商户操作手册.html
+
+## 要做的事
+
+1. 先看 telegram/bot.php 完整结构：
+   - 找到命令路由入口（可能在 lib/Commands.php 或 lib/Cmds.php 里）
+   - 找到现有文档发送逻辑（搜 pickDoc / sendDocument / 文档）
+   - 看现有菜单结构（Menu.php）
+
+2. 参考 customer_bot.php 的 pickDoc() + sendDocument 模式
+   - 复制 2 份文档到 telegram/docs/
+   - 命令路由里加 /商户手册 /下级手册 /操作手册
+   - 或加到 Bot 主菜单里（Menu.php）
+
+3. 兼容：两份 HTML 直接发文件（Telegram 支持 HTML 预览）
+
+## 先跑这条命令看结构
+
+$p = "D:\XindaPay_mail\pay.yunzexinda.com"
+$l = [System.IO.File]::ReadAllLines("$p\telegram\bot.php", [System.Text.Encoding]::UTF8)
+"总行数: $($l.Count)"
+for ($i=0; $i -lt $l.Count; $i++) {
+    if ($l[$i] -match 'function |pickDoc|sendDocument|文档|手册|Menu|Commands') {
+        "{0,4}: {1}" -f ($i+1), $l[$i]
+    }
+}
+
+看 result 决定改哪里。
+═══════════════════════════════════════════════════════
+【任务 2】线上部署
+═══════════════════════════════════════════════════════
+
+## 步骤
+
+1. 本地打包（排除测试文件 + config）
+   cd D:\XindaPay_mail\pay.yunzexinda.com
+   tar -czf D:\deploy.tar.gz --exclude="*.bak*" --exclude="_test*" --exclude="_dev*" --exclude="_sim*" --exclude="_ft*" --exclude="_gen*" --exclude="_reset*" --exclude="_pb*" --exclude="_setmail*" --exclude="config.php" --exclude="telegram/config.php" --exclude="runtime/*" --exclude="*.log" .
+
+2. 上传到香港机（经新加坡跳板）
+   scp -P 47395 -i $env:USERPROFILE\.ssh\id_ed25519 D:\deploy.tar.gz jinmei:/tmp/
+
+3. 线上解压
+   ssh server124
+   cd /www/wwwroot/pay.yunzexinda.com
+   tar -czf /www/backup/pay_$(date +%Y%m%d_%H%M).tar.gz .   # 先备份
+   tar -xzf /tmp/deploy.tar.gz --exclude='config.php' --exclude='telegram/config.php'
+   chown -R www:www .
+   chmod -R 777 runtime/ uploads/
+
+4. 执行 migration（见 docs/对话交接-20261017.html 第四部分）
+   重点：
+   - pay_user 加字段（service_expire / sub_level / sub_push_*）
+   - pay_alipay_bill 加软删（is_deleted）
+   - pay_qrcode 加字段（weight / bind_ip / bind_province / bind_city）
+   - 新表 pay_qrcode_route
+   - pay_config 加 5 个配置（sys_month_price / sys_trial_days / ...）
+
+5. 重启 PHP
+   service php-fpm-82 restart
+
+## 上线前必删
+- _dev_login.php
+- _test*.php / _sim*.php / _ft*.php / _gen*.php / _reset*.php / _pb*.php / _setmail*.php
+- notify_receiver.php（可选）
+
+## 绝不覆盖
+- config.php
+- telegram/config.php
+
+═══════════════════════════════════════════════════════
+【任务 3】GitHub 同步
+═══════════════════════════════════════════════════════
+
+1. 本地 git init（如果还没）
+   cd D:\XindaPay_mail\pay.yunzexinda.com
+   git init
+   git remote add origin https://github.com/用户名/仓库名.git
+
+2. 创建 .gitignore（本会话先写好文件）
+   # 敏感配置
+   config.php
+   telegram/config.php
+   # 备份
+   *.bak.*
+   # 测试文件
+   _test*.php
+   _sim*.php
+   _ft*.php
+   _gen*.php
+   _reset*.php
+   _pb*.php
+   _setmail*.php
+   _dev*.php
+   # 日志/缓存
+   *.log
+   runtime/
+   # 依赖
+   node_modules/
+   vendor/
+   # 系统
+   .DS_Store
+   Thumbs.db
+
+3. 首次提交
+   git add .
+   git status   # 确认 config.php 没被加进来
+   git commit -m "初始提交：XindaPayusdt SaaS 支付系统"
+   git branch -M main
+   git push -u origin main
+
+4. 建议：仓库设为私有（含商业逻辑）
+
+═══════════════════════════════════════════════════════
+【用户操作偏好 — 务必遵守】
+═══════════════════════════════════════════════════════
+
+命令风格：
+1. 一条命令干完一件事，不分散
+2. 不要长篇解释，只要命令 + 结果
+3. PowerShell here-string（@'...'@）是主力写法
+4. 写中文/PHP/HTML 用：
+   [System.IO.File]::WriteAllText($path, $content, (New-Object System.Text.UTF8Encoding($false)))
+5. 禁止用 Set-Content 写中文（GBK 编码 PHP 读乱码）
+6. 改文件前先备份：Copy-Item $f "$f.bak.$(Get-Date -Format 'yyyyMMddHHmmss')"
+7. 改完必跑：& $phpExe -l 文件
+8. 不要在回答里连续输出带 "PS D:\...>" 提示符的命令
+9. 用行号或纯 ASCII 锚点匹配，不靠中文匹配
+
+here-string 坑：
+- ❌ 绝不在 @'...'@ 里再包 @'...'@（PS 解析失败）
+- 一份 HTML 太长 → 分 2-3 次 AppendAllText，每次 < 100 行
+- 想写 PHP 的 $var → 用单引号 here-string 直接写
+- ❌ 不用 \" 转义，正确：`` `" `` 或单引号字符串里直接写 "
+
+沟通习惯：
+- 用户会贴终端输出
+- 用户说"继续"、"下一步"、"ABC" → 继续
+- 用户说"停"或换话题 → 停
+- 用户说"跑完贴回来" → 用户会贴输出
+
+═══════════════════════════════════════════════════════
+【关键业务坑】
+═══════════════════════════════════════════════════════
+
+- pay_order 主键是 trade_no（不是 id）
+- pay_record 时间字段是 date（不是 addtime）
+- pay_user 字段是 pay_minmoney / pay_maxmoney
+- key 是 MySQL 保留字，要反引号
+- 线上 CLI PHP 是 7.4，站点 PHP 是 8.2
+- telegram/config.php 和根 config.php 上传不覆盖
+
+DeepSeek Key（telegram/config.php）：
+- DEEPSEEK_API_KEY = 'REPLACE_WITH_DEEPSEEK_API_KEY'
+- DEEPSEEK_MODEL = 'deepseek-chat'
+- 邮件 AI 复用此 Key（mail_marketing/ai.php 硬编码）
+
+═══════════════════════════════════════════════════════
+
+详细交接：D:\XindaPay_mail\pay.yunzexinda.com\docs\对话交接-20261017.html
+E 盘备份：E:\XindaPay\XindaPayusdt\对话交接-20261017.html
+
+请直接给终端命令，不要长篇解释。每步跑完我说"继续"或"贴回来"。

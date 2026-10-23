@@ -1,0 +1,184 @@
+<?php
+$nosession = true;
+define('API_INIT', true);
+require './includes/common.php';
+
+if(isset($_GET['s'])){
+	\lib\ApiHelper::load_api($_GET['s']);
+	exit;
+}
+
+$act=isset($_GET['act'])?daddslashes($_GET['act']):null;
+@header('Content-Type: application/json; charset=UTF-8');
+if($act=='query')
+{
+	$pid=intval($_GET['pid'] ?? 0);
+	$key = trim((string)($_GET['key'] ?? ''));
+	if($pid <= 0 || $key === '') exit(json_encode(['code'=>-3, 'msg'=>'参数错误']));
+	if(!require_session_uid_match($pid)) exit(json_encode(['code'=>-3, 'msg'=>'会话与商户ID不匹配']));
+	$userrow=$DB->getRow("SELECT uid,key,keytype,status,settle_id,account,username,money FROM pay_user WHERE uid=:pid limit 1", [':pid'=>$pid]);
+	if(!$userrow) exit(json_encode(['code'=>-3, 'msg'=>'商户ID不存在']));
+	if($key!==$userrow['key']) exit(json_encode(['code'=>-3, 'msg'=>'商户密钥错误']));
+	if($userrow['keytype'] == 1) exit(json_encode(['code'=>-3, 'msg'=>'该商户只能使用RSA签名类型']));
+
+	$orders=$DB->getColumn("SELECT count(*) from pay_order WHERE uid=:pid", [':pid'=>$pid]);
+	$lastday=date("Y-m-d",strtotime("-1 day"));
+	$today=date("Y-m-d");
+	$order_today=$DB->getColumn("SELECT count(*) from pay_order where uid=:pid and status=1 and date=:today", [':pid'=>$pid, ':today'=>$today]);
+	$order_lastday=$DB->getColumn("SELECT count(*) from pay_order where uid=:pid and status=1 and date=:lastday", [':pid'=>$pid, ':lastday'=>$lastday]);
+
+	$result=array("code"=>1,"pid"=>$pid,"key"=>mask_sensitive_text('key', $key),"active"=>$userrow['status'],"money"=>$userrow['money'],"type"=>$userrow['settle_id'],"account"=>mask_sensitive_text('account', $userrow['account']),"username"=>mask_sensitive_text('username', $userrow['username']),"orders"=>$orders,"orders_today"=>$order_today,"orders_lastday"=>$order_lastday);
+	exit(json_encode($result));
+}
+elseif($act=='settle')
+{
+	$pid=intval($_GET['pid'] ?? 0);
+	$key = trim((string)($_GET['key'] ?? ''));
+	$limit=isset($_GET['limit'])?intval($_GET['limit']):10;
+	$offset=isset($_GET['offset'])?intval($_GET['offset']):0;
+	if($pid <= 0 || $key === '') exit(json_encode(['code'=>-3, 'msg'=>'参数错误']));
+	if($limit < 1) $limit = 10;
+	if($limit > 50) $limit = 50;
+	if($offset < 0) $offset = 0;
+	if($offset > 5000) exit(json_encode(['code'=>-3, 'msg'=>'分页偏移超出范围']));
+	if(!require_session_uid_match($pid)) exit(json_encode(['code'=>-3, 'msg'=>'会话与商户ID不匹配']));
+	$userrow=$DB->getRow("SELECT uid,key,keytype FROM pay_user WHERE uid=:pid limit 1", [':pid'=>$pid]);
+	if(!$userrow) exit(json_encode(['code'=>-3, 'msg'=>'商户ID不存在']));
+	if($key!==$userrow['key']) exit(json_encode(['code'=>-3, 'msg'=>'商户密钥错误']));
+	if($userrow['keytype'] == 1) exit(json_encode(['code'=>-3, 'msg'=>'该商户只能使用RSA签名类型']));
+
+	$rs=$DB->query("SELECT * FROM pay_settle WHERE uid=:pid order by id desc limit {$offset},{$limit}", [':pid'=>$pid]);
+	$data = [];
+	while($row=$rs->fetch(PDO::FETCH_ASSOC)){
+		$data[] = mask_sensitive_row($row);
+	}
+	if($rs){
+		$result=array("code"=>1,"msg"=>"查询结算记录成功！","data"=>$data);
+	}else{
+		$result=array("code"=>-1,"msg"=>"查询结算记录失败！");
+	}
+	exit(json_encode($result));
+}
+elseif($act=='order')
+{
+	if(isset($_GET['sign']) && isset($_GET['trade_no'])){
+		$trade_no=daddslashes($_GET['trade_no']);
+		if(empty($_GET['sign']) || md5(SYS_KEY.$trade_no.SYS_KEY) !== $_GET['sign']) exit(json_encode(['code'=>-3, 'msg'=>'verify sign failed']));
+		$row=$DB->getRow("SELECT * FROM pay_order WHERE trade_no=:trade_no limit 1", [':trade_no'=>$trade_no]);
+	}else{
+		$pid=intval($_GET['pid'] ?? 0);
+		$key = trim((string)($_GET['key'] ?? ''));
+		if($pid <= 0 || $key === '') exit(json_encode(['code'=>-3, 'msg'=>'参数错误']));
+		if(!require_session_uid_match($pid)) exit(json_encode(['code'=>-3, 'msg'=>'会话与商户ID不匹配']));
+		$userrow=$DB->getRow("SELECT uid,key,keytype FROM pay_user WHERE uid=:pid limit 1", [':pid'=>$pid]);
+		if(!$userrow) exit(json_encode(['code'=>-3, 'msg'=>'商户ID不存在']));
+		if($key!==$userrow['key']) exit(json_encode(['code'=>-3, 'msg'=>'商户密钥错误']));
+		if($userrow['keytype'] == 1) exit(json_encode(['code'=>-3, 'msg'=>'该商户只能使用RSA签名类型']));
+
+		if(!empty($_GET['trade_no'])){
+			$trade_no=daddslashes($_GET['trade_no']);
+			$row=$DB->getRow("SELECT * FROM pay_order WHERE uid=:pid and trade_no=:trade_no limit 1", [':pid'=>$pid, ':trade_no'=>$trade_no]);
+		}elseif(!empty($_GET['out_trade_no'])){
+			$out_trade_no=daddslashes($_GET['out_trade_no']);
+			$row=$DB->getRow("SELECT * FROM pay_order WHERE uid=:pid and out_trade_no=:out_trade_no limit 1", [':pid'=>$pid, ':out_trade_no'=>$out_trade_no]);
+		}else{
+			exit(json_encode(['code'=>-4, 'msg'=>'订单号不能为空']));
+		}
+	}
+	if($row){
+		$type=$DB->getColumn("SELECT name FROM pay_type WHERE id=:type LIMIT 1", [':type'=>$row['type']]);
+		$result=array("code"=>1,"msg"=>"succ","trade_no"=>$row['trade_no'],"out_trade_no"=>$row['out_trade_no'],"api_trade_no"=>$row['api_trade_no'],"bill_trade_no"=>$row['bill_trade_no'],"type"=>$type,"pid"=>$row['uid'],"addtime"=>$row['addtime'],"endtime"=>$row['endtime'],"name"=>$row['name'],"money"=>$row['money'],"param"=>$row['param'],"buyer"=>mask_sensitive_text('buyer', $row['buyer']),"status"=>$row['status'],"payurl"=>$row['payurl']);
+	}else{
+		$result=array("code"=>-1,"msg"=>"订单号不存在");
+	}
+	exit(json_encode($result));
+}
+elseif($act=='orders')
+{
+	$pid=intval($_GET['pid'] ?? 0);
+	$key = trim((string)($_GET['key'] ?? ''));
+	$limit=isset($_GET['limit'])?intval($_GET['limit']):10;
+	$offset=isset($_GET['offset'])?intval($_GET['offset']):0;
+	$status=isset($_GET['status'])?intval($_GET['status']):null;
+	if($pid <= 0 || $key === '') exit(json_encode(['code'=>-3, 'msg'=>'参数错误']));
+	if($limit < 1) $limit = 10;
+	if($limit > 50) $limit = 50;
+	if($offset < 0) $offset = 0;
+	if($offset > 5000) exit(json_encode(['code'=>-3, 'msg'=>'分页超出范围']));
+	if(!require_session_uid_match($pid)) exit(json_encode(['code'=>-3, 'msg'=>'会话与商户ID不匹配']));
+	$userrow=$DB->getRow("SELECT uid,key,keytype FROM pay_user WHERE uid=:pid limit 1", [':pid'=>$pid]);
+	if(!$userrow) exit(json_encode(['code'=>-3, 'msg'=>'商户ID不存在']));
+	if($key!==$userrow['key']) exit(json_encode(['code'=>-3, 'msg'=>'商户密钥错误']));
+	if($userrow['keytype'] == 1) exit(json_encode(['code'=>-3, 'msg'=>'该商户只能使用RSA签名类型']));
+
+	$sql = " A.uid=:pid ";
+	$params = [':pid'=>$pid];
+	if(isset($_GET['status'])){
+		$status = intval($_GET['status']);
+		$sql .= " AND A.status=:status ";
+		$params[':status'] = $status;
+	}
+
+	$rs=$DB->query("SELECT A.*,B.name typename FROM pay_order A LEFT JOIN pay_type B ON A.type=B.id WHERE{$sql} ORDER BY trade_no DESC LIMIT {$offset},{$limit}", $params);
+	$data=[];
+	while($row=$rs->fetch(PDO::FETCH_ASSOC)){
+		$data[]=["trade_no"=>$row['trade_no'],"out_trade_no"=>$row['out_trade_no'],"type"=>$row['typename'],"pid"=>$row['uid'],"addtime"=>$row['addtime'],"endtime"=>$row['endtime'],"name"=>$row['name'],"money"=>$row['money'],"param"=>$row['param'],"buyer"=>mask_sensitive_text('buyer', $row['buyer']),"status"=>$row['status']];
+	}
+	if($rs){
+		$result=array("code"=>1,"msg"=>"查询订单记录成功！","count"=>count($data),"data"=>$data);
+	}else{
+		$result=array("code"=>-1,"msg"=>"查询订单记录失败！");
+	}
+	exit(json_encode($result));
+}
+elseif($act=='refund')
+{
+	if(!$conf['user_refund']) exit(json_encode(['code'=>-4, 'msg'=>'未开启商户后台自助退款']));
+	$pid=intval($_POST['pid'] ?? 0);
+	$key = trim((string)($_POST['key'] ?? ''));
+	if($pid <= 0 || $key === '') exit(json_encode(['code'=>-3, 'msg'=>'参数错误']));
+	if(!require_session_uid_match($pid)) exit(json_encode(['code'=>-3, 'msg'=>'会话与商户ID不匹配']));
+	$userrow=$DB->getRow("SELECT uid,key,keytype,refund FROM pay_user WHERE uid=:pid limit 1", [':pid'=>$pid]);
+	if(!$userrow) exit(json_encode(['code'=>-3, 'msg'=>'商户ID不存在']));
+	if($key!==$userrow['key']) exit(json_encode(['code'=>-3, 'msg'=>'商户密钥错误']));
+	if($userrow['keytype'] == 1) exit(json_encode(['code'=>-3, 'msg'=>'该商户只能使用RSA签名类型']));
+	if($userrow['refund'] == 0) exit(json_encode(['code'=>-2, 'msg'=>'商户未开启订单退款API接口']));
+
+	$money = trim($_POST['money']);
+	if(!is_numeric($money) || !preg_match('/^[0-9.]+$/', $money))exit(json_encode(['code'=>-1, 'msg'=>'金额输入错误']));
+
+	if(!empty($_POST['trade_no'])){
+		$trade_no=daddslashes($_POST['trade_no']);
+	}elseif(!empty($_POST['out_trade_no'])){
+		$out_trade_no=daddslashes($_POST['out_trade_no']);
+		$trade_no = $DB->getColumn('SELECT trade_no FROM pay_order WHERE out_trade_no=:out_trade_no AND uid=:uid LIMIT 1', [':out_trade_no'=>$out_trade_no, ':uid'=>$pid]);
+		if(!$trade_no) exit(json_encode(['code'=>-1, 'msg'=>'当前订单不存在！']));
+	}else{
+		exit(json_encode(['code'=>-4, 'msg'=>'订单号不能为空']));
+	}
+
+	$refund_no = date("YmdHis").rand(11111,99999);
+	$result = \lib\Order::refund($refund_no, $trade_no, $money, 1, $pid);
+	if($result['code'] == 0){
+		$result['msg'] = '退款成功！退款金额¥'.$result['money'];
+	}
+	exit(json_encode($result));
+}
+elseif($act=='refundapi')
+{
+	$money = trim($_POST['money']);
+	$trade_no=daddslashes($_POST['trade_no']);
+	if(!is_numeric($money) || !preg_match('/^[0-9.]+$/', $money))exit(json_encode(['code'=>-1, 'msg'=>'金额输入错误']));
+	if(!isset($_POST['key']) || $_POST['key']!==md5($trade_no.SYS_KEY.$trade_no))exit(json_encode(['code'=>-1, 'msg'=>'密钥错误']));
+
+	$refund_no = date("YmdHis").rand(11111,99999);
+	$result = \lib\Order::refund($refund_no, $trade_no, $money, 1);
+	if($result['code'] == 0){
+		$result['msg'] = '退款成功！退款金额￥'.$result['money'];
+	}
+	exit(json_encode($result));
+}
+else
+{
+	exit(json_encode(['code'=>-5, 'msg'=>'No Act!']));
+}

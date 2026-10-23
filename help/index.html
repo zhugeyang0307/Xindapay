@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>帮助中心 | 信达支付</title>
+<style>
+body { background: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 40px 20px; color: #334155; line-height: 1.8; }
+.container { max-width: 800px; margin: 0 auto; }
+h1 { color: #0f172a; font-size: 28px; margin-bottom: 10px; }
+p.subtitle { color: #64748b; font-size: 15px; margin-bottom: 40px; }
+h2 { color: #1e293b; font-size: 20px; margin-top: 40px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+h2::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; margin-left: 10px; }
+a { color: #3b82f6; text-decoration: none; }
+a.card { display: flex; align-items: center; background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 15px; transition: all 0.2s; text-decoration: none; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+a.card:hover { border-color: #3b82f6; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(59,130,246,0.1); }
+.card-icon { font-size: 24px; margin-right: 20px; width: 40px; text-align: center; }
+.card-content h3 { margin: 0 0 5px 0; color: #1e293b; font-size: 16px; font-weight: 700; }
+.card-content p { margin: 0; font-size: 13px; color: #64748b; }
+.back-float { position: fixed; top: 20px; left: 20px; background: #fff; color: #3b82f6 !important; padding: 10px 20px; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; z-index: 9999; transition: all 0.2s; text-decoration: none !important; }
+.back-float:hover { background: #eff6ff; transform: translateX(-3px); }
+</style>
+</head>
+<body>
+<a href="/user/" class="back-float">← 返回后台</a>
+<div class="container" style="margin-top: 40px;">
+    <h1>📖 帮助中心</h1>
+    <p class="subtitle">欢迎查阅 2026 极简版操作指南，帮你快速掌握系统各项核心功能。</p>
+
+    
+    <h2>🛡️ 平台声明与安全保障</h2>
+    <a href="docs/00_系统安全与架构说明.html" class="card" style="border: 2px solid #3b82f6; background: #eff6ff;">
+        <div class="card-icon">⚖️</div>
+        <div class="card-content">
+            <h3 style="color: #1d4ed8;">系统架构与安全白皮书 (必读)</h3>
+            <p style="color: #3b82f6;">底层技术框架说明、防篡改机制、绝对无后门承诺及私有化部署方案。</p>
+        </div>
+    </a>
+
+    <h2>🚀 1. 快速上手入门</h2>
+    <a href="docs/商户后台使用指南.html" class="card">
+        <div class="card-icon">👑</div>
+        <div class="card-content">
+            <h3>商户老板后台使用指南</h3>
+            <p>从开号、添加应用到手机 PWA、防漏单语音播报，3 分钟全面掌握。</p>
+        </div>
+    </a>
+    <a href="docs/员工码商使用指南.html" class="card">
+        <div class="card-icon">👨‍💻</div>
+        <div class="card-content">
+            <h3>员工（码商）工作台使用指南</h3>
+            <p>码商接单、挂机、查流水、提现及手机端操作的极简教程。</p>
+        </div>
+    </a>
+    <a href="docs/商户手册.html" class="card">
+        <div class="card-icon">📚</div>
+        <div class="card-content">
+            <h3>商户手册（总纲）</h3>
+            <p>涵盖实名认证、系统服务、收款、下级、账单核对的全量百科。</p>
+        </div>
+    </a>
+
+    <h2>💳 2. 核心收款与对接</h2>
+    <a href="docs/商户对接文档.html" class="card">
+        <div class="card-icon">🔌</div>
+        <div class="card-content">
+            <h3>API 接口全量对接文档</h3>
+            <p>V1 (MD5) 与 V2 (RSA) 接口规范、发起支付、查询与退款 Demo。</p>
+        </div>
+    </a>
+    <a href="docs/收款码智能路由.html" class="card">
+        <div class="card-icon">🎯</div>
+        <div class="card-content">
+            <h3>收款码智能路由</h3>
+            <p>按客户 IP 归属地、权重自动选择最优收款码，提升支付成功率。</p>
+        </div>
+    </a>
+    <a href="docs/收款码推送说明.html" class="card">
+        <div class="card-icon">📱</div>
+        <div class="card-content">
+            <h3>收款码推送与配置说明</h3>
+            <p>配置个人私聊、TG 群，一键确认回调，系统不碰资金。</p>
+        </div>
+    </a>
+    <a href="docs/listener.html" class="card">
+        <div class="card-icon">📲</div>
+        <div class="card-content">
+            <h3>监听 App (APK) 使用说明</h3>
+            <p>获取鉴权密钥、安卓端保活技巧、自动匹配订单完成。</p>
+        </div>
+    </a>
+
+    <h2>🔔 3. 推送与通知</h2>
+    <a href="docs/机器人创建.html" class="card">
+        <div class="card-icon">🤖</div>
+        <div class="card-content">
+            <h3>Telegram 机器人创建与配置</h3>
+            <p>找 @BotFather 创建专属机器人，获取 Token 与 ChatID，独立推送。</p>
+        </div>
+    </a>
+    <a href="docs/机器人操作说明.html" class="card">
+        <div class="card-icon">🕹️</div>
+        <div class="card-content">
+            <h3>机器人操作说明</h3>
+            <p>基础命令、查 ID、查账单等高频指令说明。</p>
+        </div>
+    </a>
+    <a href="docs/邮件推送说明.html" class="card">
+        <div class="card-icon">📧</div>
+        <div class="card-content">
+            <h3>邮件推送与 SMTP 配置</h3>
+            <p>配置自己的邮箱发送确认按钮，防垃圾邮件指南。</p>
+        </div>
+    </a>
+    <a href="docs/邮件营销系统.html" class="card">
+        <div class="card-icon">📣</div>
+        <div class="card-content">
+            <h3>邮件营销与追踪</h3>
+            <p>群发邮件、追踪打开/点击率、AI 写作指南与模板管理。</p>
+        </div>
+    </a>
+
+    <h2>👥 4. 下级代理与分润</h2>
+    <a href="docs/下级操作手册.html" class="card">
+        <div class="card-icon">🌳</div>
+        <div class="card-content">
+            <h3>下级账户与分润机制</h3>
+            <p>树形层级、级差费率计算、下级订单与账单核对。</p>
+        </div>
+    </a>
+    <a href="docs/下级推送指南.html" class="card">
+        <div class="card-icon">📮</div>
+        <div class="card-content">
+            <h3>下级推送审批指南</h3>
+            <p>下级提交推送资料、上级审批、确保通知触达。</p>
+        </div>
+    </a>
+
+    <h2>🛡️ 5. 安全与问题排查</h2>
+    <a href="docs/2FA开启教程.html" class="card">
+        <div class="card-icon">🔐</div>
+        <div class="card-content">
+            <h3>2FA 谷歌验证器开启教程</h3>
+            <p>给账号加第二道锁，大幅提升资金与账户安全性。</p>
+        </div>
+    </a>
+    <a href="docs/订单管理说明.html" class="card">
+        <div class="card-icon">📋</div>
+        <div class="card-content">
+            <h3>订单管理说明</h3>
+            <p>订单来源、状态流转、补单与导出操作说明。</p>
+        </div>
+    </a>
+    <a href="docs/TG推送限流.html" class="card">
+        <div class="card-icon">🚦</div>
+        <div class="card-content">
+            <h3>TG 推送限流解决方案</h3>
+            <p>官方限制说明与高并发下的队列处理方案。</p>
+        </div>
+    </a>
+</div>
+</body>
+</html>

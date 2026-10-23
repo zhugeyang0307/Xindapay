@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TG推送限流说明 · 信达支付</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+     max-width:900px;margin:0 auto;padding:40px 24px;line-height:1.8;color:#1a2a4a;
+     background:#fff;-webkit-font-smoothing:antialiased}
+h1{font-size:28px;font-weight:800;margin:0 0 24px;padding-bottom:16px;
+   border-bottom:3px solid #1e88e5;color:#0a1e3f;letter-spacing:-.3px}
+h2{font-size:22px;font-weight:800;margin:36px 0 18px;padding-left:12px;
+   border-left:4px solid #1e88e5;color:#0a1e3f}
+h3{font-size:17px;font-weight:700;margin:26px 0 12px;color:#1e88e5}
+h4{font-size:15px;font-weight:700;margin:20px 0 10px;color:#3a4a5e}
+p{margin:12px 0;font-size:14.5px}
+ul,ol{margin:12px 0;padding-left:26px;font-size:14.5px}
+li{margin:6px 0}
+code{background:#f5f7fa;padding:2px 8px;border-radius:4px;font-family:Menlo,Consolas,monospace;
+     font-size:13px;color:#c7254e}
+pre{background:#f7f9fc;border:1px solid #eef0f5;border-radius:8px;padding:16px 18px;
+    overflow-x:auto;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#2a3a4e}
+pre code{background:none;padding:0;color:#2a3a4e}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+th,td{border:1px solid #e2e8f0;padding:10px 14px;text-align:left}
+th{background:#f7f9fc;font-weight:700;color:#0a1e3f}
+tr:nth-child(even) td{background:#fafbfc}
+blockquote{border-left:4px solid #00c9a7;background:#f0fdf9;margin:16px 0;
+           padding:12px 18px;color:#3a4a5e;border-radius:0 8px 8px 0;font-size:14px}
+a{color:#1e88e5;text-decoration:none}
+a:hover{text-decoration:underline}
+hr{border:none;border-top:1px solid #eef0f5;margin:32px 0}
+strong{font-weight:700;color:#0a1e3f}
+</style>
+</head>
+<body>
+<h1>信达支付系统 · TG 推送限流说明与解决方案</h1>
+
+<blockquote>生成时间：2026-10-13</blockquote>
+
+<h2>一、TG 官方限制（实测）</h2>
+
+<table>
+<thead><tr><th>维度</th><th>限制</th></tr></thead><tbody>
+<tr><td>单群消息频率</td><td>约 20 条 / 分钟</td></tr>
+<tr><td>单 bot 全局</td><td>约 30 条 / 秒</td></tr>
+<tr><td>触发惩罚</td><td>首次 30-60 秒</td></tr>
+<tr><td>编辑消息</td><td>同样受限</td></tr>
+</tbody></table>
+
+<p>报错样例：{&quot;ok&quot;:false,&quot;error_code&quot;:429,&quot;description&quot;:&quot;Too Many Requests: retry after 41&quot;}</p>
+
+<h2>二、系统解决方案</h2>
+
+<h3>方案 1：Redis 队列 + 每群独立限速</h3>
+
+<p>商户下单 → 秒写入 Redis → Worker 单线程消费（每群 ≥3.5 秒/条）→ TG 永不限流</p>
+
+<h3>方案 2：多码绑多群</h3>
+
+<p>商户上传 N 个收款码，每码绑不同群，订单按码分流。</p>
+
+<p><strong>容量 = N × 17 条/分钟</strong></p>
+
+<h3>方案 3：组合方案（终极）</h3>
+
+<p>Redis 队列 + 多群分流 + 每群独立限速</p>
+
+<h2>三、容量估算</h2>
+
+<table>
+<thead><tr><th>群数量</th><th>每分钟</th><th>每天</th></tr></thead><tbody>
+<tr><td>1 个群</td><td>17 条</td><td>约 2.4 万单</td></tr>
+<tr><td>4 个群</td><td>68 条</td><td>约 9.8 万单</td></tr>
+<tr><td>10 个群</td><td>170 条</td><td>约 24 万单</td></tr>
+</tbody></table>
+
+<h2>四、商户操作步骤</h2>
+
+<ol>
+<li>创建 TG 群 → 拉 bot 进群 → 设管理员</li>
+<li>群里发 <code>/id</code> 获取群 ID（格式 <code>-100xxxxxxxxxx</code>）</li>
+<li>商户后台 → 收款方式管理 → 上传码 → 绑定群 + 操作人 TG ID</li>
+<li>保存</li>
+<li>每多绑 1 个群，容量增加 17 条/分钟</li>
+</ol>
+
+<h2>五、常见问题</h2>
+
+<p><strong>Q1：点【确认到账】提示&quot;无权操作&quot;？</strong></p>
+<p>A：你的 TG ID 不在该群操作人列表。群里发 <code>/加操作人 @你的用户名</code> 添加。</p>
+
+<p><strong>Q2：订单消息延迟？</strong></p>
+<p>A：队列排队，最多 3.5 秒 × 队列长度。增加群数量可减少延迟。</p>
+
+<p><strong>Q3：订单推送失败？</strong></p>
+<p>A：检查 bot 是否被踢出群、是否被禁言、群 ID 是否正确。查日志：<code>queue/logs/worker.log</code></p>
+
+<p><strong>Q4：为什么不能一次推很多条？</strong></p>
+<p>A：TG 官方限制，任何 bot 都无法绕过。唯一方案：多群分流 + 队列。</p>
+
+<h2>六、注意事项</h2>
+
+<ol>
+<li>不要试图绕过限流，TG 检测到会封 bot</li>
+<li>不要多个 bot 打同一个群，会叠加限流</li>
+<li>每群至少留 1 个操作人</li>
+<li>群 ID 是负数（-100xxxxxxxxxx）</li>
+<li>操作人 TG ID 是正数（7xxxxxxxxx）</li>
+</ol>
+
+<hr>
+<p>文档完</p>
+
+
+</body>
+</html>

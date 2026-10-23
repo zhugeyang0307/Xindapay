@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Ficao 版本说明</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --primary-2: #0ea5e9;
+      --success: #16a34a;
+      --warning: #f59e0b;
+      --line: #e5e7eb;
+      --text: #111827;
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(180deg, #eef6ff 0%, #f8fafc 100%);
+      color: var(--text);
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 860px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: rgba(15, 23, 42, 0.96);
+      color: #fff;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .version-tag {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: #dbeafe;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .hero {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .hero-inner {
+      padding: 28px 22px 20px;
+    }
+
+    .mini-label {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #075985;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 6vw, 48px);
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.8;
+      max-width: 620px;
+    }
+
+    .stats {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px 14px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .stat span {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 26px;
+    }
+
+    .button {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 16px 18px;
+      border-radius: 16px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 800;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .button:active { transform: translateY(1px); }
+
+    .primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.25);
+    }
+
+    .secondary {
+      color: var(--text);
+      background: #f8fafc;
+      border: 1px solid var(--line);
+    }
+
+    .panel {
+      margin-top: 20px;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin: 0 0 16px;
+    }
+
+    .tips {
+      display: grid;
+      gap: 14px;
+    }
+
+    .tip {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 16px;
+      background: linear-gradient(180deg, #fff, #f8fafc);
+    }
+
+    .tip h3 {
+      margin: 0 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 17px;
+    }
+
+    .badge {
+      display: inline-flex;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .ios { background: #0f172a; }
+    .android { background: var(--success); }
+    .apk { background: var(--warning); }
+
+    .tip p, .tip li {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .tip ol {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f0fdf4;
+      border: 1px solid rgba(22, 163, 74, 0.18);
+      color: #166534;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 640px) {
+      .stats, .actions {
+        grid-template-columns: 1fr;
+      }
+      .topbar {
+        gap: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .hero-inner { padding: 22px 16px 18px; }
+      .panel { padding: 18px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">F</div>
+        <span>Ficao</span>
+      </div>
+      <div class="version-tag">Version 2.1.0</div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="mini-label">移动端安装说明</div>
+        <h1>轻量安装，支持 iPhone 与 Android</h1>
+        <p class="subtitle">
+          本页面兼容 Safari 保存到桌面，以及 Android 下 APK 直接下载安装。适用于 H5 版本说明、客户端入口、安装指引页。
+        </p>
+
+        <div class="stats">
+          <div class="stat">
+            <strong>iOS</strong>
+            <span>Safari → 添加到主屏幕</span>
+          </div>
+          <div class="stat">
+            <strong>Android</strong>
+            <span>Chrome 下载 APK</span>
+          </div>
+          <div class="stat">
+            <strong>H5</strong>
+            <span>支持移动端访问</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a class="button primary" href="#install-guide">查看安装教程</a>
+          <a class="button secondary" href="https://example.com/app-release.apk" target="_blank" rel="noopener">下载 APK</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="install-guide" class="panel">
+      <h2 class="section-title">安装方式</h2>
+
+      <div class="tips">
+        <div class="tip">
+          <h3><span class="badge ios">iOS</span> 苹果手机</h3>
+          <ol>
+            <li>用 Safari 浏览器打开当前页面；</li>
+            <li>点击底部的“分享”按钮；</li>
+            <li>选择“添加到主屏幕”；</li>
+            <li>确认后，即可在桌面直接打开。</li>
+          </ol>
+        </div>
+
+        <div class="tip">
+          <h3><span class="badge android">Android</span> 安卓设备</h3>
+          <p>使用 Chrome / Edge 浏览器打开，点击“下载 APK”按钮，下载完成后允许安装未知来源应用即可完成安装。</p>
+        </div>
+
+        <div class="tip">
+          <h3><span class="badge apk">APK</span> 版本说明</h3>
+          <p>本版本适配移动端 H5 访问、桌面快捷方式、Android APK 安装体验。若需要替换正式 APK 地址，请将按钮链接更换为你自己的下载地址即可。</p>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        提示：苹果设备的“保存到桌面”依赖 Safari，不支持直接用微信内置浏览器创建桌面快捷方式；安卓建议使用 Chrome 浏览器下载与安装 APK。
+      </div>
+    </section>
+  </div>
+</body>
+</html>

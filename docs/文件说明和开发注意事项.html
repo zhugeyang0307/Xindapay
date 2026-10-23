@@ -1,0 +1,533 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>文件说明 + 开发注意事项 - XindaPay</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7;color:#1a2a4a;background:#f5f7fa}
+.wrap{display:flex;min-height:100vh}
+.side{width:260px;background:#1e293b;color:#cbd5e1;padding:24px 0;position:fixed;height:100vh;overflow-y:auto}
+.side h2{color:#fff;padding:0 24px 16px;font-size:16px;border-bottom:1px solid #334155;margin-bottom:16px}
+.side a{display:block;padding:8px 24px;color:#cbd5e1;text-decoration:none;font-size:14px;border-left:3px solid transparent}
+.side a:hover{background:#334155;color:#fff;border-left-color:#60a5fa}
+.main{flex:1;margin-left:260px;padding:40px 60px;max-width:1100px}
+h1{font-size:28px;color:#0f172a;margin-bottom:8px;padding-bottom:16px;border-bottom:3px solid #3b82f6}
+h2{font-size:22px;color:#1e40af;margin:36px 0 16px;padding-left:12px;border-left:5px solid #3b82f6}
+h3{font-size:17px;color:#0f172a;margin:24px 0 12px}
+p{margin:10px 0;color:#334155}
+code{background:#f1f5f9;color:#e11d48;padding:2px 6px;border-radius:4px;font-family:Menlo,Consolas,monospace;font-size:13px}
+pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:8px;overflow-x:auto;margin:12px 0;font-size:13px;line-height:1.5}
+pre code{background:none;color:inherit;padding:0}
+table{width:100%;border-collapse:collapse;margin:16px 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid #e2e8f0;font-size:14px}
+th{background:#f1f5f9;color:#334155;font-weight:600}
+tr:hover td{background:#f8fafc}
+ul,ol{margin:10px 0 10px 24px;color:#334155}
+li{margin:4px 0}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;margin-right:4px}
+.tag-red{background:#fee2e2;color:#b91c1c}
+.tag-green{background:#dcfce7;color:#15803d}
+.tag-blue{background:#dbeafe;color:#1d4ed8}
+.tag-yellow{background:#fef3c7;color:#a16207}
+.box{background:#fff;border-radius:10px;padding:20px;margin:16px 0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.box-info{border-left:4px solid #3b82f6}
+.box-warn{border-left:4px solid #f59e0b;background:#fffbeb}
+.box-danger{border-left:4px solid #ef4444;background:#fef2f2}
+</style>
+</head><body><div class="wrap">
+<div class="side">
+<h2>📚 XindaPay 文档</h2>
+<a href="项目结构说明.html">🏗 项目结构说明</a>
+<a href="部署说明.html">🚀 部署说明</a>
+<a href="运维手册.html">🔧 运维手册</a>
+<a href="商户操作手册.html">👨‍💼 商户操作手册</a>
+<a href="下级操作手册.html">👥 下级操作手册</a>
+<a href="文件说明和开发注意事项.html">📖 文件说明 + 开发注意</a>
+<a href="CHANGELOG.html">📝 变更记录</a>
+</div>
+<div class="main">
+<h1>📖 文件说明 + 下次开发注意事项</h1>
+<p style="color:#94a3b8;font-size:13px;">每个文件干什么 + 改动时的坑</p>
+
+<h2>一、根目录（入口层）</h2>
+<table>
+<tr><th>文件</th><th>作用</th><th>注意事项</th></tr>
+<tr><td><code>config.php</code></td><td>主配置（数据库/密钥/常量）</td><td><span class="tag tag-red">绝不传</span>本地 root/root，线上不同</td></tr>
+<tr><td><code>index.php</code></td><td>站点入口（按 mod 参数分流）</td><td>别乱改</td></tr>
+<tr><td><code>submit.php</code></td><td>页面支付入口（跳转网关）</td><td>接收参数 → 验签 → 跳转收银台</td></tr>
+<tr><td><code>mapi.php</code></td><td>API 支付（JSON 返回 payUrl）</td><td>只转发到 api.php</td></tr>
+<tr><td><code>api.php</code></td><td>V1/V2 接口核心</td><td>签名用 ApiHelper 类</td></tr>
+<tr><td><code>gateway.php</code></td><td>通用支付网关</td><td>兼容易支付协议</td></tr>
+<tr><td><code>cashier.php</code></td><td>收银台（显示订单 + 支付方式）</td><td>—</td></tr>
+<tr><td><code>payok.php</code></td><td>支付成功后跳转页</td><td>—</td></tr>
+<tr><td><code>pay.php</code></td><td>兼容旧入口（转发）</td><td>别乱动</td></tr>
+<tr><td><code>submit2.php</code></td><td>旧版支付入口（兼容）</td><td>—</td></tr>
+<tr><td><code>cron.php</code></td><td>定时任务（超时订单关闭 + 回调重试）</td><td>宝塔计划任务每分钟跑</td></tr>
+<tr><td><code>cron_usdt.php</code></td><td>USDT 充值监听</td><td>每 5 分钟跑</td></tr>
+<tr><td><code>gold.php</code></td><td>金币/积分相关</td><td>—</td></tr>
+<tr><td><code>services.php</code></td><td>服务相关（旧）</td><td>被 user/service.php 取代</td></tr>
+<tr><td><code>getshop.php</code></td><td>获取店铺信息</td><td>—</td></tr>
+<tr><td><code>tg_bridge.php</code></td><td>TG 桥接（转发到 telegram/）</td><td>—</td></tr>
+<tr><td><code>user_bot_hook.php</code></td><td>用户 Bot 回调</td><td>—</td></tr>
+<tr><td><code>wework.php</code></td><td>企业微信回调</td><td>—</td></tr>
+<tr><td><code>mail_confirm.php</code></td><td>邮件确认回调（邮件里点按钮走这）</td><td>别乱改，会挂掉整条确认链</td></tr>
+<tr><td><code>mail_hook.php</code></td><td>邮件推送触发（被 hook_order_paid 调）</td><td>参数 uid + trade_no + to</td></tr>
+<tr><td><code>buy_apk.php</code></td><td>APK 购买/介绍页</td><td>营销页</td></tr>
+<tr><td><code>notify_receiver.php</code></td><td>回调测试接收端</td><td><span class="tag tag-yellow">上线可删</span></td></tr>
+<tr><td><code>_dev_login.php</code></td><td>本地快速切身份工具</td><td><span class="tag tag-red">上线必删</span></td></tr>
+<tr><td><code>_test.php</code> / <code>_mini.php</code></td><td>临时测试</td><td><span class="tag tag-red">上线必删</span></td></tr>
+</table>
+<h2>二、includes/（核心库）</h2>
+<table>
+<tr><th>文件</th><th>作用</th><th>注意事项</th></tr>
+<tr><td><code>common.php</code></td><td>全局初始化</td><td>所有页面第一行 include</td></tr>
+<tr><td><code>functions.php</code></td><td>工具函数（签名/回调/余额/日志）</td><td>changeUserMoney 是核心函数，改要小心</td></tr>
+<tr><td><code>tg_queue.php</code></td><td>TG 推送队列</td><td>—</td></tr>
+<tr><td><code>bot_sender.php</code></td><td>Bot 发送器</td><td>—</td></tr>
+</table>
+
+<h3>includes/lib/</h3>
+<table>
+<tr><th>文件</th><th>作用</th><th>注意事项</th></tr>
+<tr><td><code>Channel.php</code></td><td>通道选择（含智能路由钩子）</td><td>加通道要在这里注册</td></tr>
+<tr><td><code>Order.php</code></td><td>⭐ 订单完成/冻结/退款</td><td>码商代收扣款 + 分成逻辑在这，改前务必读完整</td></tr>
+<tr><td><code>Service.php</code></td><td>⭐ 服务期管理</td><td>isActive/getStatus/extend/initTrial</td></tr>
+<tr><td><code>MailOrder.php</code></td><td>邮件推送（SMTP 优先用上级）</td><td>getSmtpCfg 优先读 upid</td></tr>
+<tr><td><code>Payment.php</code></td><td>支付核心逻辑</td><td>39KB 大文件，改动谨慎</td></tr>
+<tr><td><code>Plugin.php</code></td><td>插件加载器</td><td>—</td></tr>
+<tr><td><code>ApiHelper.php</code></td><td>签名验证（V1 MD5 / V2 RSA）</td><td>—</td></tr>
+<tr><td><code>RiskCheck.php</code></td><td>风控检测</td><td>—</td></tr>
+<tr><td><code>Transfer.php</code></td><td>转账/代付</td><td>—</td></tr>
+<tr><td><code>TOTP.php</code></td><td>谷歌验证码</td><td>—</td></tr>
+<tr><td><code>Printer.php</code></td><td>小票打印</td><td>—</td></tr>
+<tr><td><code>XdbSearcher.php</code></td><td>IP 归属地数据库</td><td>PHP 8.2 已修 dollar-brace 语法</td></tr>
+<tr><td><code>PdoHelper.php</code></td><td>DB 助手类</td><td>—</td></tr>
+<tr><td><code>MsgNotice.php</code></td><td>消息通知</td><td>—</td></tr>
+<tr><td><code>Template.php</code></td><td>模板引擎</td><td>—</td></tr>
+<tr><td><code>Cache.php</code></td><td>缓存</td><td>—</td></tr>
+<tr><td><code>Ip2Region.php</code></td><td>IP 定位</td><td>—</td></tr>
+<tr><td><code>VerifyCode.php</code></td><td>验证码</td><td>—</td></tr>
+<tr><td><code>Oauth.php</code></td><td>OAuth 封装</td><td>—</td></tr>
+<tr><td><code>GeetestLib.php</code></td><td>极验</td><td>—</td></tr>
+<tr><td><code>AliyunCertify.php</code></td><td>阿里云实名</td><td>—</td></tr>
+<tr><td><code>AntiDigitalCertify.php</code></td><td>实名认证</td><td>—</td></tr>
+<tr><td><code>QcloudFaceid.php</code></td><td>腾讯云人脸</td><td>—</td></tr>
+<tr><td><code>QC.php</code></td><td>千川/其他</td><td>—</td></tr>
+<tr><td><code>hieroglyphy.php</code></td><td>JS 混淆</td><td>—</td></tr>
+</table>
+
+<h2>三、plugins/（支付插件）</h2>
+<p>当前启用：<b>mapay</b>（码支付）</p>
+<table>
+<tr><th>文件</th><th>作用</th><th>注意事项</th></tr>
+<tr><td><code>mapay/mapay_plugin.php</code></td><td>⭐ 码支付主逻辑</td><td>pickWithChildren 找码（本人优先→下级，3层BFS）；写 ext 时写 qrcode_uid</td></tr>
+<tr><td><code>mapay/_region_helper.php</code></td><td>地区匹配</td><td>用户省份 → 匹配同省码</td></tr>
+<tr><td><code>easypay/</code></td><td>易支付插件（未启用）</td><td>—</td></tr>
+<tr><td><code>lakalamoss/</code></td><td>拉卡拉（未启用）</td><td>—</td></tr>
+<tr><td>其他 50+ 插件</td><td>各种支付渠道</td><td>未启用，参考用</td></tr>
+</table>
+<h2>四、user/（商户后台）</h2>
+
+<h3>4.1 基础</h3>
+<table>
+<tr><th>文件</th><th>作用</th><th>注意事项</th></tr>
+<tr><td><code>login.php</code></td><td>登录</td><td>登出用 ?logout</td></tr>
+<tr><td><code>reg.php</code></td><td>注册</td><td>注册后自动开 2 天试用</td></tr>
+<tr><td><code>findpwd.php</code></td><td>找回密码</td><td>—</td></tr>
+<tr><td><code>index.php</code></td><td>商户中心首页</td><td>统计 + 图表</td></tr>
+<tr><td><code>head.php</code></td><td>后台公共头 + 菜单</td><td>加菜单在这里；下级登录自动隐藏冗余</td></tr>
+<tr><td><code>foot.php</code></td><td>公共尾</td><td>—</td></tr>
+<tr><td><code>editinfo.php</code></td><td>修改资料</td><td>—</td></tr>
+<tr><td><code>userinfo.php</code></td><td>账号信息（含 API）</td><td>?mod=api 看密钥</td></tr>
+<tr><td><code>certificate.php</code></td><td>实名认证</td><td>—</td></tr>
+<tr><td><code>certificate_mobile.php</code></td><td>实名（移动端）</td><td>—</td></tr>
+<tr><td><code>completeinfo.php</code></td><td>完善资料</td><td>—</td></tr>
+<tr><td><code>apply.php</code></td><td>申请（商户/认证）</td><td>—</td></tr>
+<tr><td><code>deposit.php</code></td><td>保证金</td><td>—</td></tr>
+<tr><td><code>force_bind.php</code></td><td>强制绑定</td><td>—</td></tr>
+<tr><td><code>logout_force.php</code></td><td>强制登出</td><td>清 cookie 用</td></tr>
+</table>
+
+<h3>4.2 经营数据</h3>
+<table>
+<tr><th>文件</th><th>作用</th><th>注意事项</th></tr>
+<tr><td><code>order.php</code></td><td>我的订单</td><td>只查 uid=我</td></tr>
+<tr><td><code>record.php</code></td><td>资金明细</td><td>pay_record.date 不是 addtime</td></tr>
+<tr><td><code>bill_upload.php</code></td><td>上传对账单</td><td>支持 CSV/TXT/ZIP/XLSX；微信 ZIP 需密码</td></tr>
+<tr><td><code>bill_reconcile.php</code></td><td>系统 vs 账单核对</td><td>支持 ?uid=下级（加权限校验）</td></tr>
+<tr><td><code>bill_detail.php</code></td><td>账单批次明细</td><td>支持 ?uid=下级</td></tr>
+<tr><td><code>bill.php</code></td><td>APK 到账流水</td><td>读 pay_listen_log</td></tr>
+</table>
+
+<h3>4.3 收款工具</h3>
+<table>
+<tr><th>文件</th><th>作用</th><th>注意事项</th></tr>
+<tr><td><code>qrcode/index.php</code></td><td>收款码管理</td><td>码表 pay_qrcode，owner 用 uid 字段</td></tr>
+<tr><td><code>onecode.php</code></td><td>聚合码</td><td>—</td></tr>
+<tr><td><code>license.php</code></td><td>我的激活码</td><td>重写过；领码走 ajax_apk?act=claim</td></tr>
+<tr><td><code>service.php</code></td><td>系统续费</td><td>新建</td></tr>
+<tr><td><code>ajax_service.php</code></td><td>续费下单接口</td><td>新建</td></tr>
+<tr><td><code>ajax_apk.php</code></td><td>激活码接口</td><td>claim 分支是新增</td></tr>
+</table>
+
+<h3>4.4 下级商户</h3>
+<table>
+<tr><th>文件</th><th>作用</th><th>注意事项</th></tr>
+<tr><td><code>sub_list.php</code></td><td>下级列表（树形）</td><td>BFS 最多 3 级</td></tr>
+<tr><td><code>sub_create.php</code></td><td>创建下级</td><td>—</td></tr>
+<tr><td><code>sub_edit.php</code></td><td>编辑下级（rate/pay/加余额）</td><td>isMyDescendant 权限校验</td></tr>
+<tr><td><code>sub_push.php</code></td><td>下级填推送资料</td><td>—</td></tr>
+<tr><td><code>sub_review.php</code></td><td>上级审批推送</td><td>—</td></tr>
+<tr><td><code>sub_switch.php</code></td><td>模拟登录</td><td>已禁用，只留 return</td></tr>
+<tr><td><code>sub_qrcodes.php</code></td><td>⭐ 下级收款码管理</td><td>新建；可开关码</td></tr>
+<tr><td><code>sub_orders.php</code></td><td>⭐ 下级订单</td><td>新建；含下级/只看我的</td></tr>
+<tr><td><code>sub_bills.php</code></td><td>⭐ 下级账单核对</td><td>新建；软删除 is_deleted</td></tr>
+</table>
+
+<h3>4.5 对账</h3>
+<table>
+<tr><th>文件</th><th>作用</th><th>注意事项</th></tr>
+<tr><td><code>bill_sub.php</code></td><td>对账中心</td><td>汇总自己 + 下级</td></tr>
+</table>
+
+<h3>4.6 推送/邮件</h3>
+<table>
+<tr><th>文件</th><th>作用</th><th>注意事项</th></tr>
+<tr><td><code>telegram.php</code></td><td>机器人管理</td><td>—</td></tr>
+<tr><td><code>mail_push.php</code></td><td>邮件推送</td><td>—</td></tr>
+<tr><td><code>mail_marketing/</code></td><td>邮件营销系统</td><td>—</td></tr>
+</table>
+
+<h3>4.7 其他</h3>
+<table>
+<tr><th>文件</th><th>作用</th></tr>
+<tr><td><code>domain.php</code></td><td>域名绑定</td></tr>
+<tr><td><code>invite.php</code></td><td>邀请码</td></tr>
+<tr><td><code>transfer.php</code></td><td>转账</td></tr>
+<tr><td><code>transfer_add.php</code></td><td>发起转账</td></tr>
+<tr><td><code>transfer_red.php</code></td><td>红包</td></tr>
+<tr><td><code>recharge.php</code></td><td>充值</td></tr>
+<tr><td><code>usdt_recharge.php</code></td><td>USDT 充值</td></tr>
+<tr><td><code>settle.php</code></td><td>结算</td></tr>
+<tr><td><code>complain.php</code></td><td>投诉/工单</td></tr>
+<tr><td><code>mchrisk.php</code></td><td>风控中心</td></tr>
+<tr><td><code>qrlogin.php</code> / <code>wxlogin.php</code></td><td>扫码/微信登录</td></tr>
+<tr><td><code>oauth.php</code> / <code>openid.php</code> / <code>connect.php</code> / <code>douyinoauth.php</code></td><td>OAuth 登录</td></tr>
+<tr><td><code>download.php</code></td><td>下载（APK/账单）</td></tr>
+<tr><td><code>alipaycert.php</code> / <code>alipaycertok.php</code></td><td>支付宝认证</td></tr>
+<tr><td><code>groupbuy.php</code></td><td>拼团/团购</td></tr>
+<tr><td><code>test.php</code></td><td>测试用</td></tr>
+</table>
+<h2>五、admin/（平台后台）</h2>
+<table>
+<tr><th>文件</th><th>作用</th><th>注意事项</th></tr>
+<tr><td><code>login.php</code></td><td>管理员登录</td><td>—</td></tr>
+<tr><td><code>index.php</code></td><td>平台首页</td><td>—</td></tr>
+<tr><td><code>head.php</code></td><td>后台菜单</td><td>加菜单在这里；本次已重排</td></tr>
+<tr><td><code>ulist.php</code></td><td>商户管理</td><td>删了插件市场引用</td></tr>
+<tr><td><code>order.php</code></td><td>全平台订单</td><td>42KB 大文件</td></tr>
+<tr><td><code>service.php</code></td><td>⭐ 系统服务管理</td><td>本次新建</td></tr>
+<tr><td><code>license.php</code></td><td>APK 授权管理</td><td>—</td></tr>
+<tr><td><code>pay_channel.php</code></td><td>通道管理</td><td>—</td></tr>
+<tr><td><code>pay_plugin.php</code></td><td>插件管理</td><td>—</td></tr>
+<tr><td><code>set.php</code></td><td>系统设置</td><td>140KB 巨文件，改前备份</td></tr>
+<tr><td><code>transfer.php</code> / <code>transfer_*.php</code></td><td>转账管理</td><td>—</td></tr>
+<tr><td><code>settle.php</code> / <code>settle_batch.php</code></td><td>结算</td><td>—</td></tr>
+<tr><td><code>record.php</code> / <code>record_export.php</code></td><td>流水</td><td>—</td></tr>
+<tr><td><code>risk.php</code></td><td>风控规则</td><td>—</td></tr>
+<tr><td><code>iproute.php</code></td><td>IP 路由</td><td>—</td></tr>
+<tr><td><code>telegram.php</code></td><td>Bot 管理</td><td>—</td></tr>
+<tr><td><code>export.php</code></td><td>数据导出</td><td>—</td></tr>
+<tr><td><code>ajax*.php</code></td><td>各模块 AJAX</td><td>别单点改</td></tr>
+<tr><td><code>sso.php</code></td><td>SSO 登录</td><td>—</td></tr>
+<tr><td><code>blacklist.php</code></td><td>黑名单</td><td>—</td></tr>
+<tr><td><code>clean.php</code></td><td>清理任务</td><td>—</td></tr>
+<tr><td><code>buyerstat.php</code></td><td>买家统计</td><td>—</td></tr>
+<tr><td><code>code.php</code></td><td>验证码</td><td>—</td></tr>
+<tr><td><code>domain.php</code></td><td>域名管理</td><td>—</td></tr>
+<tr><td><code>download.php</code></td><td>下载</td><td>—</td></tr>
+<tr><td><code>gedit.php</code> / <code>glist.php</code></td><td>分组管理</td><td>—</td></tr>
+<tr><td><code>gettoken.php</code></td><td>获取 token</td><td>—</td></tr>
+<tr><td><code>gonggao.php</code></td><td>公告</td><td>—</td></tr>
+<tr><td><code>group.php</code></td><td>群管理</td><td>—</td></tr>
+<tr><td><code>invitecode.php</code></td><td>邀请码</td><td>—</td></tr>
+<tr><td><code>loader_helper.php</code></td><td>加载助手</td><td>—</td></tr>
+<tr><td><code>log.php</code></td><td>日志</td><td>—</td></tr>
+<tr><td><code>password.php</code></td><td>改密</td><td>—</td></tr>
+<tr><td><code>pay_roll.php</code> / <code>pay_type.php</code></td><td>支付配置</td><td>—</td></tr>
+<tr><td><code>pay_weixin.php</code> / <code>pay_wework.php</code></td><td>微信/企微</td><td>—</td></tr>
+<tr><td><code>plugin_page.php</code></td><td>插件页</td><td>—</td></tr>
+<tr><td><code>ps_order.php</code> / <code>ps_receiver.php</code></td><td>分账</td><td>—</td></tr>
+<tr><td><code>set_totp.php</code> / <code>set_wxkf.php</code></td><td>2FA/客服</td><td>—</td></tr>
+<tr><td><code>slist.php</code></td><td>系统列表</td><td>—</td></tr>
+<tr><td><code>testsubmit.php</code></td><td>测试提交</td><td>—</td></tr>
+<tr><td><code>uset.php</code> / <code>ustat.php</code></td><td>用户设置/统计</td><td>—</td></tr>
+<tr><td><code>ajax_profitsharing.php</code></td><td>分账 AJAX</td><td>—</td></tr>
+</table>
+
+<h2>六、paypage/（支付展示）</h2>
+<table>
+<tr><th>文件</th><th>作用</th><th>注意事项</th></tr>
+<tr><td><code>mapay.php</code></td><td>⭐ 码支付展示页</td><td>兜底选码走 pickWithChildren（已修，找下级码）</td></tr>
+<tr><td><code>notify_listen.php</code></td><td>⭐ APK 上报接口</td><td>核心！验签 + 匹配订单 + 调 Order::complete；10 分钟窗口</td></tr>
+<tr><td><code>license.php</code></td><td>APK 激活页</td><td>跟服务期绑定</td></tr>
+</table>
+
+<h2>七、telegram/（TG Bot）</h2>
+<table>
+<tr><th>文件</th><th>作用</th><th>注意事项</th></tr>
+<tr><td><code>config.php</code></td><td>Bot 配置</td><td>绝不传</td></tr>
+<tr><td><code>bot.php</code></td><td>主 Bot 逻辑</td><td>—</td></tr>
+<tr><td><code>hook_order_paid.php</code></td><td>⭐ 订单完成推送</td><td>被 Order.php 用 CLI 调；pushUid=码 owner；邮件分支优先级：码级→下级→平台→TG</td></tr>
+<tr><td><code>complete_order.php</code></td><td>CLI 完成订单</td><td>—</td></tr>
+<tr><td><code>usdt_callback.php</code></td><td>USDT 支付回调</td><td>含 SVC 服务期分支</td></tr>
+<tr><td><code>bot_daily_report.php</code></td><td>日报</td><td>定时任务每天跑</td></tr>
+<tr><td><code>customer_bot.php</code></td><td>客服 Bot</td><td>—</td></tr>
+<tr><td><code>webhook.php</code></td><td>Webhook 入口</td><td>—</td></tr>
+<tr><td><code>lib/DB.php</code></td><td>独立 DB</td><td>读 telegram/config.php</td></tr>
+<tr><td><code>lib/Telegram.php</code></td><td>TG API 封装</td><td>—</td></tr>
+<tr><td><code>lib/Cmds.php</code></td><td>命令路由</td><td>本次重写 APK 命令</td></tr>
+<tr><td><code>lib/ApkTutorial.php</code></td><td>APK 教程文案</td><td>本次重写</td></tr>
+<tr><td><code>lib/OrderConfirm.php</code></td><td>TG 确认逻辑</td><td>—</td></tr>
+<tr><td><code>lib/DeepSeek.php</code></td><td>AI 文案</td><td>—</td></tr>
+</table>
+
+<h2>八、help/（帮助中心）</h2>
+<table>
+<tr><th>文件</th><th>作用</th></tr>
+<tr><td><code>index.html</code></td><td>卡片导航（入口）</td></tr>
+<tr><td><code>docs/商户手册.html</code></td><td>⭐ 商户完整操作手册</td></tr>
+<tr><td><code>docs/下级推送指南.html</code></td><td>⭐ 下级操作教程</td></tr>
+<tr><td><code>docs/商户对接文档.html</code></td><td>V1/V2 完整 API demo</td></tr>
+<tr><td><code>docs/listener.html</code></td><td>APK 监听说明</td></tr>
+<tr><td><code>docs/收款码推送方案.html</code></td><td>推送方案说明</td></tr>
+<tr><td><code>docs/邮件推送说明.html</code></td><td>邮件推送</td></tr>
+<tr><td><code>docs/订单管理说明.html</code></td><td>订单管理</td></tr>
+<tr><td><code>docs/智能路由规则.html</code></td><td>智能路由</td></tr>
+<tr><td><code>docs/收款码地区匹配.html</code></td><td>地区匹配</td></tr>
+<tr><td><code>docs/机器人创建.html</code> / <code>机器人操作说明.html</code> / <code>BotFather设置说明.html</code></td><td>TG Bot</td></tr>
+<tr><td><code>docs/邮件营销系统.html</code> / <code>邮件模板管理.html</code></td><td>邮件营销</td></tr>
+<tr><td><code>docs/追踪接入指南.html</code></td><td>邮件追踪</td></tr>
+<tr><td><code>docs/2FA开启教程.html</code></td><td>2FA</td></tr>
+<tr><td><code>docs/TG推送限流.html</code></td><td>限流说明</td></tr>
+</table>
+
+<h2>九、docs/（本目录）</h2>
+<table>
+<tr><th>文件</th><th>作用</th></tr>
+<tr><td><code>项目结构说明.html</code></td><td>每个文件说明</td></tr>
+<tr><td><code>部署说明.html</code></td><td>本地→线上部署</td></tr>
+<tr><td><code>运维手册.html</code></td><td>巡检/故障/备份</td></tr>
+<tr><td><code>商户操作手册.html</code></td><td>商户操作</td></tr>
+<tr><td><code>下级操作手册.html</code></td><td>下级操作</td></tr>
+<tr><td><code>CHANGELOG.html</code></td><td>变更记录</td></tr>
+<tr><td><code>文件说明和开发注意事项.html</code></td><td>本文件</td></tr>
+</table>
+
+<hr style="margin:40px 0;border:none;border-top:2px dashed #cbd5e1;">
+<hr style="margin:40px 0;border:none;border-top:2px dashed #cbd5e1;">
+
+<h1>🚨 下次开发必须注意的事项</h1>
+
+<h2>A. 环境（本地 PowerShell）</h2>
+<div class="box box-danger">
+
+<h3>A1. 中文写文件</h3>
+<p><b>症状</b>：写入中文后变乱码、搜索匹配不到。</p>
+<pre><code># 正确
+[System.IO.File]::WriteAllText($f, $c, (New-Object System.Text.UTF8Encoding($false)))
+
+# 错误（会加 BOM 或按 GBK 写）
+Set-Content $f $c
+$c | Out-File $f</code></pre>
+
+<h3>A2. here-string 内容里不能有结束标记</h3>
+<p>PowerShell 单引号 here-string 的结束标记是「行首的单引号 + at 符号」。如果内容里出现这个序列（尤其在行首），here-string 会提前结束。</p>
+<p><b>解决</b>：内容里的这个序列要改成文字描述，或改用 VS Code 直接编辑 HTML。</p>
+
+<h3>A3. 注释用井号</h3>
+<p>PHP 的双斜杠、HTML 的尖括号在 PowerShell 里都不是注释，会被当命令执行。</p>
+
+<h3>A4. 美元括号会被 PS 当表达式执行</h3>
+<p>写 bash 命令时，shell 里的日期语法会被 PS 优先执行，导致报错。</p>
+<pre><code># 错误：会触发 Get-Date
+tar -czf backup_DATE_TAG.tar.gz
+
+# 正确：写占位符，之后 Replace
+# 或先写到临时文件再读进来</code></pre>
+
+<h3>A5. 大段 HTML 不要贴 PowerShell</h3>
+<p>超过 50 行 HTML 会被 PS 逐行当命令执行，产生大量报错。</p>
+<p><b>正确做法</b>：</p>
+<ul>
+<li>用 VS Code 直接打开 .html 文件粘贴</li>
+<li>或写到临时 .txt 文件再读取</li>
+<li>或分段追加（每段 &lt; 100 行，且不含 here-string 结束标记）</li>
+</ul>
+</div>
+
+<h2>B. PHP 8.2 语法</h2>
+<div class="box box-warn">
+
+<h3>B1. 变量 dollar-brace 已废弃</h3>
+<pre><code>// PHP 8.2 会警告
+"dollar-brace-name"
+
+// 改用
+"brace-name"</code></pre>
+
+<h3>B2. use Exception 无效</h3>
+<pre><code>// 顶级命名空间不能 use 全局类
+// 直接省略，PHP 自动找全局 Exception
+// 或写反斜杠 Exception</code></pre>
+
+<h3>B3. PHP_BINARY 在 Apache 下是 httpd.exe</h3>
+<p>Apache 环境下 PHP_BINARY 指向 httpd.exe，不是 php。改探测式：</p>
+<pre><code>$phpBin = '';
+foreach ([
+  'D:\\phpstudy_pro\\Extensions\\php\\php8.2.9nts\\php.exe',
+  'C:\\php\\php.exe',
+  '/www/server/php/82/bin/php',
+  '/usr/bin/php'
+] as $cand) {
+    if (is_file($cand)) { $phpBin = $cand; break; }
+}
+if (!$phpBin) $phpBin = 'php';</code></pre>
+
+<h3>B4. 类型严格</h3>
+<p>字符串当数字用可能报警，用 (int) / (float) 显式转换。</p>
+</div>
+
+<h2>C. 数据库</h2>
+<div class="box box-warn">
+
+<h3>C1. pay_order 主键是 trade_no</h3>
+<p>没有 id 字段，按 trade_no 查询/排序。</p>
+
+<h3>C2. pay_record 时间字段是 date</h3>
+<p>不是 addtime。</p>
+
+<h3>C3. key 是 MySQL 保留字</h3>
+<p>必须用反引号包裹：SELECT 反引号key反引号 FROM pay_user。</p>
+
+<h3>C4. pay_user 字段命名</h3>
+<p>是 pay_minmoney / pay_maxmoney（不是 paymin/paymax）。</p>
+
+<h3>C5. pay_qrcode 没有 type/name</h3>
+<p>用 channel / remark 字段。</p>
+
+<h3>C6. ext 是 JSON</h3>
+<p>提取：SELECT JSON_UNQUOTE(JSON_EXTRACT(ext, 美元.qrcode_uid)) FROM pay_order</p>
+
+<h3>C7. PDO 不混用参数类型</h3>
+<p>命名参数和位置参数不能同时用，会报 HY093。</p>
+<pre><code>// 全命名
+$DB->getRow("SELECT * FROM t WHERE uid=:u LIMIT 1", [':u'=>1]);
+
+// 或全位置
+$DB->getRow("SELECT * FROM t WHERE uid=? LIMIT 1", [1]);</code></pre>
+</div>
+
+<h2>D. 业务逻辑</h2>
+<div class="box box-info">
+
+<h3>D1. 码商代收扣款顺序</h3>
+<ol>
+<li>检查 ext.qrcode_uid</li>
+<li>若 qrcode_uid 不等于 order.uid：
+  <ul>
+    <li>查 qrcode_uid 余额</li>
+    <li>余额不足 → 拒绝完成（回滚 status）</li>
+    <li>扣 qrcode_uid 余额</li>
+    <li>查 qrcode_uid 的 upid 和 rate</li>
+    <li>rate &gt; 0 → 给 upid 加分成</li>
+  </ul>
+</li>
+<li>更新码统计</li>
+</ol>
+
+<h3>D2. 推送目标 = 码 owner</h3>
+<p>hook_order_paid.php 里的 pushUid 优先取码 owner。</p>
+
+<h3>D3. 邮件分支优先级</h3>
+<ol>
+<li>码级邮件配置（pay_qrcode.mail_enabled=1 且有 mail_to）</li>
+<li>下级推送资料（pay_user.sub_push_status=1 且有 sub_push_email）</li>
+<li>平台商户邮件（pay_user_botconfig.mail_enabled=1）</li>
+<li>TG 推送</li>
+</ol>
+
+<h3>D4. 服务期拦截点</h3>
+<ul>
+<li>includes/lib/api/Pay.php — 收款前</li>
+<li>paypage/notify_listen.php — APK 上报前</li>
+<li>paypage/license.php — APK 激活时</li>
+</ul>
+
+<h3>D5. 3 级封顶</h3>
+<p>getSubTree / pickWithChildren 的 depth 上限都是 3。</p>
+</div>
+
+<h2>E. 文件改动流程</h2>
+<div class="box box-success">
+<ol>
+<li>改前备份（Copy-Item 加时间戳后缀）</li>
+<li>用行号定位或单行 Replace（不要大段切片）</li>
+<li>改完跑 php -l 做语法检查</li>
+<li>测试：浏览器/curl 走一遍</li>
+<li>不行就恢复备份</li>
+</ol>
+</div>
+
+<h2>F. 上传 / 部署</h2>
+<div class="box box-danger">
+
+<h3>F1. 绝不传</h3>
+<ul>
+<li>config.php</li>
+<li>telegram/config.php</li>
+</ul>
+
+<h3>F2. 上线必删</h3>
+<ul>
+<li>_dev_login.php</li>
+<li>_test.php / _mini.php</li>
+<li>_test_*.php / _sim*.php / _ft*.php / _gen*.php / _pb*.php</li>
+<li>notify_receiver.php（测试端）</li>
+</ul>
+
+<h3>F3. 打包排除</h3>
+<p>tar 打包时排除：备份、测试文件、config.php、runtime、日志。</p>
+
+<h3>F4. 线上 CLI PHP 是 7.4</h3>
+<p>站点 PHP 8.2，但 CLI 是 7.4。用 /www/server/php/82/bin/php 指定。</p>
+</div>
+
+<h2>G. 常见错误速查</h2>
+<table>
+<tr><th>错误</th><th>原因</th><th>解决</th></tr>
+<tr><td>白屏</td><td>PHP fatal</td><td>看 apache error.log 或 runtime 日志</td></tr>
+<tr><td>HY093</td><td>PDO 参数混用</td><td>统一命名或位置</td></tr>
+<tr><td>401/403</td><td>Session 过期</td><td>重登</td></tr>
+<tr><td>unauthorized</td><td>APK token 无效</td><td>检查 pay_license</td></tr>
+<tr><td>ok unmatched</td><td>订单超 10 分钟或金额不匹配</td><td>看 pay_listen_log</td></tr>
+<tr><td>pushUid=0</td><td>ext 没有 qrcode_uid</td><td>订单没经过选码</td></tr>
+<tr><td>hook 不触发</td><td>PHP_BINARY 问题</td><td>改探测 php 路径</td></tr>
+<tr><td>邮件没到</td><td>推送配置错</td><td>看 hook.log + pay_mail_pending</td></tr>
+<tr><td>下级码选不到</td><td>mapay.php 没走 pickWithChildren</td><td>已修，勿回退</td></tr>
+<tr><td>邮件默认域名 pay.test</td><td>MAIL_HOOK_BASE 未配置</td><td>上线前必须配置环境变量或改硬编码</td></tr>
+</table>
+
+<h2>H. 会话交接信息</h2>
+<div class="box box-info">
+<table>
+<tr><th>项</th><th>值</th></tr>
+<tr><td>本地路径</td><td>D:\XindaPay_mail\pay.yunzexinda.com</td></tr>
+<tr><td>本地 PHP</td><td>D:\phpstudy_pro\Extensions\php\php8.2.9nts\php.exe</td></tr>
+<tr><td>本地域名</td><td>http://pay.test</td></tr>
+<tr><td>线上路径</td><td>/www/wwwroot/pay.yunzexinda.com</td></tr>
+<tr><td>测试商户</td><td>1000 / 10002 / 10003 / 10004，密码全 admin123</td></tr>
+<tr><td>码 owner</td><td>10002 有码 id=119</td></tr>
+</table>
+</div>
+
+</div></div></body></html>

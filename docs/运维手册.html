@@ -1,0 +1,408 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>运维手册 - XindaPay</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7;color:#1a2a4a;background:#f5f7fa}
+.wrap{display:flex;min-height:100vh}
+.side{width:260px;background:#1e293b;color:#cbd5e1;padding:24px 0;position:fixed;height:100vh;overflow-y:auto}
+.side h2{color:#fff;padding:0 24px 16px;font-size:16px;border-bottom:1px solid #334155;margin-bottom:16px}
+.side a{display:block;padding:8px 24px;color:#cbd5e1;text-decoration:none;font-size:14px;border-left:3px solid transparent}
+.side a:hover{background:#334155;color:#fff;border-left-color:#60a5fa}
+.main{flex:1;margin-left:260px;padding:40px 60px;max-width:1100px}
+h1{font-size:28px;color:#0f172a;margin-bottom:8px;padding-bottom:16px;border-bottom:3px solid #3b82f6}
+h2{font-size:22px;color:#1e40af;margin:36px 0 16px;padding-left:12px;border-left:5px solid #3b82f6}
+h3{font-size:17px;color:#0f172a;margin:24px 0 12px}
+p{margin:10px 0;color:#334155}
+code{background:#f1f5f9;color:#e11d48;padding:2px 6px;border-radius:4px;font-family:Menlo,Consolas,monospace;font-size:13px}
+pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:8px;overflow-x:auto;margin:12px 0;font-size:13px;line-height:1.5}
+pre code{background:none;color:inherit;padding:0}
+table{width:100%;border-collapse:collapse;margin:16px 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid #e2e8f0;font-size:14px}
+th{background:#f1f5f9;color:#334155;font-weight:600}
+tr:hover td{background:#f8fafc}
+ul,ol{margin:10px 0 10px 24px;color:#334155}
+li{margin:4px 0}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;margin-right:4px}
+.tag-red{background:#fee2e2;color:#b91c1c}
+.tag-green{background:#dcfce7;color:#15803d}
+.tag-blue{background:#dbeafe;color:#1d4ed8}
+.tag-yellow{background:#fef3c7;color:#a16207}
+.box{background:#fff;border-radius:10px;padding:20px;margin:16px 0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.box-info{border-left:4px solid #3b82f6}
+.box-warn{border-left:4px solid #f59e0b;background:#fffbeb}
+.box-danger{border-left:4px solid #ef4444;background:#fef2f2}
+.box-success{border-left:4px solid #10b981;background:#ecfdf5}
+</style>
+</head><body><div class="wrap">
+<div class="side">
+<h2>📚 XindaPay 文档</h2>
+<a href="项目结构说明.html">🏗 项目结构说明</a>
+<a href="部署说明.html">🚀 部署说明</a>
+<a href="运维手册.html">🔧 运维手册</a>
+<a href="商户操作手册.html">👨‍💼 商户操作手册</a>
+<a href="下级操作手册.html">👥 下级操作手册</a>
+<a href="CHANGELOG.html">📝 变更记录</a>
+</div>
+<div class="main">
+<h1>🔧 运维手册</h1>
+<p style="color:#94a3b8;font-size:13px;">日常巡检 / 故障排查 / 数据备份</p>
+
+<h2>一、日常巡检</h2>
+<table>
+<tr><th>频率</th><th>项目</th><th>操作</th></tr>
+<tr><td>每日</td><td>站点可用性</td><td><code>curl -I https://pay.yunzexinda.com/</code> 返回 200</td></tr>
+<tr><td>每日</td><td>订单量/成功率</td><td>看 admin 首页或 <code>pay_order</code> 昨日统计</td></tr>
+<tr><td>每日</td><td>PHP 错误日志</td><td><code>tail -50 /www/wwwlogs/*.error.log</code></td></tr>
+<tr><td>每日</td><td>磁盘空间</td><td><code>df -h</code>，超过 80% 告警</td></tr>
+<tr><td>每周</td><td>数据库备份</td><td>mysqldump 全库备份</td></tr>
+<tr><td>每周</td><td>证书有效期</td><td><code>openssl x509 -enddate -noout -in /path/cert.pem</code></td></tr>
+<tr><td>每月</td><td>代码备份</td><td>tar 打包代码目录</td></tr>
+<tr><td>每月</td><td>服务期到期用户</td><td>查 pay_user.service_expire 快到期</td></tr>
+</table>
+
+<h2>二、数据库运维</h2>
+
+<h3>2.1 备份</h3>
+<pre><code>cd /www/server/mysql/bin
+mkdir -p /www/backup/mysql
+./mysqldump -uxindapay -pREPLACE_WITH_DB_PASSWORD xindapay \
+  | gzip > /www/backup/mysql/xindapay_\.sql.gz
+
+# 只备核心表（快）
+./mysqldump -uxindapay -pREPLACE_WITH_DB_PASSWORD xindapay \
+  pay_user pay_order pay_record pay_config \
+  | gzip > /www/backup/mysql/core_\.sql.gz</code></pre>
+
+<h3>2.2 恢复</h3>
+<pre><code>gunzip < /www/backup/mysql/xindapay_20261017.sql.gz \
+  | ./mysql -uxindapay -pREPLACE_WITH_DB_PASSWORD xindapay</code></pre>
+
+<h3>2.3 常见查询</h3>
+<table>
+<tr><th>用途</th><th>SQL</th></tr>
+<tr><td>昨日订单数</td><td><code>SELECT COUNT(*) FROM pay_order WHERE DATE(addtime)=DATE_SUB(CURDATE(),INTERVAL 1 DAY)</code></td></tr>
+<tr><td>商户余额排行</td><td><code>SELECT uid,username,money FROM pay_user ORDER BY money DESC LIMIT 10</code></td></tr>
+<tr><td>服务快到期</td><td><code>SELECT uid,username,service_expire FROM pay_user WHERE service_expire &lt; DATE_ADD(NOW(),INTERVAL 7 DAY)</code></td></tr>
+<tr><td>待回调订单</td><td><code>SELECT trade_no,notify_url FROM pay_order WHERE notify=1</code></td></tr>
+<tr><td>下级树</td><td><code>SELECT uid,upid,sub_level,username FROM pay_user WHERE upid!=0</code></td></tr>
+<tr><td>今日分成</td><td><code>SELECT uid,SUM(money) FROM pay_record WHERE type LIKE '%分成%' AND DATE(date)=CURDATE() GROUP BY uid</code></td></tr>
+</table>
+
+<h2>三、定时任务</h2>
+<p>宝塔 → 计划任务 → 添加：</p>
+<table>
+<tr><th>频率</th><th>命令</th></tr>
+<tr><td>每分钟</td><td><code>/www/server/php/82/bin/php /www/wwwroot/pay.yunzexinda.com/cron.php</code></td></tr>
+<tr><td>每 5 分钟</td><td><code>/www/server/php/82/bin/php /www/wwwroot/pay.yunzexinda.com/cron_usdt.php</code></td></tr>
+<tr><td>每天 02:00</td><td><code>/www/server/php/82/bin/php /www/wwwroot/pay.yunzexinda.com/telegram/bot_daily_report.php</code></td></tr>
+<tr><td>每天 03:00</td><td>mysqldump 备份</td></tr>
+<tr><td>每天 04:00</td><td><code>/www/server/php/82/bin/php /www/wwwroot/pay.yunzexinda.com/mail_track/cron_cleanup.php</code></td></tr>
+</table>
+
+<h2>四、故障排查</h2>
+
+<h3>4.1 用户下单 404 / 500</h3>
+<ol>
+<li>看 <code>/www/wwwlogs/pay.yunzexinda.com.error.log</code> 末尾</li>
+<li>检查 <code>pay_order</code> 有没有创建成功</li>
+<li>检查 <code>plugins/mapay/mapay_plugin.php</code> 语法（<code>php -l</code>）</li>
+<li>检查用户有没有可用收款码：<code>SELECT * FROM pay_qrcode WHERE uid=xxx AND status=1</code></li>
+</ol>
+
+<h3>4.2 订单不完成（APK 上报了但订单还是 status=0）</h3>
+<ol>
+<li>看 <code>pay_listen_log</code> 最新记录，找 <code>match_status</code>
+<ul><li>=1 → 匹配上了，看 <code>Order::complete</code> 报什么错</li>
+<li>NULL → 没匹配（时间/金额不对）</li></ul></li>
+<li>检查 APK token 对应 <code>pay_license.uid</code> 跟订单 uid 是否一致</li>
+<li>检查订单是否超 10 分钟窗口</li>
+<li>看 Order.php 里码商余额是否充足</li>
+</ol>
+
+<h3>4.3 邮件没收到</h3>
+<ol>
+<li>看 <code>telegram/hook.log</code> 末尾，找 pushUid 和邮件分支</li>
+<li>看 <code>pay_mail_pending</code> 有没有记录</li>
+<li>检查 <code>pay_user.sub_push_email</code> 和 <code>sub_push_status</code></li>
+<li>检查 <code>pay_qrcode.mail_to</code> 和 <code>mail_enabled</code></li>
+<li>检查 <code>pay_user_botconfig.mail_enabled/mail_to</code></li>
+<li>SMTP 配置错误 → 看 error.log</li>
+</ol>
+
+<h3>4.4 推送 hook 没触发</h3>
+<ol>
+<li>看 <code>telegram/hook.log</code> 最后修改时间，是否最新</li>
+<li>检查 <code>includes/lib/Order.php</code> 里 hook 启动段（PHP_BINARY 问题）</li>
+<li>手动跑：<code>php telegram/hook_order_paid.php TRADE_NO</code></li>
+</ol>
+
+<h3>4.5 下级看不到自己收款码</h3>
+<ol>
+<li>检查 <code>pay_qrcode.uid</code> = 下级 uid</li>
+<li>检查 <code>status=1</code></li>
+<li>检查 <code>min_amount</code>/<code>max_amount</code> 是否覆盖订单金额</li>
+</ol>
+
+<h2>五、性能优化</h2>
+
+<h3>5.1 慢查询排查</h3>
+<pre><code>SET GLOBAL slow_query_log = 'ON';
+SET GLOBAL long_query_time = 1;
+# 看 /www/server/data/mysql-slow.log</code></pre>
+
+<h3>5.2 关键索引检查</h3>
+<pre><code>SHOW INDEX FROM pay_order;
+SHOW INDEX FROM pay_record;
+SHOW INDEX FROM pay_qrcode;</code></pre>
+<p>必须有索引的字段：</p>
+<ul>
+<li><code>pay_order.trade_no</code>（主键）</li>
+<li><code>pay_order.uid</code>、<code>pay_order.status</code>、<code>pay_order.addtime</code></li>
+<li><code>pay_record.uid</code>、<code>pay_record.trade_no</code></li>
+<li><code>pay_qrcode.uid</code>、<code>pay_qrcode.status</code></li>
+<li><code>pay_alipay_bill.uid</code>、<code>pay_alipay_bill.batch_id</code></li>
+</ul>
+
+<h2>六、安全加固</h2>
+
+<h3>6.1 必做</h3>
+<ul>
+<li>✅ <code>config.php</code> 和 <code>telegram/config.php</code> 禁止 web 访问</li>
+<li>✅ <code>/uploads/</code> 目录禁止 PHP 执行（nginx 加 <code>location ~ /uploads/.*\.php$ { deny all; }</code>）</li>
+<li>✅ 宝塔面板改默认端口 + 强密码</li>
+<li>✅ SSH 只允许密钥登录</li>
+<li>✅ MySQL 只监听 127.0.0.1</li>
+</ul>
+
+<h3>6.2 定期检查</h3>
+<pre><code># 检查有没有 webshell
+find /www/wwwroot/pay.yunzexinda.com -name "*.php" -newer /www/wwwroot/pay.yunzexinda.com/config.php -mtime -7
+
+# 检查异常登录
+grep "Failed password" /var/log/secure | tail -20
+
+# 检查高 CPU 进程
+top -o cpu -n 1 | head -20</code></pre>
+
+<h2>七、日志位置</h2>
+<table>
+<tr><th>日志</th><th>路径</th></tr>
+<tr><td>Nginx 访问</td><td><code>/www/wwwlogs/pay.yunzexinda.com.log</code></td></tr>
+<tr><td>Nginx 错误</td><td><code>/www/wwwlogs/pay.yunzexinda.com.error.log</code></td></tr>
+<tr><td>PHP-FPM</td><td><code>/www/server/php/82/var/log/php-fpm.log</code></td></tr>
+<tr><td>MySQL 慢查询</td><td><code>/www/server/data/mysql-slow.log</code></td></tr>
+<tr><td>Telegram hook</td><td><code>telegram/hook.log</code></td></tr>
+<tr><td>APK 上报</td><td><code>paypage/listen.log</code></td></tr>
+<tr><td>邮件确认审计</td><td><code>runtime/mail_confirm_all.log</code></td></tr>
+</table>
+
+<h2>八、应急联系</h2>
+<table>
+<tr><th>角色</th><th>联系</th></tr>
+<tr><td>服务器商</td><td>（腾讯云/阿里云工单）</td></tr>
+<tr><td>域名商</td><td>—</td></tr>
+<tr><td>开发</td><td>—</td></tr>
+</table>
+
+</div></div>
+<h2>九、智能路由运维</h2>
+<p>涉及文件：<code>user/qrcode_route.php</code> + <code>pay_qrcode_route</code> 表 + <code>pay_qrcode.weight</code> 字段 + <code>plugins/mapay/mapay_plugin.php</code> 的 <code>pickByRoute/pickByWeight</code>。</p>
+
+<h3>9.1 数据结构</h3>
+<table>
+<tr><th>表/字段</th><th>作用</th></tr>
+<tr><td>pay_qrcode_route</td><td>路由规则（uid 隔离，每商户独立）</td></tr>
+<tr><td>pay_qrcode.weight</td><td>码权重（默认 100，越大越容易被选中）</td></tr>
+<tr><td>pay_qrcode.bind_province</td><td>上传时根据 bind_ip 自动解析的省份</td></tr>
+</table>
+
+<h3>9.2 规则类型</h3>
+<ul>
+<li><b>province</b>：按客户省份匹配（match_value = {"provinces":["广东","江苏"]}）</li>
+<li><b>weight</b>：无条件命中，按 qrcode_ids 里的码加权随机</li>
+<li><b>all</b>：兜底（语义是"其他都没命中时用"）</li>
+</ul>
+
+<h3>9.3 匹配优先级</h3>
+<pre>路由规则（priority 越小越先匹配）
+  ↓ 命中
+从规则里的候选码池按 weight 加权随机
+  ↓ 无规则命中
+客户 IP 省份 优先匹配 region_province / bind_province
+  ↓
+多个候选按 weight 随机
+  ↓
+都没命中 → use_count 最少
+  ↓
+再没有 → 原逻辑（本人码优先 → 下级 BFS 最多 3 层）</pre>
+
+<h3>9.4 规则不生效排查</h3>
+<ol>
+<li>检查 <code>pay_qrcode_route.status=1</code>（是否启用）</li>
+<li>检查 <code>priority</code> 排序（小的优先）</li>
+<li>检查匹配类型（province 时 match_value 必须有 provinces 数组）</li>
+<li>检查候选码是否 status=1 / 金额区间 / 日限额</li>
+<li>到「功能测试中心 → 收款码选择测试」跑一遍看实际结果</li>
+</ol>
+
+<h3>9.5 权重设置</h3>
+<pre>-- 查权重异常
+SELECT id, uid, remark, weight FROM pay_qrcode WHERE weight > 1000 OR weight = 0;
+
+-- 修改
+UPDATE pay_qrcode SET weight=60 WHERE id=119;
+UPDATE pay_qrcode SET weight=40 WHERE id=120;</pre>
+
+<h2>十、IP 检测与地区匹配</h2>
+
+<h3>10.1 数据源</h3>
+<ul>
+<li>本地库：<code>route/data/ip2region.xdb</code>（XdbSearcher 读取）</li>
+<li>查询类：<code>route/lib/IpLocation.php</code></li>
+<li>工具页：<code>user/myip.php</code>（<code>?act=query&ip=me</code> 返回当前访问 IP）</li>
+</ul>
+
+<h3>10.2 数据库字段</h3>
+<table>
+<tr><th>字段</th><th>说明</th></tr>
+<tr><td>pay_qrcode.bind_ip</td><td>上传码时绑定的 IP</td></tr>
+<tr><td>pay_qrcode.bind_province</td><td>该 IP 解析出的省份</td></tr>
+<tr><td>pay_qrcode.bind_city</td><td>该 IP 解析出的城市</td></tr>
+<tr><td>pay_qrcode.region_province</td><td>手填的归属省份（优先于此字段）</td></tr>
+</table>
+
+<h3>10.3 更新 IP 库</h3>
+<pre># 下载最新
+wget -O /tmp/ip2region.xdb https://github.com/lionsoul2014/ip2region/raw/master/data/ip2region.xdb
+# 覆盖
+cp /tmp/ip2region.xdb /www/wwwroot/pay.yunzexinda.com/route/data/ip2region.xdb
+chown www:www /www/wwwroot/pay.yunzexinda.com/route/data/ip2region.xdb</pre>
+
+<h3>10.4 识别错误处理</h3>
+<ul>
+<li>VPN / 代理 IP → 会显示代理所在地</li>
+<li>4G/5G 手机 → 可能显示运营商出口省份</li>
+<li>CDN → 显示 CDN 机房 IP</li>
+<li>处理：手动填 <code>region_province</code> 覆盖自动识别</li>
+</ul>
+
+<h2>十一、功能测试中心（运维用）</h2>
+<p>位置：<code>user/test_center.php</code></p>
+
+<h3>6 项测试</h3>
+<table>
+<tr><th>测试</th><th>验证内容</th></tr>
+<tr><td>📧 邮件推送测试</td><td>SMTP 配置 + 发件能力</td></tr>
+<tr><td>💬 TG 机器人测试</td><td>Bot Token + Chat ID</td></tr>
+<tr><td>👥 下级推送测试</td><td>下级推送资料是否正常</td></tr>
+<tr><td>💳 收款码选择测试</td><td>路由规则 + 权重 + 金额区间匹配</td></tr>
+<tr><td>📍 IP 归属地测试</td><td>本地库解析</td></tr>
+<tr><td>🔗 回调测试</td><td>向商户 notify_url 发测试 POST</td></tr>
+</table>
+
+<h3>用途</h3>
+<ul>
+<li><b>新商户上线</b>：用它走一遍全流程</li>
+<li><b>报障排查</b>：先跑一遍看哪项挂</li>
+<li><b>配置变更后</b>：立即验证</li>
+</ul>
+
+<h2>十二、邮件营销运维</h2>
+
+<h3>12.1 关键表</h3>
+<table>
+<tr><th>表</th><th>作用</th></tr>
+<tr><td>pay_mail_campaign</td><td>营销活动</td></tr>
+<tr><td>pay_mail_recipient</td><td>收件人（含 token / 打开次数 / 点击次数）</td></tr>
+<tr><td>pay_mail_event</td><td>追踪事件（open/click/landing/custom）</td></tr>
+<tr><td>pay_mail_template</td><td>邮件模板</td></tr>
+</table>
+
+<h3>12.2 追踪数据保留</h3>
+<p>默认 7 天自动清理。cron：<code>mail_track/cron_cleanup.php</code></p>
+<pre># 宝塔计划任务
+/www/server/php/82/bin/php /www/wwwroot/pay.yunzexinda.com/mail_track/cron_cleanup.php</pre>
+
+<h3>12.3 常见问题</h3>
+<ul>
+<li>追踪数据量突增 → 检查是否被恶意群发（recipient 数过多）</li>
+<li>发送失败率高 → 查 SMTP 服务商是否限流，建议换企业邮</li>
+<li>数据未清理 → 检查 cron 是否执行</li>
+</ul>
+
+<h2>十三、收款码监控与清理</h2>
+
+<h3>13.1 数量说明</h3>
+<p><b>已取消数量上限</b>（改自 2026-10-17）。但需定期清理失效码。</p>
+
+<h3>13.2 定期巡检 SQL</h3>
+<pre>-- 长期未用的码
+SELECT id, uid, channel, remark, use_count, last_used
+FROM pay_qrcode
+WHERE status=0 OR (last_used < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 90 DAY)))
+ORDER BY uid;
+
+-- 权重异常的码
+SELECT id, uid, remark, weight FROM pay_qrcode WHERE weight > 1000 OR weight = 0;
+
+-- 绑定 IP 但省份解析失败的码
+SELECT id, uid, bind_ip, bind_province FROM pay_qrcode
+WHERE bind_ip IS NOT NULL AND (bind_province IS NULL OR bind_province='');</pre>
+
+<h3>13.3 清理建议</h3>
+<ul>
+<li>每月检查一次已停用/未用 90 天的码</li>
+<li>通知商户主动清理</li>
+<li>超过 1 年未用的码 → 备份后删除</li>
+<li>系统管理员也可在 admin 后台强制下线失效码</li>
+</ul>
+
+<h2>十四、快速故障恢复</h2>
+
+<h3>14.1 收款码选不到</h3>
+<ol>
+<li>功能测试中心 → 收款码选择测试</li>
+<li>看是"未匹配到"还是"匹配到错误的码"</li>
+<li>未匹配 → 查 pay_qrcode 的 status / 金额区间 / 日限额</li>
+<li>匹配错 → 查 pay_qrcode_route 的 priority 与 match_type</li>
+</ol>
+
+<h3>14.2 邮件不到账</h3>
+<ol>
+<li><code>tail -50 telegram/hook.log</code> 看最近记录</li>
+<li>查 <code>pay_mail_pending</code> 最新 5 条</li>
+<li>功能测试中心 → 邮件推送测试</li>
+<li>检查商户的 <code>sub_push_email</code> / SMTP 配置</li>
+</ol>
+
+<h3>14.3 IP 归属地识别错误</h3>
+<ol>
+<li>功能测试中心 → IP 归属地测试</li>
+<li>点 ip138 外链人工核对</li>
+<li>必要时让商户手动选 <code>region_province</code></li>
+</ol>
+
+<h3>14.4 下级推送失败</h3>
+<ol>
+<li>查 <code>pay_user.sub_push_status</code>（0=待审 1=通过 2=拒）</li>
+<li>上级后台 → 下级推送审批 → 🧪 测推送</li>
+<li>下级推送资料页 → 检查邮箱/SMTP 是否正确</li>
+</ol>
+
+<h3>14.5 智能路由规则不生效</h3>
+<ol>
+<li>查规则 status=1</li>
+<li>查 priority 排序</li>
+<li>用功能测试中心模拟选码</li>
+<li>检查候选码的 weight 是否合理</li>
+</ol>
+
+<h3>14.6 回调失败（notify_url 返回非 200）</h3>
+<ol>
+<li>订单详情看"回调"列状态</li>
+<li>功能测试中心 → 回调测试（发一笔测试 POST）</li>
+<li>查客户服务器的 Nginx access log</li>
+<li>确认对方 URL 是否公网可达</li>
+</ol>
+</body></html>

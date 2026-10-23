@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>系统架构与安全说明 | 信达支付</title>
+<style>
+body { background: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 40px 20px; color: #334155; line-height: 1.8; }
+.container { max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+h1 { color: #0f172a; font-size: 26px; margin-top: 0; padding-bottom: 20px; border-bottom: 2px solid #f1f5f9; text-align: center; }
+h2 { color: #1e293b; font-size: 18px; margin-top: 30px; border-left: 4px solid #3b82f6; padding-left: 10px; }
+p, li { font-size: 15px; color: #475569; }
+.alert { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 15px; border-radius: 6px; margin: 20px 0; color: #1e40af; font-weight: 500; }
+.tag { display: inline-block; background: #10b981; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-right: 5px; }
+.back-float { position: fixed; top: 20px; left: 20px; background: #fff; color: #3b82f6 !important; padding: 10px 20px; border-radius: 30px; font-size: 14px; font-weight: bold; text-decoration: none !important; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; z-index: 9999; display: flex; align-items: center; }
+table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+th, td { border: 1px solid #e2e8f0; padding: 10px; text-align: left; font-size: 14px; }
+th { background: #f8fafc; font-weight: bold; color: #1e293b; }
+</style>
+</head>
+<body>
+<a href="/help/index.html" class="back-float">← 返回目录</a>
+<div class="container" style="margin-top: 30px;">
+    <h1>🛡️ 系统架构与安全保障说明</h1>
+    
+    <div class="alert">
+        信达支付系统（XindaPay）是一套专为商业运营打造的企业级 SaaS 支付解决方案。我们承诺：所有核心代码均由开发者重新开发，无任何恶意后门，支持全量源码审计与私有化独立部署。
+    </div>
+
+    <h2>一、 底层技术架构</h2>
+    <p>本系统基于极其成熟的<strong>易支付（EPay）技术标准框架</strong>进行底层重构与二开，保留了商户对接的通用性，同时彻底优化了业务逻辑。</p>
+    <table>
+        <tr><th>项目</th><th>技术说明</th></tr>
+        <tr><td>开发框架</td><td>基于原生 PHP 开发，未使用臃肿框架，极致轻量、高并发处理能力强。</td></tr>
+        <tr><td>运行环境</td><td>PHP 8.2 / Nginx（强兼容各类 Linux 发行版）。</td></tr>
+        <tr><td>数据库</td><td>MySQL 8.0（采用 InnoDB 引擎，支持严格的行锁与事务回滚）。</td></tr>
+        <tr><td>缓存与队列</td><td>支持 Redis 队列（用于高并发下的推送限流与订单分发）。</td></tr>
+    </table>
+
+    <h2>二、 核心安全防护机制</h2>
+    <ul>
+        <li><span class="tag">防篡改</span> <strong>文件死锁：</strong>核心业务文件采用 Linux 底层 <code>chattr +i</code> 死锁保护，即使黑客拿到服务器权限也无法修改核心支付逻辑。</li>
+        <li><span class="tag">防越权</span> <strong>多租户数据隔离：</strong>底层 SQL 层面强绑定 <code>Session UID</code>，彻底杜绝跨商户拉取他人订单、资金明细的越权漏洞。</li>
+        <li><span class="tag">防伪造</span> <strong>验签与鉴权：</strong>API 对接采用 MD5/RSA 强验签，APK 挂机端采用独立随机 Secret，支付回调强制身份校验，防止伪造入账。</li>
+        <li><span class="tag">防渗透</span> <strong>极简物理隔离：</strong>废弃了所有易支付历史遗留的冗余插件与无用的对外接口，从根源切断黑客利用废弃漏洞渗透的可能。</li>
+    </ul>
+
+    <h2>三、 资金安全保障（商户主权）</h2>
+    <p>系统架构的核心理念是<strong>“平台不碰钱”</strong>。</p>
+    <ul>
+        <li><strong>法币代收：</strong>采用个人码/商家码直连，钱直接进入商户绑定的微信/支付宝，系统仅做订单通知与回调。</li>
+        <li><strong>USDT 独立网关：</strong>支持商户绑定自己部署的 BEpusdt 接口，USDT 直接进入商户自己的冷钱包，杜绝平台资金池风险与被标记“黑U”的风险。</li>
+    </ul>
+
+    
+    <h2>四、 通信机制与客户端独立开发</h2>
+    <ul>
+        <li><span class="tag">官方对接</span> <strong>推送与回调引擎：</strong>系统的 TG 机器人回调全量基于 <b>Telegram 官方 Bot API</b> 开发；邮件推送与回调全量基于各大邮局<b>官方 SMTP 协议</b>原生开发。拒绝任何黑盒通道，确保消息触达的合规性与极高到达率。</li>
+        <li><span class="tag">原生自研</span> <strong>APK 监听端：</strong>安卓监听 APK 全程由技术团队独立原生开发，不依赖任何第三方闭源 SDK。设备端与系统的通信严格对接商户自己生成的 <b>APK 独立鉴权密钥 (Secret)</b>，实现一对一的设备硬件认证，彻底防止密钥泄露与伪造上报。</li>
+    </ul>
+    
+    <h2>五、 灵活的部署方案</h2>
+    <p>我们提供两种使用模式，满足不同规模客户的需求：</p>
+    <ol>
+        <li><strong>SaaS 托管模式：</strong>直接注册即可使用，开箱即用，免去服务器维护烦恼，系统自动升级，适合快速起步的商户。</li>
+        <li><strong>私有化独立部署（推荐中大型客户）：</strong>如果您对数据安全有极致要求，我们提供全量源码。您可以自行购买服务器（如 1核1G 即可完美运行），将系统部署在您自己的机房。数据 100% 掌握在自己手里，彻底消除第三方跑路、平台封号等一切风险。</li>
+    </ol>
+
+    <p style="margin-top: 40px; text-align: center; color: #94a3b8; font-size: 13px;">© 2026 信达支付系统 · 官方唯一技术团队维护</p>
+</div>
+</body>
+</html>

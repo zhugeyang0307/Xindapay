@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>监听 App 使用说明 · 信达支付</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f7fa;color:#1a2a4a;line-height:1.75;font-size:14px}
+a{color:#1677ff;text-decoration:none}
+code{background:#eef2f7;color:#c7254e;padding:2px 6px;border-radius:4px;font-family:Consolas,Monaco,monospace;font-size:13px}
+.topbar{position:fixed;top:0;left:0;right:0;height:60px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;display:flex;align-items:center;padding:0 24px;z-index:100;box-shadow:0 2px 12px rgba(16,185,129,.2)}
+.topbar .logo{font-size:18px;font-weight:800;letter-spacing:2px}
+.topbar .subtitle{margin-left:12px;font-size:13px;opacity:.85;padding-left:12px;border-left:1px solid rgba(255,255,255,.3)}
+.topbar .right{margin-left:auto}.topbar .right a{color:#fff;font-size:13px;padding:6px 14px;border:1px solid rgba(255,255,255,.35);border-radius:20px}
+.layout{display:flex;max-width:1280px;margin:80px auto 40px;padding:0 20px;gap:24px;align-items:flex-start}
+.sidebar{width:220px;flex-shrink:0;background:#fff;border-radius:12px;padding:16px 0;box-shadow:0 2px 12px rgba(15,23,42,.06);position:sticky;top:80px}
+.toc-cat{padding:12px 20px 6px;font-size:11px;color:#7a8699;font-weight:800;letter-spacing:1.5px}
+.toc-item{display:block;padding:8px 20px 8px 28px;font-size:13.5px;color:#475569;border-left:3px solid transparent}
+.toc-item:hover{background:#ecfdf5;color:#059669}
+.main{flex:1;min-width:0}
+.page-header{background:#fff;border-radius:12px;padding:28px 32px;margin-bottom:20px;box-shadow:0 2px 12px rgba(15,23,42,.06)}
+.page-header h1{font-size:24px;font-weight:800;color:#059669;margin-bottom:8px}
+.page-header p{color:#7a8699;font-size:13.5px}
+.block{background:#fff;border-radius:12px;margin-bottom:20px;box-shadow:0 2px 12px rgba(15,23,42,.06);overflow:hidden}
+.block-head{padding:20px 32px;border-bottom:1px solid #eef2f7;background:#f0fdf4}
+.block-head h2{font-size:18px;font-weight:800;color:#059669;padding-left:12px;border-left:4px solid #10b981;line-height:1.3}
+.block-body{padding:24px 32px}
+.block-body h3{font-size:15px;font-weight:700;color:#1a2a4a;margin:20px 0 10px}
+.block-body p{margin:8px 0;color:#475569;font-size:14px;line-height:1.75}
+.block-body ul,.block-body ol{margin:8px 0 8px 22px;color:#475569}
+.block-body li{margin:5px 0}
+.note{background:#fff7e6;border-left:3px solid #f59e0b;padding:10px 14px;border-radius:6px;color:#92400e;font-size:13px;margin:12px 0}
+.note.red{background:#fef2f2;border-left-color:#dc2626;color:#991b1b}
+.note.green{background:#f0fdf4;border-left-color:#16a34a;color:#166534}
+.note.blue{background:#eff6ff;border-left-color:#2563eb;color:#1e40af}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th{background:#f0fdf4;color:#1a2a4a;font-weight:700;text-align:left;padding:10px 12px;border-bottom:2px solid #a7f3d0}
+td{padding:10px 12px;border-bottom:1px solid #eef2f7;color:#475569;vertical-align:top}
+.step{display:flex;gap:14px;margin:16px 0;padding:16px;background:#fafbfd;border-radius:10px;border-left:3px solid #10b981}
+.step .num{flex-shrink:0;width:32px;height:32px;background:#10b981;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+.step .text{flex:1;color:#475569;font-size:13.5px;line-height:1.7}
+.step .text b{color:#1a2a4a;display:block;margin-bottom:4px;font-size:14px}
+footer{text-align:center;padding:30px 0;color:#94a3b8;font-size:12.5px}
+@media(max-width:820px){.layout{flex-direction:column;padding:0 12px;margin-top:72px}.sidebar{width:100%;position:static}.block-head,.block-body{padding:16px 20px}}
+</style></head>
+<body>
+<header class="topbar">
+  <span class="logo">信达支付</span>
+  <span class="subtitle">监听 App 使用说明</span>
+  <div class="right"><a href="/help/">📚 返回帮助中心</a></div>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="toc-cat">📑 目录</div>
+    <a class="toc-item" href="#s1">1. 监听 App 是什么</a>
+    <a class="toc-item" href="#s2">2. 领取激活码</a>
+    <a class="toc-item" href="#s3">3. 下载安装</a>
+    <a class="toc-item" href="#s4">4. 权限配置</a>
+    <a class="toc-item" href="#s5">5. 保活技巧</a>
+    <a class="toc-item" href="#s6">6. 常见问题</a>
+  </aside>
+  <main class="main">
+    <div class="page-header">
+      <h1>📱 监听 App 使用说明</h1>
+      <p>安卓手机安装 · 客户付款自动上报 · 订单秒完成</p>
+    </div>
+
+    <section class="block" id="s1">
+    <div class="block-head"><h2>1. 监听 App 是什么</h2></div>
+    <div class="block-body">
+    <p>装在你<b>收款手机</b>上的安卓 App。它监听微信/支付宝的到账通知，把金额和时间上报给系统，系统自动匹配订单完成。</p>
+    <h3>完整流程</h3>
+    <pre style="background:#1e1e2e;color:#e4e4e7;padding:16px;border-radius:8px;font-size:13px;line-height:1.6;">
+1. 客户扫码付款
+2. 微信/支付宝 弹通知「收入 ¥200」
+3. App 监听到通知
+4. App 上报系统：「¥200 到账了」
+5. 系统匹配订单 → 完成 → 回调客户
+    </pre>
+    <div class="note green"><b>💡 关键</b>：手机必须<b>开机 + 联网 + App 运行</b>，才能自动确认订单。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s2">
+    <div class="block-head"><h2>2. 领取激活码</h2></div>
+    <div class="block-body">
+    <p>后台 → 收款工具 → <b>我的激活码</b>（<code>/user/license.php</code>）</p>
+    <h3>步骤</h3>
+    <div class="step"><div class="num">1</div><div class="text">
+      <b>确认实名认证已通过</b>否则不能领激活码。
+    </div></div>
+    <div class="step"><div class="num">2</div><div class="text">
+      <b>点「领取激活码」</b>每台手机一个激活码。
+    </div></div>
+    <div class="step"><div class="num">3</div><div class="text">
+      <b>额度说明</b>：每商户 <b>3 台</b>（含在月费里）。超出需额外购买（<b>50 USDT/月/台</b>）。
+    </div></div>
+    <div class="step"><div class="num">4</div><div class="text">
+      <b>复制激活码</b>形如 <code>QR-XXXX-XXXX-XXXX</code>，安装时用。
+    </div></div>
+    <div class="note"><b>💡 激活码有效期</b>：跟随你的系统服务期。服务到期后激活码失效，需续费。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s3">
+    <div class="block-head"><h2>3. 下载安装</h2></div>
+    <div class="block-body">
+    <div class="step"><div class="num">1</div><div class="text">
+      <b>下载 APK</b>后台 → 首页 → 「📥 下载监听 App」<br>
+      或直接扫后台首页的二维码下载。
+    </div></div>
+    <div class="step"><div class="num">2</div><div class="text">
+      <b>传到安卓手机</b>微信/QQ 发给自己 → 手机点开安装。<br>
+      如提示"未知来源"，设置里允许安装即可。
+    </div></div>
+    <div class="step"><div class="num">3</div><div class="text">
+      <b>打开 App 输入激活码</b>粘贴你复制的激活码。
+    </div></div>
+    <div class="step"><div class="num">4</div><div class="text">
+      <b>授权关键权限</b>见下一章。
+    </div></div>
+    <div class="step"><div class="num">5</div><div class="text">
+      <b>App 显示「在线」即成功</b>
+    </div></div>
+    </div>
+    </section>
+
+    <section class="block" id="s4">
+    <div class="block-head"><h2>4. 权限配置（关键）</h2></div>
+    <div class="block-body">
+    <p>App 需要以下权限才能正常工作：</p>
+    <table>
+    <tr><th>权限</th><th>作用</th><th>怎么开</th></tr>
+    <tr><td><b>通知读取</b></td><td>监听微信/支付宝到账通知</td><td>设置 → 通知 → 通知使用权 → 开启 App</td></tr>
+    <tr><td><b>悬浮窗</b></td><td>显示悬浮提示</td><td>设置 → 应用 → 悬浮窗权限</td></tr>
+    <tr><td><b>电池优化白名单</b></td><td>防止被系统杀</td><td>设置 → 电池 → 优化 → App → 不优化</td></tr>
+    <tr><td><b>自启动</b></td><td>开机自动运行</td><td>设置 → 应用 → 自启动管理 → 允许</td></tr>
+    <tr><td><b>后台运行</b></td><td>切到后台不停止</td><td>任务管理里给 App 加锁</td></tr>
+    </table>
+    <div class="note red"><b>⚠️ 最常见问题</b>：<b>通知读取权限</b>没开。App 就收不到微信通知，无法上报。</div>
+    <h3>不同品牌设置路径</h3>
+    <ul>
+      <li><b>小米/红米</b>：设置 → 应用 → 权限管理 → 通知使用权 + 自启动</li>
+      <li><b>华为/荣耀</b>：设置 → 应用 → 应用启动管理 → 手动管理</li>
+      <li><b>OPPO/一加</b>：设置 → 电池 → 应用速冻 → 关</li>
+      <li><b>vivo</b>：设置 → 电池 → 后台高耗电 → 允许</li>
+      <li><b>三星</b>：设置 → 应用 → App → 电池 → 不受限</li>
+    </ul>
+    </div>
+    </section>
+
+    <section class="block" id="s5">
+    <div class="block-head"><h2>5. 保活技巧</h2></div>
+    <div class="block-body">
+    <p>安卓为了省电会杀后台，要做以下"保活"措施：</p>
+    <ol>
+      <li><b>锁定后台</b>：多任务界面里给 App 加锁</li>
+      <li><b>关闭省电模式</b>：设置里关掉"智能省电"</li>
+      <li><b>允许自启动</b>：应用管理里打开</li>
+      <li><b>加电池白名单</b>：不优化该 App</li>
+      <li><b>保持充电</b>：收款手机建议一直插着充电</li>
+      <li><b>锁屏运行</b>：设置里允许锁屏后继续运行</li>
+      <li><b>检查状态</b>：每天看一次 App 显示是否"在线"</li>
+    </ol>
+    <div class="note green"><b>💡 最佳实践</b>：用<b>专用收款手机</b>（老旧安卓机即可），只装 App + 微信 + 支付宝，其他都不装。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s6">
+    <div class="block-head"><h2>6. 常见问题</h2></div>
+    <div class="block-body">
+
+    <h3>Q1：App 显示「离线」？</h3>
+    <ul>
+      <li>检查手机网络（WiFi 或 4G）</li>
+      <li>下拉刷新 App 或重启 App</li>
+      <li>检查系统是否把 App 杀了</li>
+    </ul>
+
+    <h3>Q2：客户付款了但订单还是未支付？</h3>
+    <ul>
+      <li>检查 App 是否在线</li>
+      <li>检查通知读取权限是否开启</li>
+      <li>检查金额是否完全一致（多付/少付不匹配）</li>
+      <li>看 App 里有没有日志（一般在"设置 → 日志"）</li>
+    </ul>
+
+    <h3>Q3：激活码显示「已使用」？</h3>
+    <p>一个激活码只能绑定一台手机。换手机需先解绑旧手机（在"我的激活码"页点解绑）。</p>
+
+    <h3>Q4：能装多台手机吗？</h3>
+    <p>可以，每台一个激活码。默认含 3 台额度，超出需购买（50 USDT/月/台）。</p>
+
+    <h3>Q5：服务到期后 App 还能用吗？</h3>
+    <p>不能。服务到期后所有激活码失效，APK 上报会被拒绝，需续费后恢复。</p>
+
+    <h3>Q6：App 会泄露隐私吗？</h3>
+    <p>App 只监听微信/支付宝的<b>通知栏消息</b>（金额+时间），不会读取聊天记录、不会上传其他信息。</p>
+
+    <h3>Q7：换成 iPhone 可以用吗？</h3>
+    <p>暂不支持 iOS。iOS 系统限制通知监听权限，无法实现此功能。</p>
+
+    <h3>Q8：App 占用流量吗？</h3>
+    <p>极少。每笔订单上报只有几百字节，一个月不到 1MB。</p>
+
+    </div>
+    </section>
+
+  </main>
+</div>
+<footer>信达支付系统 · 帮助中心 · <a href="/">返回官网</a></footer>
+</body>
+</html>

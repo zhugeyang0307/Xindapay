@@ -1,0 +1,47 @@
+{
+    "xinda_a": {
+        "qrWidth": "460",
+        "qrHeight": "460",
+        "foreground": "#1f2d3d",
+        "background": "#FFFFFF",
+        "imgWidth": 900,
+        "imgHeight": 1200,
+        "font": "46px 'Noto Sans CJK SC'",
+        "fontColor": "#FFFFFF",
+        "recNameLeft": "",
+        "recNameTop": 240,
+        "qrLeft": 220,
+        "qrTop": 370,
+        "url": "./assets/img/xinda_a_bg.png"
+    },
+    "xinda_b": {
+        "qrWidth": "460",
+        "qrHeight": "460",
+        "foreground": "#1f2d3d",
+        "background": "#FFFFFF",
+        "imgWidth": 900,
+        "imgHeight": 1200,
+        "font": "46px 'Noto Sans CJK SC'",
+        "fontColor": "#FFFFFF",
+        "recNameLeft": "",
+        "recNameTop": 240,
+        "qrLeft": 220,
+        "qrTop": 370,
+        "url": "./assets/img/xinda_b_bg.png"
+    },
+    "xinda_c": {
+        "qrWidth": "460",
+        "qrHeight": "460",
+        "foreground": "#1f2d3d",
+        "background": "#FFFFFF",
+        "imgWidth": 900,
+        "imgHeight": 1200,
+        "font": "46px 'Noto Sans CJK SC'",
+        "fontColor": "#FFFFFF",
+        "recNameLeft": "",
+        "recNameTop": 240,
+        "qrLeft": 220,
+        "qrTop": 370,
+        "url": "./assets/img/xinda_c_bg.png"
+    }
+}

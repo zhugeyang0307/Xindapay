@@ -1,0 +1,20 @@
+{
+  "name": "hejunjie/encrypted-request",
+  "description": "PHP 请求加密工具包，支持 AES 解密、签名与时间戳验证，快速实现前后端安全通信 | PHP encryption toolkit for AES decryption, signature, and timestamp verification, enabling fast and secure front-to-backend communication. Front-end npm package generates encrypted request parameters without changing existing APIs",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Hejunjie\\EncryptedRequest\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "何俊杰",
+      "email": "junjie.he.925@gmail.com"
+    }
+  ],
+  "require": {
+    "vlucas/phpdotenv": "^5.6"
+  }
+}

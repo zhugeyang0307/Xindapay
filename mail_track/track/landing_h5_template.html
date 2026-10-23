@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>正在打开 APP...</title>
+<!-- ⬇️ 追踪 SDK（必须，第一行） -->
+<script src="https://pay.yunzexinda.com/mail_track/track/sdk.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;
+     min-height:100vh;display:flex;align-items:center;justify-content:center;
+     background:linear-gradient(135deg,#f0f7ff,#e0ecff);padding:20px;text-align:center}
+.box{background:#fff;border-radius:20px;padding:40px 30px;box-shadow:0 8px 32px rgba(13,71,161,.1);max-width:360px;width:100%}
+.icon{font-size:72px;margin-bottom:16px;animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.08);opacity:.85}}
+h2{color:#0d47a1;font-size:20px;font-weight:800;margin-bottom:10px}
+p{color:#7a8699;font-size:14px;line-height:1.8;margin-bottom:24px}
+.btn{display:block;width:100%;padding:16px;background:linear-gradient(135deg,#1e88e5,#0d47a1);
+     color:#fff;font-size:16px;font-weight:800;border:none;border-radius:50px;cursor:pointer;
+     text-decoration:none;letter-spacing:1px;box-shadow:0 4px 14px rgba(30,136,229,.35)}
+.btn.secondary{background:#fff;color:#1e88e5;border:2px solid #1e88e5;box-shadow:none;margin-top:12px}
+.btn:hover{opacity:.92}
+.hint{color:#a5b4c9;font-size:12px;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="icon">📱</div>
+  <h2>正在打开 APP...</h2>
+  <p id="hintText">如未自动跳转，请点击下方按钮</p>
+
+  <a href="#" id="openAppBtn" class="btn">立即打开 APP</a>
+  <a href="https://你的应用商店链接" id="downloadBtn" class="btn secondary">下载 APP</a>
+
+  <div class="hint">如不想下载，可以继续 <a href="https://你的网页版链接" style="color:#1e88e5;">使用网页版</a></div>
+</div>
+
+<script>
+// ============ 商户需要修改的配置 ============
+var APP_SCHEME = 'yourapp';                    // 你的 APP 协议名（如 myapp）
+var DOWNLOAD_URL_IOS = 'https://apps.apple.com/xxx';    // iOS 下载链接
+var DOWNLOAD_URL_ANDROID = 'https://...apk';            // Android 下载链接
+var H5_FALLBACK = 'https://商户域名/h5home';            // H5 兜底（APP 打不开时）
+// =========================================
+
+// 1. 从 URL 拿 mt_rid（SDK 已自动解析）
+var rid = (window.mtTrack && window.mtTrack.rid) ? window.mtTrack.rid : '';
+
+// 2. 自动调起 APP（延迟 1.5 秒，让 landing 事件先上报）
+setTimeout(function() {
+  var url = APP_SCHEME + '://landing?mt_rid=' + rid;
+  location.href = url;
+
+  // 3 秒后检测是否跳转成功（没跳成功说明没装 APP）
+  setTimeout(function() {
+    if (!document.hidden) {
+      // 页面还在，说明 APP 没打开 → 跳下载页
+      var ua = navigator.userAgent;
+      var isIOS = /iPhone|iPad|iPod/i.test(ua);
+      var isAndroid = /Android/i.test(ua);
+      if (isIOS) location.href = DOWNLOAD_URL_IOS;
+      else if (isAndroid) location.href = DOWNLOAD_URL_ANDROID;
+      else location.href = H5_FALLBACK;
+    }
+  }, 3000);
+}, 1500);
+
+// 3. 用户手动点按钮
+document.getElementById('openAppBtn').onclick = function(e) {
+  e.preventDefault();
+  location.href = APP_SCHEME + '://landing?mt_rid=' + rid;
+};
+
+// 4. 页面卸载时（用户离开了），上报一次"离站"
+window.addEventListener('beforeunload', function() {
+  if (rid && window.mtTrack) {
+    mtTrack.event('app_launch', {});
+  }
+});
+</script>
+</body>
+</html>

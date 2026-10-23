@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>下级推送指南 · 信达支付</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f7fa;color:#1a2a4a;line-height:1.75;font-size:14px}
+a{color:#1677ff;text-decoration:none}
+code{background:#eef2f7;color:#c7254e;padding:2px 6px;border-radius:4px;font-family:Consolas,Monaco,monospace;font-size:13px}
+.topbar{position:fixed;top:0;left:0;right:0;height:60px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;display:flex;align-items:center;padding:0 24px;z-index:100;box-shadow:0 2px 12px rgba(217,119,6,.2)}
+.topbar .logo{font-size:18px;font-weight:800;letter-spacing:2px}
+.topbar .subtitle{margin-left:12px;font-size:13px;opacity:.85;padding-left:12px;border-left:1px solid rgba(255,255,255,.3)}
+.topbar .right{margin-left:auto}.topbar .right a{color:#fff;font-size:13px;padding:6px 14px;border:1px solid rgba(255,255,255,.35);border-radius:20px}
+.layout{display:flex;max-width:1280px;margin:80px auto 40px;padding:0 20px;gap:24px;align-items:flex-start}
+.sidebar{width:220px;flex-shrink:0;background:#fff;border-radius:12px;padding:16px 0;box-shadow:0 2px 12px rgba(15,23,42,.06);position:sticky;top:80px}
+.toc-cat{padding:12px 20px 6px;font-size:11px;color:#7a8699;font-weight:800;letter-spacing:1.5px}
+.toc-item{display:block;padding:8px 20px 8px 28px;font-size:13.5px;color:#475569;border-left:3px solid transparent}
+.toc-item:hover{background:#fff7e6;color:#d97706}
+.main{flex:1;min-width:0}
+.page-header{background:#fff;border-radius:12px;padding:28px 32px;margin-bottom:20px;box-shadow:0 2px 12px rgba(15,23,42,.06)}
+.page-header h1{font-size:24px;font-weight:800;color:#d97706;margin-bottom:8px}
+.page-header p{color:#7a8699;font-size:13.5px}
+.block{background:#fff;border-radius:12px;margin-bottom:20px;box-shadow:0 2px 12px rgba(15,23,42,.06);overflow:hidden}
+.block-head{padding:20px 32px;border-bottom:1px solid #eef2f7;background:#fffbf5}
+.block-head h2{font-size:18px;font-weight:800;color:#d97706;padding-left:12px;border-left:4px solid #f59e0b;line-height:1.3}
+.block-body{padding:24px 32px}
+.block-body h3{font-size:15px;font-weight:700;color:#1a2a4a;margin:20px 0 10px}
+.block-body p{margin:8px 0;color:#475569;font-size:14px;line-height:1.75}
+.block-body ul,.block-body ol{margin:8px 0 8px 22px;color:#475569}
+.block-body li{margin:5px 0}
+.note{background:#fff7e6;border-left:3px solid #f59e0b;padding:10px 14px;border-radius:6px;color:#92400e;font-size:13px;margin:12px 0}
+.note.red{background:#fef2f2;border-left-color:#dc2626;color:#991b1b}
+.note.green{background:#f0fdf4;border-left-color:#16a34a;color:#166534}
+.note.blue{background:#eff6ff;border-left-color:#2563eb;color:#1e40af}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th{background:#fffbf5;color:#1a2a4a;font-weight:700;text-align:left;padding:10px 12px;border-bottom:2px solid #fde68a}
+td{padding:10px 12px;border-bottom:1px solid #eef2f7;color:#475569;vertical-align:top}
+.step{display:flex;gap:14px;margin:16px 0;padding:16px;background:#fafbfd;border-radius:10px;border-left:3px solid #f59e0b}
+.step .num{flex-shrink:0;width:32px;height:32px;background:#f59e0b;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+.step .text{flex:1;color:#475569;font-size:13.5px;line-height:1.7}
+.step .text b{color:#1a2a4a;display:block;margin-bottom:4px;font-size:14px}
+footer{text-align:center;padding:30px 0;color:#94a3b8;font-size:12.5px}
+@media(max-width:820px){.layout{flex-direction:column;padding:0 12px;margin-top:72px}.sidebar{width:100%;position:static}.block-head,.block-body{padding:16px 20px}}
+</style></head>
+<body>
+<header class="topbar">
+  <span class="logo">信达支付</span>
+  <span class="subtitle">下级推送指南</span>
+  <div class="right"><a href="/help/">📚 返回帮助中心</a></div>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="toc-cat">📑 目录</div>
+    <a class="toc-item" href="#s1">1. 推送是什么</a>
+    <a class="toc-item" href="#s2">2. 下级填资料</a>
+    <a class="toc-item" href="#s3">3. 上级审批</a>
+    <a class="toc-item" href="#s4">4. 测试推送</a>
+    <a class="toc-item" href="#s5">5. 邮件模板参考</a>
+    <a class="toc-item" href="#s6">6. 常见问题</a>
+  </aside>
+  <main class="main">
+    <div class="page-header">
+      <h1>📮 下级推送指南</h1>
+      <p>下级提交推送资料 · 上级审批 · 订单通知到你</p>
+    </div>
+
+    <section class="block" id="s1">
+    <div class="block-head"><h2>1. 推送是什么</h2></div>
+    <div class="block-body">
+    <p>你（下级）的收款码被系统派单后，客户付款，<b>钱进你的微信/支付宝</b>。这时系统需要<b>通知你</b>，让你核对是否到账，然后点一下按钮完成订单。</p>
+    <h3>系统怎么通知你？3 种方式</h3>
+    <table>
+    <tr><th>方式</th><th>说明</th><th>推荐度</th></tr>
+    <tr><td>📧 邮件</td><td>发到你的邮箱，带【确认到账】按钮</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td>💬 Telegram</td><td>TG Bot 发消息给你，带按钮</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>📱 App 弹窗</td><td>APK 监听手机弹窗</td><td>⭐⭐⭐</td></tr>
+    </table>
+    <div class="note blue"><b>💡 建议</b>：邮件 + TG 都配，双保险。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s2">
+    <div class="block-head"><h2>2. 下级填推送资料</h2></div>
+    <div class="block-body">
+    <p>下级登录后台 → <b>推送 → 我的推送资料</b>（<code>/user/sub_push.php</code>）</p>
+
+    <h3>填写内容</h3>
+    <table>
+    <tr><th>字段</th><th>必填</th><th>说明</th></tr>
+    <tr><td>Telegram Chat ID</td><td>选填</td><td>找 <a href="https://t.me/userinfobot" target="_blank">@userinfobot</a> 拿数字 ID</td></tr>
+    <tr><td>接收邮箱</td><td>推荐</td><td>收到订单通知的邮箱</td></tr>
+    <tr><td>邮件 SMTP 服务器</td><td>选填</td><td>用自己邮箱发件时填，不填用上级的</td></tr>
+    <tr><td>SMTP 用户名/密码</td><td>选填</td><td>配合上一项</td></tr>
+    <tr><td>加密方式</td><td>选填</td><td>ssl / tls</td></tr>
+    </table>
+
+    <h3>操作步骤</h3>
+    <div class="step"><div class="num">1</div><div class="text">
+      <b>打开页面</b>后台 → 推送 → 我的推送资料
+    </div></div>
+    <div class="step"><div class="num">2</div><div class="text">
+      <b>填写 TG Chat ID</b>（可选）<br>
+      TG 里找 <code>@userinfobot</code>，给它发一条消息，它会回你数字 ID
+    </div></div>
+    <div class="step"><div class="num">3</div><div class="text">
+      <b>填写接收邮箱</b>（推荐）<br>
+      填你自己常看的邮箱，如 <code>yourname@gmail.com</code>
+    </div></div>
+    <div class="step"><div class="num">4</div><div class="text">
+      <b>SMTP 配置（可选）</b>：<br>
+      · 不填 → 邮件用<b>上级的 SMTP 发件</b>（推荐，最省事）<br>
+      · 填 → 用<b>你自己邮箱发件</b>（可信度更高，但需自备 SMTP）
+    </div></div>
+    <div class="step"><div class="num">5</div><div class="text">
+      <b>点「🧪 测试推送」</b>验证配置是否正确（会真发一封测试邮件给你）
+    </div></div>
+    <div class="step"><div class="num">6</div><div class="text">
+      <b>点「📤 提交给上级审批」</b>提交后等待上级通过
+    </div></div>
+
+    <div class="note"><b>状态说明</b>：
+      <ul style="margin-top:6px;">
+        <li>⏳ 待审批 = 已提交，等上级处理</li>
+        <li>✅ 已通过 = 生效中，订单会通知你</li>
+        <li>❌ 已拒绝 = 上级不同意，需重新提交</li>
+      </ul>
+    </div>
+    </div>
+    </section>
+
+    <section class="block" id="s3">
+    <div class="block-head"><h2>3. 上级审批</h2></div>
+    <div class="block-body">
+    <p>上级登录后台 → <b>下级商户 → 下级推送审批</b>（<code>/user/sub_review.php</code>）</p>
+
+    <h3>审批操作</h3>
+    <table>
+    <tr><th>按钮</th><th>效果</th></tr>
+    <tr><td>✅ 通过并测试</td><td>批准 + 立即发测试邮件给下级</td></tr>
+    <tr><td>仅通过</td><td>批准（不发测试）</td></tr>
+    <tr><td>❌ 拒绝</td><td>驳回，下级需重新提交</td></tr>
+    <tr><td>🧪 测推送</td><td>对已通过的下级重发测试邮件</td></tr>
+    <tr><td>🔄 重置为待审</td><td>撤销之前的审批，让下级重填</td></tr>
+    </table>
+
+    <div class="note green"><b>💡 推荐操作</b>：用「✅ 通过并测试」——一键批准 + 立即验证下级能否收到。</div>
+
+    <h3>审批后做什么</h3>
+    <ol>
+      <li>下级状态变成 <b>✅ 已通过</b></li>
+      <li>之后该下级的码被派单时，订单通知会发到下级配置的邮箱/TG</li>
+      <li>推送目标 = <b>码 owner</b>（谁码收了钱通知谁）</li>
+    </ol>
+    </div>
+    </section>
+
+    <section class="block" id="s4">
+    <div class="block-head"><h2>4. 测试推送</h2></div>
+    <div class="block-body">
+    <h3>4.1 下级自测</h3>
+    <p>下级在「我的推送资料」页 → 「🧪 测试推送」→ 收到邮件即成功。</p>
+
+    <h3>4.2 上级帮测</h3>
+    <p>上级在「下级推送审批」页 → 找该下级 → 点「🧪 测推送」。</p>
+
+    <h3>4.3 统一测试中心</h3>
+    <p>上级在 <b>功能测试中心</b> → 「👥 下级推送测试」→ 选下级 → 一键测试。</p>
+    </div>
+    </section>
+
+    <section class="block" id="s5">
+    <div class="block-head"><h2>5. 下级邮件模板参考</h2></div>
+    <div class="block-body">
+    <p>下级收到的邮件长这样：</p>
+    <div style="background:#f7f9fc;border-radius:10px;padding:20px;margin:12px 0;border:1px dashed #cbd5e1;">
+      <div style="background:#0d47a1;color:#fff;padding:14px;border-radius:8px 8px 0 0;font-weight:700;">⚠️ 新订单到账</div>
+      <div style="background:#fff;padding:20px;border-radius:0 0 8px 8px;font-size:13px;line-height:2;">
+        <b>商品：</b>会员充值<br>
+        <b>金额：</b><span style="color:#e63946;font-weight:700;">￥100.00</span><br>
+        <b>订单号：</b>2026101704391740138<br>
+        <b>时间：</b>2026-10-17 10:30:22<br>
+        <hr style="margin:12px 0;border:none;border-top:1px dashed #e2e8f0;">
+        <div style="text-align:center;margin:16px 0;">
+          <div style="display:inline-block;background:#00a86b;color:#fff;padding:10px 24px;border-radius:6px;font-weight:700;">✅ 确认到账</div>
+          <div style="display:inline-block;background:#e5e7eb;color:#333;padding:10px 24px;border-radius:6px;font-weight:700;margin-left:8px;">❌ 忽略</div>
+        </div>
+        <div style="text-align:center;font-size:12px;color:#94a3b8;">请确认客户是否已实际付款到账</div>
+      </div>
+    </div>
+    <p>点「✅ 确认到账」→ 订单完成 → 回调给客户系统。</p>
+    </div>
+    </section>
+
+    <section class="block" id="s6">
+    <div class="block-head"><h2>6. 常见问题</h2></div>
+    <div class="block-body">
+
+    <h3>Q1：下级说收不到推送？</h3>
+    <ul>
+      <li>下级推送资料是否已通过上级审批</li>
+      <li>下级邮箱地址是否正确（让下级点测试推送）</li>
+      <li>垃圾邮件箱有没有</li>
+      <li>TG 的 Chat ID 是不是数字 ID（不是 @username）</li>
+    </ul>
+
+    <h3>Q2：订单通知发到谁？</h3>
+    <p>发到<b>码 owner</b>——即这笔订单用的收款码属于谁，就通知谁。</p>
+
+    <h3>Q3：下级没配推送怎么办？</h3>
+    <p>系统不会发通知。下级需要在「我的推送资料」填至少一个（邮箱或 TG）。</p>
+
+    <h3>Q4：下级能用自己 SMTP 发件吗？</h3>
+    <p>可以。下级在推送资料里填 SMTP 服务器/用户名/密码，上级审批后即生效。不填则用上级的 SMTP 代发。</p>
+
+    <h3>Q5：审批后想改配置？</h3>
+    <ul>
+      <li>下级 → 「我的推送资料」重新编辑并提交</li>
+      <li>上级 → 「下级推送审批」→ 重置为待审 → 下级再提交</li>
+    </ul>
+
+    <h3>Q6：邮件确认链接有效期多久？</h3>
+    <p>24 小时。过期需上级手动补单。</p>
+
+    </div>
+    </section>
+
+  </main>
+</div>
+<footer>信达支付系统 · 帮助中心 · <a href="/">返回官网</a></footer>
+</body>
+</html>

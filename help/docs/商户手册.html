@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商户手册 · 总纲 | 信达支付</title>
+<style>
+body { background: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 40px 20px; color: #334155; line-height: 1.8; }
+.container { max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+h1 { color: #0f172a; font-size: 26px; margin-top: 0; padding-bottom: 20px; border-bottom: 2px solid #f1f5f9; }
+h2 { color: #1e293b; font-size: 20px; margin-top: 40px; border-left: 4px solid #3b82f6; padding-left: 10px; }
+h3 { color: #1e293b; font-size: 16px; margin-top: 20px; }
+p, li { font-size: 15px; color: #475569; }
+a { color: #3b82f6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+th, td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; font-size: 14px; }
+th { background: #f8fafc; font-weight: bold; color: #1e293b; }
+.tag { display: inline-block; background: #eff6ff; color: #2563eb; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-right: 5px; }
+.back-float { position: fixed; top: 20px; left: 20px; background: #fff; color: #3b82f6 !important; padding: 10px 20px; border-radius: 30px; font-size: 14px; font-weight: bold; text-decoration: none !important; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; z-index: 9999; display: flex; align-items: center; }
+</style>
+</head>
+<body>
+<a href="/help/index.html" class="back-float">← 返回目录</a>
+<div class="container" style="margin-top: 30px;">
+    <h1>📘 商户手册（总纲）</h1>
+    <p>从开号到日常运营的完整指南。本系统已全面升级为<b>白牌独立版</b>，所有基础服务全免费。</p>
+
+    <h2>1. 快速开始</h2>
+    <p>访问系统注册页，填写账号、密码、邮箱即可开通。无需实名认证，无月费，注册即享完整权限。</p>
+
+    <h2>2. 收款码管理</h2>
+    <p><b>简要流程：</b>后台 → 收款工具 → 收款码管理 → 新增。选择平台（微信/支付宝），上传收款码图片，可配置限额。</p>
+    <p><span class="tag">智能路由</span> 支持按客户 IP 归属地、权重规则自动选择最优收款码，支付成功率提升 15-20%。</p>
+
+    <h2>3. APK 监听与鉴权（全免费）</h2>
+    <p><b>简要流程：</b></p>
+    <ol>
+        <li>后台 → 收款工具 → <b>APK鉴权密钥</b> → 生成专属密钥。</li>
+        <li>下载安卓 APP 安装包。</li>
+        <li>在手机端填入您的鉴权密钥，并授权通知读取、悬浮窗、自启动等权限。</li>
+        <li>App 显示“在线”即成功。</li>
+    </ol>
+    <p><span class="tag">安全提示</span> 若密钥泄露，请立即在后台点击“重置密钥”，旧密钥将瞬间失效，防止被伪造监听。</p>
+
+    <h2>4. 订单管理</h2>
+    <p><b>订单状态：</b>未支付、已支付、已退款。支持手动补单、重新回调、CSV 导出等操作。</p>
+
+    <h2>5. 推送与通知（全免费）</h2>
+    <p>系统支持 <b>Telegram 机器人</b> 与 <b>邮件推送</b> 双通道。客户付款后，系统会通过您自己的 Bot 或邮箱发送通知，点击“确认到账”即可完成回调。</p>
+
+    <h2>6. 下级代理与分润</h2>
+    <p>您可以无限级发展下级码商。</p>
+    <ul>
+        <li><b>创建下级：</b>后台 → 下级账户管理 → 创建下级码商。系统会自动生成专属登录信息。</li>
+        <li><b>分润机制：</b>您为下级设定费率（如 10%）。下级收款时，系统自动扣除其本金，并将差价利润分给您。</li>
+        <li><b>码商代扣：</b>为确保客户支付必成功，即使下级余额不足，系统也会允许扣成负数，后续商户自行结清。</li>
+    </ul>
+
+    <h2>7. 常见问题解答</h2>
+    <p><b>Q：下单后客户看不到收款码？</b><br>请检查是否有启用的收款码、限额是否覆盖订单金额。</p>
+    <p><b>Q：客户已付款但订单没完成？</b><br>检查 APK 挂机端是否在线、金额与时间是否匹配，或手动补单。</p>
+    <p><b>Q：能修改实名信息吗？</b><br>本系统无需实名认证，无此概念。</p>
+    <p><b>Q：资金是平台代收吗？</b><br>绝对不是。本系统为“商户主权”架构，钱直达您的微信/支付宝或 USDT 冷钱包，平台绝不碰一分钱。</p>
+
+</div>
+</body>
+</html>

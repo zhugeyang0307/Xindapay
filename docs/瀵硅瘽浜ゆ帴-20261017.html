@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>对话交接文档 · XindaPay</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7;color:#1a2a4a;background:#f5f7fa}
+.wrap{display:flex;min-height:100vh}
+.side{width:260px;background:#1e293b;color:#cbd5e1;padding:24px 0;position:fixed;height:100vh;overflow-y:auto}
+.side h2{color:#fff;padding:0 24px 16px;font-size:16px;border-bottom:1px solid #334155;margin-bottom:16px}
+.side a{display:block;padding:8px 24px;color:#cbd5e1;text-decoration:none;font-size:13.5px;border-left:3px solid transparent}
+.side a:hover{background:#334155;color:#fff;border-left-color:#60a5fa}
+.main{flex:1;margin-left:260px;padding:40px 60px;max-width:1100px}
+h1{font-size:28px;color:#0f172a;margin-bottom:8px;padding-bottom:16px;border-bottom:3px solid #3b82f6}
+h2{font-size:22px;color:#1e40af;margin:36px 0 16px;padding-left:12px;border-left:5px solid #3b82f6}
+h3{font-size:17px;color:#0f172a;margin:24px 0 12px}
+p{margin:10px 0;color:#334155}
+code{background:#f1f5f9;color:#e11d48;padding:2px 6px;border-radius:4px;font-family:Menlo,Consolas,monospace;font-size:13px}
+pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:8px;overflow-x:auto;margin:12px 0;font-size:13px;line-height:1.5}
+pre code{background:none;color:inherit;padding:0}
+table{width:100%;border-collapse:collapse;margin:16px 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid #e2e8f0;font-size:13.5px}
+th{background:#f1f5f9;color:#334155;font-weight:600}
+tr:hover td{background:#f8fafc}
+ul,ol{margin:10px 0 10px 24px;color:#334155}
+li{margin:5px 0}
+.box{background:#fff;border-radius:10px;padding:20px;margin:16px 0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.box-info{border-left:4px solid #3b82f6}
+.box-warn{border-left:4px solid #f59e0b;background:#fffbeb}
+.box-danger{border-left:4px solid #ef4444;background:#fef2f2}
+.box-success{border-left:4px solid #10b981;background:#ecfdf5}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:700;margin-right:4px}
+.tag-red{background:#fee2e2;color:#b91c1c}
+.tag-green{background:#dcfce7;color:#15803d}
+.tag-blue{background:#dbeafe;color:#1d4ed8}
+.tag-yellow{background:#fef3c7;color:#a16207}
+</style></head>
+<body>
+<div class="wrap">
+<div class="side">
+<h2>📄 交接文档</h2>
+<a href="#s0">〇、操作偏好</a>
+<a href="#s1">一、项目概况</a>
+<a href="#s2">二、环境信息</a>
+<a href="#s3">三、本次改动</a>
+<a href="#s4">四、数据库变更</a>
+<a href="#s5">五、待办</a>
+<a href="#s6">六、坑点</a>
+<a href="#s7">七、新对话开场白</a>
+</div>
+<div class="main">
+<h1>📄 对话交接文档</h1>
+<p style="color:#94a3b8;font-size:13px;">生成：2026-10-17 | 用途：新对话开场直接接续</p>
+
+<h2 id="s0">〇、用户操作偏好（务必遵守）</h2>
+<div class="box box-danger">
+<h3 style="margin-top:0">命令风格</h3>
+<ol>
+<li><b>一条命令干完一件事</b>，不分散</li>
+<li><b>不要解释</b>，只要命令 + 结果</li>
+<li><b>PowerShell here-string</b>（<code>@'...'@</code>）是主力写法</li>
+<li><b>中文文件</b>一律用 <code>[System.IO.File]::WriteAllText($path, $content, (New-Object System.Text.UTF8Encoding($false)))</code></li>
+<li><b>写中文/PHP/HTML 禁用</b> <code>Set-Content</code>（PS 5.1 会按 GBK 编码，PHP 读乱码）；写纯 ASCII 临时文件可用</li>
+<li><b>写中文文件一律用</b> <code>[System.IO.File]::WriteAllText($path, $content, (New-Object System.Text.UTF8Encoding($false)))</code></li>
+<li><b>本机是 Windows PowerShell 5.1</b>（不是 PS 7），默认编码 GBK，写中文极易踩坑</li>
+<li><b>PowerShell 注释用 <code>#</code></b>，不要用 <code>//</code></li>
+<li><b>改文件前先备份</b> <code>Copy-Item $f "$f.bak.$(Get-Date -Format 'yyyyMMddHHmmss')"</code></li>
+<li><b>改完必跑</b> <code>& $phpExe -l 文件</code></li>
+<li><b>不要连续输出带 <code>PS D:\...&gt;</code> 提示符的命令</b></li>
+<li><b>尽量用行号或纯 ASCII 锚点匹配</b>，不要靠中文匹配（编码坑）</li>
+</ol>
+</div>
+
+<div class="box box-warn">
+<h3 style="margin-top:0">⚠️ 用户踩过的坑（必读）</h3>
+<ul>
+<li><b>❌ 不要在 here-string 里嵌套 here-string</b><br>
+    <code>@'...'@</code> 里又包 <code>@'...'@</code> → PS 解析会失败 → 输出一堆 UnexpectedToken<br>
+    <b>正确做法</b>：一份文档分 2-3 次 AppendAllText，每次一段</li>
+<li><b>❌ 不要用 <code>\"</code> 转义</b>（PS 里不对）<br>
+    <b>正确</b>：<code>`"</code>（反引号+双引号）或在单引号字符串里直接写 <code>"</code></li>
+</ul>
+</div>
+
+<h3>沟通习惯</h3>
+<ul>
+<li>每做完一段，用户会<b>贴终端输出</b>给我</li>
+<li>用户说 <code>继续</code>、<code>下一步</code>、<code>ABC</code>（选项字母）我就继续</li>
+<li>用户说 <code>停</code> 或换话题，我就停</li>
+<li>遇到报错<b>不长篇解释</b>，直接给修复命令</li>
+<li>用户说"跑完贴回来"意思是把终端输出发我</li>
+</ul>
+
+<h2 id="s1">一、项目概况</h2>
+<p><b>业务</b>：SaaS 支付系统服务商，不参与收款。</p>
+<ul>
+<li>商户注册 → 实名认证 → 审核通过 → 使用系统收单</li>
+<li>服务方式：<b>开户即用</b>，不抽成，不按笔收费，收多少拿多少</li>
+<li>适用范围：商户/码商/下级按需使用，不另收月费</li>
+<li>支持 <b>3 级子商户</b>（码商代收模式）</li>
+</ul>
+
+<h3>核心流程</h3>
+<pre>
+客户下单 → 系统按路由规则选码 → 展示收款码
+        → 客户付款 → APK 监听到账
+        → 系统扣码 owner 余额 + 按 rate 给上级分成
+        → 触发 hook → 邮件/TG 推送码 owner
+        → 点【确认到账】→ Order::complete → 回调客户商户
+</pre>
+
+<h2 id="s2">二、环境信息</h2>
+<table>
+<tr><th>项</th><th>值</th></tr>
+<tr><td>本地路径</td><td><code>D:\XindaPay_mail\pay.yunzexinda.com</code></td></tr>
+<tr><td>本地 PHP</td><td><code>D:\phpstudy_pro\Extensions\php\php8.2.9nts\php.exe</code></td></tr>
+<tr><td>本地 MySQL</td><td><code>D:\phpstudy_pro\Extensions\MySQL8.0.12\bin\mysql.exe</code></td></tr>
+<tr><td>本地域名</td><td><code>http://pay.test</code></td></tr>
+<tr><td>本地 DB</td><td><code>root/root</code> · 库 <code>xindapay</code></td></tr>
+<tr><td>线上路径</td><td><code>/www/wwwroot/pay.yunzexinda.com</code></td></tr>
+<tr><td>线上 DB</td><td><code>xindapay/REPLACE_WITH_DB_PASSWORD</code></td></tr>
+<tr><td>香港机 SSH</td><td><code>124.156.163.186:15566</code>（别名 server124，经 jinmei 跳）</td></tr>
+<tr><td>新加坡跳板</td><td><code>43.160.238.44:47395</code>（别名 jinmei）</td></tr>
+<tr><td>文档目录</td><td><code>E:\XindaPay\XindaPayusdt\</code></td></tr>
+</table>
+
+<h3>测试商户</h3>
+<table>
+<tr><th>uid</th><th>账号</th><th>密码</th><th>说明</th></tr>
+<tr><td>1000</td><td>信达支付系统</td><td>admin123</td><td>一级商户（上级）</td></tr>
+<tr><td>10002</td><td>dianpu_b1</td><td>admin123</td><td>二级（有码 119）</td></tr>
+<tr><td>10003</td><td>dianpu_b2</td><td>admin123</td><td>二级</td></tr>
+<tr><td>10004</td><td>dianpu_c1</td><td>admin123</td><td>三级</td></tr>
+</table>
+
+<div class="box box-info">
+<b>本地快速切身份</b>：<code>http://pay.test/_dev_login.php?uid=10002</code>（<b>上线必删</b>）
+</div>
+
+<h2 id="s3">三、本次会话全部改动</h2>
+
+<h3>3.1 新增文件</h3>
+<h4>核心代码</h4>
+<ul>
+<li><code>includes/lib/Service.php</code> — 服务期管理</li>
+<li><code>user/service.php</code> — 商户续费页</li>
+<li><code>user/ajax_service.php</code> — 续费下单接口</li>
+<li><code>user/ajax_apk.php</code> — 加 claim 分支</li>
+</ul>
+
+<h4>子商户</h4>
+<ul>
+<li><code>user/sub_list.php</code> — 下级列表（树形）</li>
+<li><code>user/sub_create.php</code> — 创建下级</li>
+<li><code>user/sub_edit.php</code> — 编辑下级</li>
+<li><code>user/sub_push.php</code> — 下级填推送资料</li>
+<li><code>user/sub_review.php</code> — 上级审批推送</li>
+<li><code>user/sub_switch.php</code> — 已禁用（只保留返回）</li>
+<li><code>user/sub_qrcodes.php</code> — 下级收款码管理</li>
+<li><code>user/sub_orders.php</code> — 下级订单</li>
+<li><code>user/sub_bills.php</code> — 下级账单核对（含软删除）</li>
+</ul>
+
+<h4>对账 + 智能路由</h4>
+<ul>
+<li><code>user/bill_sub.php</code> — 对账中心</li>
+<li><code>user/qrcode_route.php</code> — ⭐ 收款码路由管理</li>
+<li><code>user/myip.php</code> — IP 检测工具</li>
+<li><code>user/test_center.php</code> — ⭐ 功能测试中心</li>
+</ul>
+
+<h4>平台后台 + 文档</h4>
+<ul>
+<li><code>admin/service.php</code> — 系统服务管理</li>
+<li><code>help/docs/*.html</code> — 18 份帮助文档（商户手册 12 章 / 商户操作手册 12 章 / 下级操作手册 / 收款码管理 7 章 / 收款码智能路由 / 订单 / 邮件推送 / 邮件营销 / 邮件模板 / 追踪 / 2FA / 下级推送 / listener 等）</li>
+<li><code>docs/*.html</code> — 7 份运维/操作文档</li>
+</ul>
+
+<h3>3.2 修改文件（关键）</h3>
+<table>
+<tr><th>文件</th><th>改动</th></tr>
+<tr><td><code>includes/lib/api/Pay.php</code></td><td>加服务期检查</td></tr>
+<tr><td><code>includes/lib/Order.php</code></td><td>码商代收 + 上级分成 + 自动触发 hook</td></tr>
+<tr><td><code>includes/lib/MailOrder.php</code></td><td>SMTP 优先用上级</td></tr>
+<tr><td><code>includes/functions.php</code></td><td>注册钩子 + 抽成 0</td></tr>
+<tr><td><code>plugins/mapay/mapay_plugin.php</code></td><td>⭐ pickWithRouteOrChildren + pickByRoute + pickByWeight + pickOne 权重随机</td></tr>
+<tr><td><code>paypage/mapay.php</code></td><td>兜底选码走 pickWithChildren（找下级码）</td></tr>
+<tr><td><code>paypage/license.php</code></td><td>额度检查 + 跟随服务期</td></tr>
+<tr><td><code>paypage/notify_listen.php</code></td><td>加服务期检查</td></tr>
+<tr><td><code>user/ajax.php</code></td><td>注册后自动开试用</td></tr>
+<tr><td><code>user/license.php</code></td><td>重写（领取激活码）</td></tr>
+<tr><td><code>user/head.php</code></td><td>菜单重排 + 下级隐藏冗余 + 加新菜单</td></tr>
+<tr><td><code>user/qrcode/index.php</code></td><td>加「绑定 IP」+「🔍 用我的 IP」+ 取消数量限制 + 顶部清理提示</td></tr>
+<tr><td><code>user/bill_detail.php</code></td><td>支持 <code>?uid=下级</code> + 权限校验</td></tr>
+<tr><td><code>user/bill_reconcile.php</code></td><td>支持 <code>?uid=下级</code> + 权限校验</td></tr>
+<tr><td><code>user/sub_push.php</code></td><td>加「🧪 测试推送」</td></tr>
+<tr><td><code>user/sub_review.php</code></td><td>加「✅ 通过并测试」「🧪 测推送」</td></tr>
+<tr><td><code>telegram/hook_order_paid.php</code></td><td>pushUid + sub_push_email 分支 + MAIL_HOOK_BASE</td></tr>
+<tr><td><code>telegram/usdt_callback.php</code></td><td>SVC 服务期分支</td></tr>
+<tr><td><code>telegram/lib/Cmds.php</code></td><td>APK 命令重写</td></tr>
+<tr><td><code>admin/head.php</code></td><td>菜单重排</td></tr>
+<tr><td><code>buy_apk.php</code></td><td>重写（营销页）</td></tr>
+<tr><td><code>help/index.html</code></td><td>7 大分类重组 + 18 卡片</td></tr>
+</table>
+
+<h2 id="s4">四、数据库变更</h2>
+<pre>
+-- pay_user 加字段
+ALTER TABLE pay_user
+  ADD COLUMN service_expire DATETIME NULL,
+  ADD COLUMN service_trial_end DATETIME NULL,
+  ADD COLUMN apk_quota INT UNSIGNED NOT NULL DEFAULT 3,
+  ADD COLUMN sub_level TINYINT NOT NULL DEFAULT 1,
+  ADD COLUMN sub_push_tg VARCHAR(32),
+  ADD COLUMN sub_push_email VARCHAR(64),
+  ADD COLUMN sub_push_smtp_host VARCHAR(100),
+  ADD COLUMN sub_push_smtp_user VARCHAR(100),
+  ADD COLUMN sub_push_smtp_pwd VARCHAR(255),
+  ADD COLUMN sub_push_smtp_secure VARCHAR(10) DEFAULT 'ssl',
+  ADD COLUMN sub_push_status TINYINT DEFAULT 0;
+
+-- pay_alipay_bill 加软删
+ALTER TABLE pay_alipay_bill
+  ADD COLUMN is_deleted TINYINT NOT NULL DEFAULT 0,
+  ADD COLUMN deleted_by INT UNSIGNED DEFAULT 0,
+  ADD COLUMN deleted_at DATETIME NULL;
+
+-- pay_qrcode 加路由相关字段
+ALTER TABLE pay_qrcode
+  ADD COLUMN weight INT UNSIGNED NOT NULL DEFAULT 100,
+  ADD COLUMN bind_ip VARCHAR(45),
+  ADD COLUMN bind_province VARCHAR(20),
+  ADD COLUMN bind_city VARCHAR(30);
+
+-- 新表 pay_qrcode_route（路由规则）
+CREATE TABLE `pay_qrcode_route` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(10) unsigned NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `match_type` varchar(16) NOT NULL COMMENT 'province/weight/all',
+  `match_value` text NOT NULL COMMENT 'JSON',
+  `priority` int(11) DEFAULT '100',
+  `status` tinyint(4) DEFAULT '1',
+  `remark` varchar(255) DEFAULT '',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_uid` (`uid`),
+  KEY `idx_priority` (`priority`),
+  KEY `idx_status` (`status`)
+);
+
+-- 系统配置
+INSERT INTO pay_config (k,v) VALUES
+  ('sys_month_price','100'), ('sys_trial_days','2'),
+  ('sys_grace_days','0'), ('sys_apk_quota','3'),
+  ('sys_extra_device_price','50')
+ON DUPLICATE KEY UPDATE v=VALUES(v);
+</pre>
+
+<h2 id="s5">五、待办清单</h2>
+
+<h3>🔴 上线前必做</h3>
+<table>
+<tr><th>#</th><th>项</th><th>说明</th></tr>
+<tr><td>1</td><td>删除测试文件</td><td><code>_dev_login.php</code> / <code>_test*.php</code> / <code>_sim*.php</code> / <code>_ft*.php</code> / <code>_gen*.php</code> / <code>_reset*.php</code> / <code>_pb*.php</code> / <code>_setmail*.php</code></td></tr>
+<tr><td>2</td><td>不传 config</td><td><code>config.php</code> 和 <code>telegram/config.php</code> <b>绝不覆盖</b></td></tr>
+<tr><td>3</td><td>数据库 migration</td><td>执行上面 SQL</td></tr>
+<tr><td>4</td><td>hook 默认域名</td><td>检查 <code>hook_order_paid.php</code> 里 <code>MAIL_HOOK_BASE</code> 是否配好</td></tr>
+<tr><td>5</td><td>删除测试端</td><td><code>notify_receiver.php</code> 可删</td></tr>
+</table>
+
+<h3>🟡 中期</h3>
+<ul>
+<li>真实 USDT 付款全链路测（浏览器打开 → 选码 → 付款 → 邮件 → 点确认 → 回调）</li>
+<li><code>pay_config</code> 加"上级 SMTP"配置（让码 owner 邮件用自己的 SMTP 发件）</li>
+<li>管理员后台加"下级码管理"页（可选）</li>
+<li><code>Order::refund</code> 走码商代收逻辑（退款时反向）</li>
+</ul>
+
+<h3>🟢 后期</h3>
+<ul>
+<li>cron 计划任务（<code>mail_track/cron_cleanup.php</code> 每日清理追踪数据）</li>
+<li>IP138 token 配置</li>
+<li>机器人命令集成（<code>/邮件营销</code> <code>/追踪</code> <code>/路由</code>）</li>
+<li>权重前端滑块（现在要改数据库）</li>
+</ul>
+
+<h2 id="s6">六、关键坑点（已踩过）</h2>
+
+<h3>环境坑</h3>
+<table>
+<tr><th>坑</th><th>解决</th></tr>
+<tr><td>php.ini 被精简成 429 字节</td><td>从 <code>php.ini-production</code> 恢复</td></tr>
+<tr><td><code>track_errors</code> PHP 8 已废弃</td><td>注释掉</td></tr>
+<tr><td>openssl 未启用</td><td>php.ini 加 <code>extension=openssl</code></td></tr>
+<tr><td>本地 CLI 无 curl</td><td>php.ini 启用 <code>extension=curl</code></td></tr>
+<tr><td>XAMPP Apache 500</td><td>vhosts 加 <code>Require all granted</code></td></tr>
+<tr><td>线上 CLI PHP = 7.4，站点 = 8.2</td><td>composer 用 <code>/www/server/php/82/bin/php</code></td></tr>
+</table>
+
+<h3>文件传输坑</h3>
+<table>
+<tr><th>坑</th><th>解决</th></tr>
+<tr><td><code>Set-Content</code> 破坏 UTF-8</td><td><b>一律用</b> <code>[System.IO.File]::WriteAllText</code></td></tr>
+<tr><td><code>scp</code> 大文件丢数据</td><td>打包 <code>tar -czf</code> 后传</td></tr>
+<tr><td>mysqldump SQL 有 CRLF</td><td>上传前 <code>-replace "\`r\`n", "\`n"</code></td></tr>
+</table>
+
+<h3>代码坑</h3>
+<table>
+<tr><th>坑</th><th>解决</th></tr>
+<tr><td>PDO 参数绑定 <code>LIMIT ?</code> 失败</td><td>改整数内插 <code>LIMIT {$limit}</code></td></tr>
+<tr><td>PS here-string 缩进不匹配</td><td>用行号定位或纯 ASCII 锚点</td></tr>
+<tr><td><code>//</code> 是 PHP 注释不是 PS 注释</td><td>PS 用 <code>#</code></td></tr>
+<tr><td>here-string 里嵌套 here-string</td><td>拆成 2-3 次 AppendAllText</td></tr>
+<tr><td><code>pay_order</code> 主键是 <code>trade_no</code></td><td>不是 id，排序用 <code>trade_no DESC</code></td></tr>
+<tr><td>PHP <code>===</code> 严格比较 DB 字符串和 float</td><td>用 <code>==</code> 或先 <code>(float)</code></td></tr>
+</table>
+
+<h3>数据库坑</h3>
+<table>
+<tr><th>坑</th><th>解决</th></tr>
+<tr><td><code>pay_user</code> 没有 <code>paymin</code>/<code>paymax</code></td><td>只有 <code>pay_minmoney</code>/<code>pay_maxmoney</code></td></tr>
+<tr><td><code>key</code> 是 MySQL 保留字</td><td>INSERT 必须用反引号 <code>`key`</code></td></tr>
+<tr><td><code>pay_qrcode</code> 无 <code>type</code>/<code>name</code></td><td>有 <code>channel</code>/<code>remark</code></td></tr>
+<tr><td><code>pay_record</code> 时间字段是 <code>date</code></td><td>不是 <code>addtime</code></td></tr>
+<tr><td>JSON 字段 <code>ext</code> 里 <code>qrcode_id</code></td><td>用 <code>JSON_UNQUOTE(JSON_EXTRACT(A.ext, '$.qrcode_id'))</code></td></tr>
+</table>
+
+<h2 id="s7">七、新对话开场白（复制这段）</h2>
+<div class="box box-success">
+<pre style="background:#f8fafc;color:#0f172a;border:1px solid #e2e8f0;">
+项目：XindaPayusdt — SaaS 支付系统服务商
+模式：多商户独立收款，平台不参与收款，商户按月付系统使用费 100 USDT/月
+      含 3 台 APK 设备，额外 50 USDT/月/台，费率 0
+      支持 3 级子商户，码商代收（下级码收款，下级余额扣款）
+
+本地：D:\XindaPay_mail\pay.yunzexinda.com
+线上：香港 124.156.163.186（SSH 别名 server124，经新加坡 jinmei 跳板）
+数据库：本地 root/root，线上 xindapay/REPLACE_WITH_DB_PASSWORD
+PHP：本地 D:\phpstudy_pro\Extensions\php\php8.2.9nts\php.exe
+
+已完成模块：
+- 系统月费（Service 类 + 续费页 + 到期拦截 + 注册试用）
+- 费率改 0（Order.php + functions.php）
+- 子商户 3 级（sub_list/sub_create/sub_edit/sub_push/sub_review）
+- 码商代收（mapay pickWithChildren + Order 扣码 owner 余额）
+- 上级分成（Order::complete 按 rate 加分）
+- 推送目标改成码 owner（hook_order_paid pushUid）
+- APK 免费（3 台额度）
+- 帮助中心（18 份文档，含商户手册 / 收款码管理图文教程）
+- 智能路由（pickByRoute + 权重随机 + user/qrcode_route.php）
+- IP 检测（user/myip.php + 上传绑 IP + 自动查省份）
+- 功能测试中心（6 项测试）
+- 邮件营销系统 + 追踪
+- 后台菜单重排
+
+当前待办：
+1. 真实 USDT 付款测全链路
+2. 上线部署（本次所有改动还在本地）
+3. pay_config 加"上级 SMTP"配置
+4. 管理员后台"下级码管理"页
+5. 权重前端滑块
+
+关键坑：
+- here-string 不要嵌套
+- 改文件只备份 + 用 [System.IO.File]::WriteAllText + UTF8Encoding($false)
+- telegram/config.php 和根 config.php 上传不覆盖
+- PS 注释用 #，不用 //
+- pay_order 主键是 trade_no（不是 id）
+- 中文文件不要用 Set-Content
+- 用行号或纯 ASCII 锚点匹配，不靠中文匹配
+
+请直接给终端命令，不要长篇解释。每步跑完我说"继续"或"贴回来"。
+</pre>
+</div>
+
+</div>
+</div>
+</body>
+</html>

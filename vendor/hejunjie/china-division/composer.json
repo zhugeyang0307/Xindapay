@@ -1,0 +1,20 @@
+{
+  "name": "hejunjie/china-division",
+  "description": "定期更新，全国最新省市区划分数据，身份证号码解析地址，支持 Composer 安装与版本控制，适用于表单选项、数据校验、地址解析等场景 | Regularly updated dataset of China's administrative divisions with ID-card address parsing. Distributed via Composer and versioned for use in forms, validation, and address-related features",
+  "license": "MIT",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "Hejunjie\\ChinaDivision\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "何俊杰",
+      "email": "junjie.he.925@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.0"
+  }
+}

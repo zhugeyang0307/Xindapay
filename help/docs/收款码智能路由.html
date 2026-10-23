@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>收款码智能路由 · 信达支付</title>
+
+<style>
+body { background: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 40px 20px; color: #334155; line-height: 1.8; }
+.container { max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+h1 { color: #0f172a; font-size: 26px; margin-top: 0; padding-bottom: 20px; border-bottom: 2px solid #f1f5f9; }
+h2 { color: #1e293b; font-size: 18px; margin-top: 30px; border-left: 4px solid #3b82f6; padding-left: 10px; }
+h3 { color: #1e293b; font-size: 16px; margin-top: 20px; }
+p, li { font-size: 15px; color: #475569; }
+a { color: #3b82f6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { background: #f1f5f9; color: #e11d48; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 14px; }
+pre { background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 8px; overflow-x: auto; }
+</style>
+</head>
+<body>
+<a href="/help/index.html" class="back-float" style="position:fixed;top:20px;left:20px;background:#fff;color:#3b82f6!important;padding:10px 20px;border-radius:30px;font-size:14px;font-weight:bold;text-decoration:none!important;box-shadow:0 4px 15px rgba(0,0,0,0.08);border:1px solid #e2e8f0;z-index:9999;display:flex;align-items:center;">← 返回目录</a>
+
+
+<style>
+.back-float {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: #ffffff;
+    color: #3b82f6 !important;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+    z-index: 9999;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.back-float:hover {
+    background: #eff6ff;
+    transform: translateX(-3px);
+    box-shadow: 0 6px 20px rgba(59,130,246,0.15);
+}
+</style>
+
+
+<div class="container">
+<header class="topbar">
+  <span class="logo">信达支付</span>
+  <span class="subtitle">收款码智能路由</span>
+  <div class="right"><a href="/help/">📚 返回文档中心</a></div>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="toc-cat">📑 目录</div>
+    <a class="toc-item" href="#intro">功能简介</a>
+    <a class="toc-item" href="#how">工作原理</a>
+    <a class="toc-item" href="#ip">IP 检测工具</a>
+    <a class="toc-item" href="#bindip">绑定 IP</a>
+    <a class="toc-item" href="#route">路由规则</a>
+    <a class="toc-item" href="#type1">规则类型 · 省份</a>
+    <a class="toc-item" href="#type2">规则类型 · 权重</a>
+    <a class="toc-item" href="#type3">规则类型 · 全部</a>
+    <a class="toc-item" href="#weight">权重设置</a>
+    <a class="toc-item" href="#example">实战案例</a>
+    <a class="toc-item" href="#faq">常见问题</a>
+  </aside>
+  <main class="main">
+    <div class="page-header">
+      <h1>🎯 收款码智能路由</h1>
+      <p>按客户 IP 归属地、权重自动选择最优收款码，提升支付成功率</p>
+    </div>
+
+<section class="block" id="intro">
+<div class="block-head"><h2>功能简介</h2></div>
+<div class="block-body">
+<p>系统根据客户的 <b>IP 归属地</b>和您配置的 <b>权重规则</b>，自动从候选收款码中挑选一个展示给客户。</p>
+<p><b>为什么需要？</b></p>
+<ul>
+<li>📈 <b>提升成功率</b>：客户 IP 与收款码归属地一致，微信/支付宝风控更宽松</li>
+<li>⚖️ <b>分担风险</b>：多码加权随机，避免单码被风控</li>
+<li>🔒 <b>精准管控</b>：哪个地区的客户走哪个码，一目了然</li>
+</ul>
+<div class="note green">
+<b>实测效果</b>：地域匹配策略可提升支付成功率约 <b>15~20%</b>（尤其对微信商家码敏感）
+</div>
+</div>
+</section>
+
+<section class="block" id="how">
+<div class="block-head"><h2>工作原理</h2></div>
+<div class="block-body">
+<p>客户下单时的完整链路：</p>
+<pre>
+1. 客户点支付链接
+        ↓
+2. 系统获取客户 IP → 本地库查归属地（省/市/运营商）
+        ↓
+3. 匹配路由规则（按优先级从高到低）
+        ↓
+   命中规则 → 从规则指定的候选码池中选码
+        ↓
+   未命中 → 走原逻辑（本人码优先 → 下级码 BFS）
+        ↓
+4. 多个候选码时 → 按 weight 字段加权随机
+        ↓
+5. 展示收款码给客户
+</pre>
+<div class="note blue">
+<b>优先级顺序</b>：路由规则 > 省份匹配 > 权重随机 > use_count 最少
+</div>
+</div>
+</section>
+
+<section class="block" id="ip">
+<div class="block-head"><h2>IP 检测工具</h2></div>
+<div class="block-body">
+<p>位置：<b>商户后台 → 收款工具 → 📍 IP 检测</b></p>
+<p>用途：</p>
+<ol>
+<li><b>查看当前访问 IP</b>：显示你现在的 IP + 省份 + 城市 + 运营商（本地库）</li>
+<li><b>验证 IP 归属地</b>：一键跳 ip138 核对准确度</li>
+<li><b>查询其他 IP</b>：输入任意 IP，看它的归属地</li>
+</ol>
+<h4>页面元素</h4>
+<table>
+<tr><th>元素</th><th>说明</th></tr>
+<tr><td>当前 IP</td><td>红色大字，含 ip138 外链</td></tr>
+<tr><td>省份/城市/运营商</td><td>本地库查询结果（ip2region.xdb）</td></tr>
+<tr><td>查询框</td><td>任意 IP → 查归属地</td></tr>
+<tr><td>常用地区参考</td><td>34 个省级行政区列表</td></tr>
+</table>
+<div class="note">
+<b>本地库识别不准？</b> 点 ip138 外链人工核对，以官方为准。
+</div>
+</div>
+</section>
+
+<section class="block" id="bindip">
+<div class="block-head"><h2>绑定 IP（上传收款码时）</h2></div>
+<div class="block-body">
+<p>上传收款码时，可以给每个码绑定一个 IP，系统自动识别归属地。</p>
+<h4>操作步骤</h4>
+<div class="step"><div class="num">1</div><div class="text"><b>打开上传弹窗</b>收款工具 → 收款码管理 → 新增</div></div>
+<div class="step"><div class="num">2</div><div class="text"><b>找到「绑定 IP」字段</b>在「归属地区」下方</div></div>
+<div class="step"><div class="num">3</div><div class="text"><b>点「🔍 用我的 IP」</b>自动填你当前 IP<br>或手动输入 IP</div></div>
+<div class="step"><div class="num">4</div><div class="text"><b>保存后自动入库</b>系统把 IP 归属地写入 <code>bind_province</code> / <code>bind_city</code></div></div>
+
+<h4>匹配逻辑</h4>
+<p>下单时，系统会对比：</p>
+<ul>
+<li>客户的 <b>省份</b>（IP 库实时查）</li>
+<li>收款码的 <b>region_province</b>（手动填的归属地区）</li>
+<li>收款码的 <b>bind_province</b>（从绑定 IP 自动识别的）</li>
+</ul>
+<p>只要其中一个匹配，该码就是<b>优先候选</b>。</p>
+<div class="note green">
+<b>小技巧</b>：绑定 IP 比手填省份更准，因为 IP 直接反映你手机在哪个地区收的款。
+</div>
+</div>
+</section>
+
+<section class="block" id="route">
+<div class="block-head"><h2>路由规则管理</h2></div>
+<div class="block-body">
+<p>位置：<b>商户后台 → 收款工具 → 🎯 收款码路由</b></p>
+
+<h4>页面结构</h4>
+<ul>
+<li><b>规则列表</b>：所有规则，按优先级排序</li>
+<li><b>新增/编辑表单</b>：选类型 + 配置匹配值 + 选候选码</li>
+</ul>
+
+<h4>规则字段</h4>
+<table>
+<tr><th>字段</th><th>说明</th></tr>
+<tr><td>规则名</td><td>自己看的名字，如「广东优先」</td></tr>
+<tr><td>优先级</td><td>数字，<b>越小越先匹配</b>（默认 100）</td></tr>
+<tr><td>匹配类型</td><td>省份 / 权重 / 全部（见下方）</td></tr>
+<tr><td>状态</td><td>启用 / 停用（一键切换）</td></tr>
+<tr><td>备注</td><td>选填</td></tr>
+</table>
+
+<h4>可用收款码</h4>
+<p>规则里能选的码 = <b>你 + 全部下级</b>的收款码。这样你可以给下级码也配路由。</p>
+</div>
+</section>
+
+<section class="block" id="type1">
+<div class="block-head"><h2>规则类型 · 按省份</h2></div>
+<div class="block-body">
+<div class="note green"><b>适用场景</b>：把某个省的客户单独分配给指定码（本地风控更松）</div>
+<h4>配置步骤</h4>
+<ol>
+<li>匹配类型选「按省份」</li>
+<li>勾选一个或多个省份（可多选）</li>
+<li>选择该规则的候选码（可以选多个）</li>
+<li>保存</li>
+</ol>
+<h4>匹配逻辑</h4>
+<pre>
+客户省份 ∈ 规则勾选的省份  →  命中
+       ↓
+从规则的候选码池里随机取（按 weight 加权）
+</pre>
+<div class="note">
+<b>省份识别不准？</b> 见下方「常见问题 Q2」
+</div>
+</div>
+</section>
+
+<section class="block" id="type2">
+<div class="block-head"><h2>规则类型 · 按权重</h2></div>
+<div class="block-body">
+<div class="note green"><b>适用场景</b>：所有客户按比例分流到多个码（不用管 IP）</div>
+<h4>配置步骤</h4>
+<ol>
+<li>匹配类型选「按权重」</li>
+<li>勾选 2 个或更多收款码</li>
+<li>每个码的 weight 字段决定被选中的概率</li>
+<li>保存</li>
+</ol>
+<h4>举例：权重分流</h4>
+<table>
+<tr><th>码 ID</th><th>weight</th><th>实际概率</th></tr>
+<tr><td>#119</td><td>60</td><td>60/(60+40)=60%</td></tr>
+<tr><td>#120</td><td>40</td><td>40/(60+40)=40%</td></tr>
+</table>
+<div class="note blue">
+<b>命中规则后无条件使用</b>（不管客户 IP）——这条规则通常放在列表最后，作为「兜底分流」。
+</div>
+</div>
+</section>
+
+<section class="block" id="type3">
+<div class="block-head"><h2>规则类型 · 全部（兜底）</h2></div>
+<div class="block-body">
+<div class="note green"><b>适用场景</b>：指定一组"终极候选"，其他规则都没命中时用</div>
+<h4>与权重的区别</h4>
+<table>
+<tr><th>类型</th><th>选码方式</th></tr>
+<tr><td>权重</td><td>多个码 → 按 weight 加权随机</td></tr>
+<tr><td>全部</td><td>多个码 → 也按 weight（跟权重一样）<br>单码 → 直接用</td></tr>
+</table>
+<p>实际上「全部」和「权重」在匹配后行为一样，<b>区别只在语义</b>：</p>
+<ul>
+<li>「全部」= 我不在乎分流比例，随便选一个可用的</li>
+<li>「权重」= 我要精确控制每个码的比例</li>
+</ul>
+</div>
+</section>
+
+<section class="block" id="weight">
+<div class="block-head"><h2>权重（weight）设置</h2></div>
+<div class="block-body">
+<p><code>pay_qrcode.weight</code> 字段，默认 100。</p>
+<h4>如何修改？</h4>
+<p>目前没做前端界面，需要手动改数据库：</p>
+<pre>
+-- 修改某码权重为 200
+UPDATE pay_qrcode SET weight=200 WHERE id=119;
+
+-- 批量：
+UPDATE pay_qrcode SET weight=60 WHERE id=119;
+UPDATE pay_qrcode SET weight=40 WHERE id=120;
+</pre>
+<div class="note">
+<b>后续版本会加上前端滑块</b>，现在暂时改数据库。
+</div>
+<h4>权重规则</h4>
+<ul>
+<li>权重越大，被选中概率越高</li>
+<li>权重为 0 或负数会当作 1 处理</li>
+<li>多个码的权重之比 = 选中概率之比</li>
+</ul>
+</div>
+</section>
+
+<section class="block" id="example">
+<div class="block-head"><h2>实战案例</h2></div>
+<div class="block-body">
+
+<h3>案例 1：广东省客户走 A 码，其他走 B 码</h3>
+<pre>
+规则1：广东优先（优先级 10）
+  类型：按省份
+  省份：广东
+  候选码：#119（广东地区的码）
+
+规则2：兜底（优先级 100）
+  类型：全部
+  候选码：#120（备用码）
+</pre>
+<p><b>效果</b>：广东客户 → #119；其他省客户 → #120</p>
+
+<h3>案例 2：三码平均分流</h3>
+<pre>
+规则1：均衡分流（优先级 100）
+  类型：按权重
+  候选码：#119 / #120 / #121
+  权重：#119=100, #120=100, #121=100
+
+概率：#119 33.3%，#120 33.3%，#121 33.3%
+</pre>
+
+<h3>案例 3：多级匹配</h3>
+<pre>
+规则1：广东省 VIP（优先级 5）
+  类型：按省份，省份=广东
+  候选码：#119, #120（广东地区的两个码）
+
+规则2：江浙沪（优先级 10）
+  类型：按省份，省份=江苏、浙江、上海
+  候选码：#121
+
+规则3：兜底（优先级 999）
+  类型：全部
+  候选码：#119, #120, #121, #122
+</pre>
+<p><b>效果</b>：广东 → #119/#120 随机；江浙沪 → #121；其他 → 全部码随机</p>
+</div>
+</section>
+
+<section class="block" id="faq">
+<div class="block-head"><h2>常见问题</h2></div>
+<div class="block-body">
+
+<h4>Q1：规则没生效？</h4>
+<ul>
+<li>检查规则是不是「启用」状态</li>
+<li>检查优先级是不是最小的先匹配</li>
+<li>检查候选码是不是「启用」状态</li>
+<li>检查候选码的金额/日限额是否覆盖订单</li>
+</ul>
+
+<h4>Q2：省份识别不准？</h4>
+<ul>
+<li>本地库是 ip2region.xdb，覆盖率高但不是 100%</li>
+<li>CDN/代理 IP 可能识别成其他地区</li>
+<li>手机 4G/5G 的 IP 可能跨省（运营商出口）</li>
+<li>可以点 IP 检测页的「ip138 查看」人工核对</li>
+</ul>
+
+<h4>Q3：权重怎么设置最合理？</h4>
+<ul>
+<li>平均分流：所有码权重相等（如都是 100）</li>
+<li>主备模式：主码 200，备码 100（约 2:1）</li>
+<li>保护模式：新码权重小（如 50），老码权重大（如 200）</li>
+<li>建议：不要单个码权重超过其他总和 3 倍以上，否则等同单码</li>
+</ul>
+
+<h4>Q4：能不能给下级码配路由？</h4>
+<ul>
+<li>可以。路由规则里能选所有下级码</li>
+<li>但只有你能配，下级不能给自己配</li>
+<li>下级也不需要配——他会告诉你他的码什么时候最活跃，你决定</li>
+</ul>
+
+<h4>Q5：绑定的 IP 变了怎么办？</h4>
+<ul>
+<li>IP 归属地是上传时一次性识别的，之后 IP 变了不会自动更新</li>
+<li>如果收款手机换地区，重新编辑该码、重新绑 IP 即可</li>
+<li>也可以在「归属地区」手动选省份（优先级相同）</li>
+</ul>
+
+<h4>Q6：一条规则都不配会怎样？</h4>
+<ul>
+<li>系统走原逻辑：本人码优先 → 下级码（3 层 BFS）</li>
+<li>多个候选时按 weight 加权随机</li>
+<li>所以即使不配规则，也会按权重分流</li>
+</ul>
+
+<h4>Q7：绑定 IP 和手填省份冲突？</h4>
+<ul>
+<li>优先看 <code>region_province</code>（手填的），再看 <code>bind_province</code>（IP 识别的）</li>
+<li>只要有一个匹配就算命中</li>
+<li>建议只用一个，避免混乱</li>
+</ul>
+
+</div>
+</section>
+
+  </main>
+</div>
+</div>
+</body>
+</html>

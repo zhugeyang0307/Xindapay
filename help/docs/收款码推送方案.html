@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>收款码推送方案 · 信达支付</title>
+
+<style>
+body { background: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 40px 20px; color: #334155; line-height: 1.8; }
+.container { max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+h1 { color: #0f172a; font-size: 26px; margin-top: 0; padding-bottom: 20px; border-bottom: 2px solid #f1f5f9; }
+h2 { color: #1e293b; font-size: 18px; margin-top: 30px; border-left: 4px solid #3b82f6; padding-left: 10px; }
+h3 { color: #1e293b; font-size: 16px; margin-top: 20px; }
+p, li { font-size: 15px; color: #475569; }
+a { color: #3b82f6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { background: #f1f5f9; color: #e11d48; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 14px; }
+pre { background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 8px; overflow-x: auto; }
+</style>
+</head>
+<body>
+<a href="/help/index.html" class="back-float" style="position:fixed;top:20px;left:20px;background:#fff;color:#3b82f6!important;padding:10px 20px;border-radius:30px;font-size:14px;font-weight:bold;text-decoration:none!important;box-shadow:0 4px 15px rgba(0,0,0,0.08);border:1px solid #e2e8f0;z-index:9999;display:flex;align-items:center;">← 返回目录</a>
+
+
+<style>
+.back-float {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: #ffffff;
+    color: #3b82f6 !important;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+    z-index: 9999;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.back-float:hover {
+    background: #eff6ff;
+    transform: translateX(-3px);
+    box-shadow: 0 6px 20px rgba(59,130,246,0.15);
+}
+</style>
+
+
+<div class="container">
+<h1>收款码推送方案 · 完整说明</h1>
+
+<blockquote>支持微信、支付宝个人码 H5 跳转，订单推送到个人或群，一键确认回调</blockquote>
+
+<hr>
+
+<h2>一、整体方案</h2>
+
+
+
+<hr>
+
+<h2>五、多码分流（扩容）</h2>
+
+<p><strong>一个商户可以上传多张收款码，每张码绑不同的推送目标</strong>：</p>
+
+<table>
+<thead><tr><th>码</th><th>推送目标</th><th>谁点确认</th></tr></thead><tbody>
+<tr><td>微信码A</td><td>张三私聊</td><td>张三</td></tr>
+<tr><td>微信码B</td><td>李四私聊</td><td>李四</td></tr>
+<tr><td>支付宝码</td><td>王五私聊</td><td>王五</td></tr>
+<tr><td>财务群</td><td>群 ID</td><td>群成员</td></tr>
+</tbody></table>
+
+<p><strong>订单按扫码的码自动路由到对应的人</strong>，互不干扰。</p>
+
+<p><strong>容量</strong>：N 个推送目标 × 各自限速 = N 倍容量</p>
+
+<hr>
+
+<h2>六、需要系统授权</h2>
+
+<table>
+<thead><tr><th>项</th><th>说明</th></tr></thead><tbody>
+<tr><td><strong>商户注册</strong></td><td>300 USDT 预充值（换成积分，扣系统费用）</td></tr>
+<tr><td><strong>服务说明</strong></td><td>开户即用，不抽成，不按笔收费</td></tr>
+<tr><td><strong>APK 授权</strong></td><td>按实际使用配置</td></tr>
+<tr><td><strong>源码授权</strong></td><td>单独联系客服</td></tr>
+</tbody></table>
+
+<hr>
+
+<h2>七、TG 回调说明</h2>
+
+<p>客户付款后，TG 机器人自动推送订单消息：</p>
+
+<pre><code>🔔 新订单到账
+━━━━━━━━━━━━━━━━━━
+📦 商品：VIP会员
+💰 金额：￥100.00
+🔑 订单：2026101312345678901
+👤 私聊：@zhangsan
+🕐 时间：10-13 17:00:00
+━━━━━━━━━━━━━━━━━━
+[✅ 确认到账] [❌ 忽略]
+</code></pre>
+
+<p><strong>点击【✅确认到账】后</strong>：</p>
+<ol>
+<li>消息就地变成&quot;✅已确认到账&quot;</li>
+<li>显示操作人 + TG ID + 确认时间</li>
+<li><strong>商户系统秒收 TRADE_SUCCESS 回调</strong></li>
+<li>订单状态更新为已支付</li>
+</ol>
+
+<p><strong>限流解决方案</strong>：系统内置 Redis 队列 + 多码分流，永不掉单。</p>
+
+<hr>
+
+<h2>八、TG 推送限流说明</h2>
+
+<table>
+<thead><tr><th>推送方式</th><th>官方限制</th><th>系统方案</th></tr></thead><tbody>
+<tr><td>私聊</td><td>约 60 条/分钟</td><td>Redis 队列自动限速</td></tr>
+<tr><td>群</td><td>约 20 条/分钟</td><td>每群独立限速</td></tr>
+<tr><td>多群/多私聊</td><td>—</td><td>分流扩容</td></tr>
+</tbody></table>
+
+<p><strong>推荐</strong>：商户选择<strong>推送到个人私聊</strong>——<strong>不限流、速度最快、安全</strong>。</p>
+
+<hr>
+
+<h2>九、推荐配置</h2>
+
+<table>
+<thead><tr><th>场景</th><th>推荐推送方式</th></tr></thead><tbody>
+<tr><td><strong>个人商户</strong></td><td>✅ 推送到个人私聊</td></tr>
+<tr><td><strong>2-3 人团队</strong></td><td>每人一个码，各推各的私聊</td></tr>
+<tr><td><strong>多客服团队</strong></td><td>推送到财务群</td></tr>
+<tr><td><strong>无人值守</strong></td><td>部署 APK 监听</td></tr>
+</tbody></table>
+
+<p><strong>最省心方案</strong>：</p>
+<pre><code>1. 上传 1 张码
+2. 推送目标填你自己的 TG ID
+3. 完成！
+</code></pre>
+
+<hr>
+
+<h2>十、常见问题</h2>
+
+<p><strong>Q1：钱去哪了？</strong></p>
+<p>A：直达商户自己上传的收款码账户（微信/支付宝），平台不碰资金。</p>
+
+<p><strong>Q2：客户付款后多久收到回调？</strong></p>
+<p>A：点确认后立即回调，通常 &lt; 1 秒。</p>
+
+<p><strong>Q3：推送目标必须和 bot 私聊过吗？</strong></p>
+<p>A：必须。TG 规定用户要先和 bot 发过消息。让目标用户去 bot 点 START 即可。</p>
+
+<p><strong>Q4：一个码能推给多个人吗？</strong></p>
+<p>A：不能。要多人看 → 把 bot 拉进群，填群 ID。</p>
+
+<p><strong>Q5：怎么改推送目标？</strong></p>
+<p>A：收款码管理 → 编辑 → 改推送目标 → 保存。</p>
+
+<p><strong>Q6：收款码换账号了怎么办？</strong></p>
+<p>A：上传新码 → 删旧码。旧码上的未完成订单不受影响。</p>
+
+<hr>
+
+<p><strong>文档完 · 2026-10-13</strong></p>
+
+
+</div>
+</body>
+</html>

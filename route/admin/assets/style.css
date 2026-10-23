@@ -1,0 +1,60 @@
+* { box-sizing: border-box; }
+body {
+    font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    font-size: 14px; color: #333; background: #f5f6fa; margin: 0; line-height: 1.5;
+}
+.wrap { max-width: 1200px; margin: 0 auto; padding: 20px; }
+header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e1e4ea; padding-bottom: 12px; margin-bottom: 20px; }
+header h1 { font-size: 20px; margin: 0; }
+header nav a { color: #555; text-decoration: none; margin-left: 16px; padding: 6px 12px; border-radius: 4px; }
+header nav a:hover { background: #eef0f5; }
+header nav a.active { background: #4a6cf7; color: #fff; }
+header nav a.logout { color: #d9534f; }
+
+.toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+.muted { color: #999; font-size: 13px; }
+
+.btn { display: inline-block; padding: 6px 14px; background: #fff; border: 1px solid #d0d4dc; border-radius: 4px; color: #333; cursor: pointer; text-decoration: none; font-size: 13px; }
+.btn:hover { background: #f5f6fa; }
+.btn.primary { background: #4a6cf7; color: #fff; border-color: #4a6cf7; }
+.btn.primary:hover { background: #3a5ce5; }
+.btn.danger { color: #d9534f; border-color: #f3c6c4; }
+.btn.danger:hover { background: #fdf2f2; }
+.btn.small { padding: 3px 8px; font-size: 12px; }
+
+table.list, table.weight-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+table.list th, table.list td, table.weight-table th, table.weight-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #eef0f5; }
+table.list th { background: #fafbfd; font-weight: 600; color: #555; font-size: 13px; }
+table.list tr:hover td { background: #fafbfd; }
+td.empty { text-align: center; color: #aaa; padding: 30px; }
+
+.tag { display: inline-block; padding: 2px 8px; background: #eef0f5; border-radius: 3px; font-size: 12px; color: #555; }
+.badge { padding: 2px 8px; border: none; border-radius: 10px; font-size: 12px; cursor: pointer; }
+.badge.on { background: #e3f7ec; color: #1a7f4c; }
+.badge.off { background: #f5f6fa; color: #999; }
+
+.form { background: #fff; padding: 24px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+.form .row { margin-bottom: 18px; }
+.form .row.half { display: flex; gap: 20px; }
+.form .row.half > div { flex: 1; }
+.form label { display: block; margin-bottom: 6px; font-weight: 500; color: #555; }
+.form input[type=text], .form input[type=number], .form select, .form textarea { width: 100%; padding: 8px 10px; border: 1px solid #d0d4dc; border-radius: 4px; font-family: inherit; font-size: 14px; }
+.form input:focus, .form select:focus, .form textarea:focus { border-color: #4a6cf7; outline: none; }
+.form .checks { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 8px 0; }
+.form .check { display: inline-flex; align-items: center; gap: 4px; font-weight: normal; margin: 0; }
+.form .check input { margin: 0; }
+.form .actions { display: flex; gap: 12px; padding-top: 12px; border-top: 1px solid #eef0f5; }
+.weight-table { margin-top: 8px; }
+.weight-table select, .weight-table input { padding: 6px 8px; }
+
+.pager { display: flex; gap: 6px; justify-content: center; margin-top: 20px; }
+.pager a { padding: 5px 12px; background: #fff; border: 1px solid #d0d4dc; border-radius: 4px; text-decoration: none; color: #333; }
+.pager a.active { background: #4a6cf7; color: #fff; border-color: #4a6cf7; }
+
+.login-body { display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+.login-box { background: #fff; padding: 32px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,.1); width: 320px; }
+.login-box h2 { margin: 0 0 20px; font-size: 18px; text-align: center; }
+.login-box input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #d0d4dc; border-radius: 4px; font-size: 14px; }
+.login-box button { width: 100%; padding: 10px; background: #4a6cf7; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+.login-box button:hover { background: #3a5ce5; }
+.login-box .error { color: #d9534f; text-align: center; margin: 0 0 12px; }

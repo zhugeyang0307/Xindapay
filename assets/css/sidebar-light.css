@@ -1,0 +1,183 @@
+/* ========== 侧栏浅色主题 ========== */
+.app-aside,
+aside.app-aside,
+.app-aside.bg-black,
+.app-aside.bg-dark {
+  background: #ffffff !important;
+  background-image: none !important;
+  border-right: 1px solid #e8ecf1 !important;
+  box-shadow: 2px 0 8px rgba(15,23,42,.04) !important;
+}
+
+/* 菜单项 */
+.app-aside .navi > ul > li > a {
+  color: #4a5568 !important;
+  background: transparent !important;
+  border-radius: 6px;
+  margin: 2px 8px;
+  transition: all .2s;
+}
+.app-aside .navi > ul > li > a:hover {
+  background: #f0f5ff !important;
+  color: #1677ff !important;
+}
+.app-aside .navi > ul > li.active > a,
+.app-aside .navi > ul > li.open > a {
+  background: linear-gradient(90deg, #e6f7ff 0%, #d6e4ff 100%) !important;
+  color: #1677ff !important;
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 #1677ff;
+}
+.app-aside .navi > ul > li.active > a .icon,
+.app-aside .navi > ul > li.open > a .icon {
+  color: #1677ff !important;
+}
+.app-aside .navi ul.nav-sub > li > a {
+  color: #6b7280 !important;
+  background: transparent !important;
+}
+.app-aside .navi ul.nav-sub > li > a:hover {
+  color: #1677ff !important;
+  background: #f0f5ff !important;
+}
+.app-aside .navi .text-muted,
+.app-aside .text-muted {
+  color: #9ca3af !important;
+}
+.app-aside .line.dk,
+.app-aside .line {
+  background: #e8ecf1 !important;
+}
+
+/* 侧栏底部进度条 */
+.app-aside .progress { background: #f0f3f7 !important; }
+.app-aside .progress-bar-info { background: #1677ff !important; }
+.app-aside .progress-bar-primary { background: #40a9ff !important; }
+
+/* 侧栏折叠按钮 */
+.app-aside-folded .app-aside { background: #fff !important; }
+
+
+
+/* ====== 终极补丁 v2：清掉所有深色背景 ====== */
+
+/* 1. 整个侧栏强制白底 */
+.app-aside,
+.app-aside.bg-dark,
+.app-aside.bg-black,
+aside.app-aside,
+aside.app-aside.bg-dark,
+aside.app-aside.bg-black {
+  background: #ffffff !important;
+  background-image: none !important;
+  color: #4a5568 !important;
+}
+
+/* 2. 所有菜单链接，不管嵌套多深，全部清深色 */
+.app-aside .navi a,
+.app-aside .navi a:hover,
+.app-aside .navi a:focus,
+.app-aside .navi a:active,
+.app-aside .navi li > a,
+.app-aside .navi li.active > a,
+.app-aside .navi li.open > a,
+.app-aside .navi ul.nav-sub a,
+.app-aside .navi ul.nav-sub > li > a,
+.app-aside .navi ul.nav-sub li.active > a,
+.app-aside .navi ul.nav-sub li.open > a,
+.app-aside .navi ul.nav li a,
+.app-aside .navi ul.nav li li a,
+.app-aside .navi ul.nav li.active > a,
+.app-aside .navi ul.nav li.open > a,
+.app-aside .bg-dark a,
+.app-aside .bg-dark a:hover,
+.app-aside .bg-dark .nav > li:hover > a,
+.app-aside .bg-dark .nav > li:focus > a,
+.app-aside .bg-dark .nav > li.active > a {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #4a5568 !important;
+  box-shadow: none !important;
+}
+
+/* 3. 悬停态：蓝底蓝字 */
+.app-aside .navi a:hover,
+.app-aside .navi li > a:hover,
+.app-aside .navi ul.nav-sub > li > a:hover,
+.app-aside .navi ul.nav li li a:hover {
+  background: #f0f5ff !important;
+  color: #1677ff !important;
+}
+
+/* 4. 选中态 */
+.app-aside .navi > ul > li.active > a,
+.app-aside .navi > ul > li.open > a,
+.app-aside .navi ul.nav-sub > li.active > a,
+.app-aside .navi ul.nav li.active > a {
+  background: linear-gradient(90deg, #e6f7ff 0%, #d6e4ff 100%) !important;
+  color: #1677ff !important;
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 #1677ff !important;
+}
+
+/* 5. 子菜单容器本身透明 */
+.app-aside .navi .nav-sub,
+.app-aside .navi .nav-sub ul,
+.app-aside .navi li .nav-sub,
+.app-aside .bg-dark .navi .nav-sub {
+  background: transparent !important;
+}
+
+/* 6. 图标颜色 */
+.app-aside .navi a .icon,
+.app-aside .navi a i {
+  color: inherit !important;
+}
+
+/* ====== 布局补丁：侧栏固定，主内容自适应 ====== */
+body { overflow-x: hidden; }
+
+.app-aside {
+  position: fixed !important;
+  top: 50px !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 200px !important;
+  float: none !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  z-index: 1000;
+}
+
+.app-aside .aside-wrap {
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
+.app-content {
+  margin-left: 200px !important;
+  height: auto !important;
+  min-height: calc(100vh - 50px) !important;
+  overflow: visible !important;
+  float: none !important;
+}
+
+.app-content-body {
+  float: none !important;
+  width: auto !important;
+}
+
+.app-aside::-webkit-scrollbar { width: 6px; }
+.app-aside::-webkit-scrollbar-thumb { background: #d0d7e2; border-radius: 3px; }
+
+@media (max-width: 767px) {
+  .app-aside {
+    position: relative !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+  .app-content { margin-left: 0 !important; }
+}

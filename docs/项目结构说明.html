@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>项目结构说明 - XindaPay</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7;color:#1a2a4a;background:#f5f7fa}
+.wrap{display:flex;min-height:100vh}
+.side{width:260px;background:#1e293b;color:#cbd5e1;padding:24px 0;position:fixed;height:100vh;overflow-y:auto}
+.side h2{color:#fff;padding:0 24px 16px;font-size:16px;border-bottom:1px solid #334155;margin-bottom:16px}
+.side a{display:block;padding:8px 24px;color:#cbd5e1;text-decoration:none;font-size:14px;border-left:3px solid transparent}
+.side a:hover{background:#334155;color:#fff;border-left-color:#60a5fa}
+.main{flex:1;margin-left:260px;padding:40px 60px;max-width:1100px}
+h1{font-size:28px;color:#0f172a;margin-bottom:8px;padding-bottom:16px;border-bottom:3px solid #3b82f6}
+h2{font-size:22px;color:#1e40af;margin:36px 0 16px;padding-left:12px;border-left:5px solid #3b82f6}
+h3{font-size:17px;color:#0f172a;margin:24px 0 12px}
+p{margin:10px 0;color:#334155}
+code{background:#f1f5f9;color:#e11d48;padding:2px 6px;border-radius:4px;font-family:Menlo,Consolas,monospace;font-size:13px}
+pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:8px;overflow-x:auto;margin:12px 0;font-size:13px;line-height:1.5}
+pre code{background:none;color:inherit;padding:0}
+table{width:100%;border-collapse:collapse;margin:16px 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid #e2e8f0;font-size:14px}
+th{background:#f1f5f9;color:#334155;font-weight:600}
+tr:hover td{background:#f8fafc}
+ul,ol{margin:10px 0 10px 24px;color:#334155}
+li{margin:4px 0}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;margin-right:4px}
+.tag-red{background:#fee2e2;color:#b91c1c}
+.tag-green{background:#dcfce7;color:#15803d}
+.tag-blue{background:#dbeafe;color:#1d4ed8}
+.tag-yellow{background:#fef3c7;color:#a16207}
+.box{background:#fff;border-radius:10px;padding:20px;margin:16px 0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.box-info{border-left:4px solid #3b82f6}
+.box-warn{border-left:4px solid #f59e0b;background:#fffbeb}
+.box-danger{border-left:4px solid #ef4444;background:#fef2f2}
+</style>
+</head><body>
+<div class="wrap">
+<div class="side">
+<h2>📚 XindaPay 文档</h2>
+<a href="项目结构说明.html">🏗 项目结构说明</a>
+<a href="部署说明.html">🚀 部署说明</a>
+<a href="运维手册.html">🔧 运维手册</a>
+<a href="商户操作手册.html">👨‍💼 商户操作手册</a>
+<a href="下级操作手册.html">👥 下级操作手册</a>
+<a href="CHANGELOG.html">📝 变更记录</a>
+</div>
+<div class="main">
+<h1>🏗 项目结构说明</h1>
+<p style="color:#94a3b8;font-size:13px;">生成：2026-10-17 | 用途：开发/运维/接手必读</p>
+
+<div class="box box-info">
+<h3 style="margin-top:0">📌 项目定位</h3>
+<p><b>SaaS 支付系统服务商</b>，不参与收款。商户注册 → 实名认证 → 审核通过 → 使用系统。</p>
+<ul>
+<li>服务方式：<b>开户即用</b>，不抽成，不按笔收费，收多少拿多少</li>
+<li>适用范围：商户/码商/下级按需使用，不另收月费</li>
+<li>支持 <b>3 级子商户</b>（码商代收模式）</li>
+</ul>
+</div>
+
+<h2>一、顶层目录结构</h2>
+<pre><code>pay.yunzexinda.com/
+├── config.php              主配置 ★不传
+├── index.php               站点入口
+├── submit.php              页面支付入口
+├── mapi.php                API 支付入口
+├── gateway.php             通用网关
+├── cashier.php             收银台
+├── payok.php               支付成功页
+├── api.php                 V1/V2 接口
+├── cron.php                定时任务
+│
+├── includes/               核心代码库
+├── plugins/                支付通道插件（50+）
+├── admin/                  平台管理后台
+├── user/                   商户后台
+├── paypage/                支付展示页
+├── telegram/               Telegram Bot
+├── help/                   帮助中心
+├── route/                  智能路由系统
+├── mail_track/             邮件追踪
+├── assets/                 前端静态资源
+└── docs/                   本目录（运维文档）</code></pre>
+
+<h2>二、支付入口层（根目录）</h2>
+<table>
+<tr><th>文件</th><th>用途</th></tr>
+<tr><td><code>submit.php</code></td><td>页面跳转支付：接收参数 → 验签 → 跳转收银台</td></tr>
+<tr><td><code>mapi.php</code></td><td>API 支付：JSON 返回 payUrl</td></tr>
+<tr><td><code>gateway.php</code></td><td>通用支付网关（兼容易支付协议）</td></tr>
+<tr><td><code>cashier.php</code></td><td>收银台：显示订单 + 支付方式选择</td></tr>
+<tr><td><code>payok.php</code></td><td>支付完成后跳转页</td></tr>
+<tr><td><code>api.php</code></td><td>V1/V2 接口（MD5/RSA 签名）</td></tr>
+<tr><td><code>cron.php</code></td><td>定时任务：订单超时关闭、回调重试</td></tr>
+<tr><td><code>cron_usdt.php</code></td><td>USDT 充值订单监听</td></tr>
+</table>
+
+<h2>三、核心库（includes/lib）</h2>
+<table>
+<tr><th>文件</th><th>用途</th></tr>
+<tr><td><code>common.php</code></td><td>全局初始化：加载配置、连接 DB、会话</td></tr>
+<tr><td><code>functions.php</code></td><td>工具函数：签名、回调、余额、日志</td></tr>
+<tr><td><code>lib/Channel.php</code></td><td>⭐ 通道选择（含智能路由钩子）</td></tr>
+<tr><td><code>lib/Order.php</code></td><td>⭐ 订单完成/冻结/退款（含码商代收分账）</td></tr>
+<tr><td><code>lib/Service.php</code></td><td>⭐ 服务期管理（月费/试用/额度）</td></tr>
+<tr><td><code>lib/MailOrder.php</code></td><td>⭐ 邮件推送（SMTP 优先用上级）</td></tr>
+<tr><td><code>lib/Payment.php</code></td><td>支付核心逻辑</td></tr>
+<tr><td><code>lib/Plugin.php</code></td><td>插件加载器</td></tr>
+<tr><td><code>lib/ApiHelper.php</code></td><td>签名验证（V1 MD5 / V2 RSA）</td></tr>
+<tr><td><code>lib/RiskCheck.php</code></td><td>风控检测</td></tr>
+<tr><td><code>lib/Transfer.php</code></td><td>转账/代付</td></tr>
+<tr><td><code>lib/TOTP.php</code></td><td>谷歌验证码</td></tr>
+<tr><td><code>lib/Printer.php</code></td><td>小票打印</td></tr>
+<tr><td><code>lib/XdbSearcher.php</code></td><td>IP 归属地数据库查询</td></tr>
+</table>
+
+<h2>四、支付插件（plugins/）</h2>
+<p>当前<b>启用</b>：<code>mapay</code>（码支付）</p>
+<table>
+<tr><th>文件</th><th>用途</th></tr>
+<tr><td><code>mapay/mapay_plugin.php</code></td><td>⭐ 码支付主逻辑（含 pickWithChildren 找下级码）</td></tr>
+<tr><td><code>mapay/_region_helper.php</code></td><td>收款码地区匹配（用户省份 → 匹配同省码）</td></tr>
+</table>
+<p>其他 50+ 插件（未启用）：<code>alipay</code>、<code>wechat</code>、<code>easypay</code>、<code>lakalamoss</code> 等。</p>
+
+<h2>五、商户后台（user/）</h2>
+
+<h3>5.1 基础</h3>
+<table>
+<tr><th>文件</th><th>用途</th></tr>
+<tr><td><code>login.php</code> / <code>reg.php</code> / <code>findpwd.php</code></td><td>登录/注册/找回</td></tr>
+<tr><td><code>index.php</code></td><td>商户中心首页（统计图表）</td></tr>
+<tr><td><code>editinfo.php</code> / <code>userinfo.php</code></td><td>资料/API 密钥</td></tr>
+<tr><td><code>certificate.php</code></td><td>实名认证</td></tr>
+<tr><td><code>deposit.php</code></td><td>保证金</td></tr>
+<tr><td><code>logout_force.php</code></td><td>强制登出</td></tr>
+</table>
+
+<h3>5.2 经营数据</h3>
+<table>
+<tr><th>文件</th><th>用途</th></tr>
+<tr><td><code>order.php</code></td><td>我的订单</td></tr>
+<tr><td><code>record.php</code></td><td>资金明细（流水）</td></tr>
+<tr><td><code>bill_upload.php</code></td><td>上传对账单（微信/支付宝/聚合码）</td></tr>
+<tr><td><code>bill_reconcile.php</code></td><td>系统 vs 账单自动核对（支持 ?uid=下级）</td></tr>
+<tr><td><code>bill_detail.php</code></td><td>账单批次明细（支持 ?uid=下级）</td></tr>
+<tr><td><code>bill.php</code></td><td>APK 到账流水</td></tr>
+</table>
+
+<h3>5.3 收款工具</h3>
+<table>
+<tr><th>文件</th><th>用途</th></tr>
+<tr><td><code>qrcode/index.php</code></td><td>收款码管理</td></tr>
+<tr><td><code>onecode.php</code></td><td>聚合码</td></tr>
+<tr><td><code>license.php</code></td><td>我的激活码（领取 APK 授权）</td></tr>
+<tr><td><code>service.php</code></td><td>系统服务（续费页）</td></tr>
+<tr><td><code>ajax_service.php</code></td><td>续费下单接口</td></tr>
+<tr><td><code>ajax_apk.php</code></td><td>APK 激活码领取接口</td></tr>
+</table>
+
+<h3>5.4 下级商户（新）</h3>
+<table>
+<tr><th>文件</th><th>用途</th></tr>
+<tr><td><code>sub_list.php</code></td><td>下级树形列表</td></tr>
+<tr><td><code>sub_create.php</code></td><td>创建下级</td></tr>
+<tr><td><code>sub_edit.php</code></td><td>编辑下级（分润/权限/加余额）</td></tr>
+<tr><td><code>sub_push.php</code></td><td>下级填推送资料</td></tr>
+<tr><td><code>sub_review.php</code></td><td>上级审批推送</td></tr>
+<tr><td><code>sub_switch.php</code></td><td>一键切换登录 <span class="tag tag-red">已禁用</span></td></tr>
+<tr><td><code>sub_qrcodes.php</code></td><td>⭐ 下级收款码管理（开关）</td></tr>
+<tr><td><code>sub_orders.php</code></td><td>⭐ 下级订单查看</td></tr>
+<tr><td><code>sub_bills.php</code></td><td>⭐ 下级账单核对（含软删除）</td></tr>
+</table>
+
+<h3>5.5 对账中心（新）</h3>
+<table>
+<tr><th>文件</th><th>用途</th></tr>
+<tr><td><code>bill_sub.php</code></td><td>上级看下级汇总对账</td></tr>
+</table>
+
+<h3>5.6 推送/邮件</h3>
+<table>
+<tr><th>文件</th><th>用途</th></tr>
+<tr><td><code>telegram.php</code></td><td>机器人管理</td></tr>
+<tr><td><code>mail_push.php</code></td><td>邮件推送</td></tr>
+<tr><td><code>mail_marketing/</code></td><td>邮件营销系统</td></tr>
+</table>
+
+<h3>5.7 其他</h3>
+<table>
+<tr><th>文件</th><th>用途</th></tr>
+<tr><td><code>domain.php</code></td><td>域名绑定</td></tr>
+<tr><td><code>invite.php</code></td><td>邀请码</td></tr>
+<tr><td><code>transfer.php</code></td><td>转账</td></tr>
+<tr><td><code>recharge.php</code> / <code>usdt_recharge.php</code></td><td>充值</td></tr>
+<tr><td><code>complain.php</code></td><td>工单/投诉</td></tr>
+<tr><td><code>mchrisk.php</code></td><td>风控中心</td></tr>
+</table>
+
+<h2>六、平台后台（admin/）</h2>
+<table>
+<tr><th>文件</th><th>用途</th></tr>
+<tr><td><code>login.php</code></td><td>管理员登录</td></tr>
+<tr><td><code>index.php</code></td><td>平台首页</td></tr>
+<tr><td><code>ulist.php</code></td><td>商户管理（含下级树）</td></tr>
+<tr><td><code>order.php</code></td><td>全平台订单</td></tr>
+<tr><td><code>service.php</code></td><td>⭐ 系统服务管理（新）</td></tr>
+<tr><td><code>license.php</code></td><td>APK 授权管理</td></tr>
+<tr><td><code>pay_channel.php</code></td><td>支付通道管理</td></tr>
+<tr><td><code>pay_plugin.php</code></td><td>插件管理</td></tr>
+<tr><td><code>set.php</code></td><td>系统设置（140KB）</td></tr>
+<tr><td><code>transfer.php</code></td><td>转账管理</td></tr>
+<tr><td><code>settle.php</code></td><td>结算</td></tr>
+<tr><td><code>record.php</code></td><td>全平台流水</td></tr>
+<tr><td><code>risk.php</code></td><td>风控规则</td></tr>
+<tr><td><code>iproute.php</code></td><td>IP 路由</td></tr>
+<tr><td><code>telegram.php</code></td><td>Bot 管理</td></tr>
+<tr><td><code>export.php</code> / <code>record_export.php</code></td><td>数据导出</td></tr>
+</table>
+
+<h2>七、Telegram Bot（telegram/）</h2>
+<table>
+<tr><th>文件</th><th>用途</th></tr>
+<tr><td><code>config.php</code></td><td>Bot 配置 <span class="tag tag-red">不传</span></td></tr>
+<tr><td><code>bot.php</code></td><td>主 Bot 逻辑</td></tr>
+<tr><td><code>hook_order_paid.php</code></td><td>⭐ 订单完成推送（含 pushUid）</td></tr>
+<tr><td><code>complete_order.php</code></td><td>CLI 完成订单</td></tr>
+<tr><td><code>usdt_callback.php</code></td><td>USDT 支付回调（含 SVC 服务期分支）</td></tr>
+<tr><td><code>bot_daily_report.php</code></td><td>日报</td></tr>
+<tr><td><code>customer_bot.php</code></td><td>客服 Bot</td></tr>
+<tr><td><code>lib/Cmds.php</code></td><td>命令路由</td></tr>
+<tr><td><code>lib/ApkTutorial.php</code></td><td>APK 教程文案</td></tr>
+<tr><td><code>lib/OrderConfirm.php</code></td><td>TG 确认逻辑</td></tr>
+<tr><td><code>lib/DeepSeek.php</code></td><td>AI 文案</td></tr>
+<tr><td><code>lib/DB.php</code></td><td>独立 DB 连接</td></tr>
+</table>
+
+<h2>八、支付展示（paypage/）</h2>
+<table>
+<tr><th>文件</th><th>用途</th></tr>
+<tr><td><code>mapay.php</code></td><td>⭐ 码支付展示页（选码 + 展示收款码）</td></tr>
+<tr><td><code>notify_listen.php</code></td><td>⭐ APK 上报接口（核心！）</td></tr>
+<tr><td><code>license.php</code></td><td>APK 激活验证页</td></tr>
+</table>
+
+<h2>九、帮助中心（help/）</h2>
+<ul>
+<li><code>index.html</code> — 卡片导航</li>
+<li><code>docs/商户手册.html</code> — ⭐ 商户完整操作手册</li>
+<li><code>docs/下级推送指南.html</code> — ⭐ 下级操作教程</li>
+<li><code>docs/商户对接文档.html</code> — 商户对接 API 文档</li>
+<li>其他 15 个专题文档</li>
+</ul>
+
+<h2>十、核心数据库表</h2>
+<table>
+<tr><th>表名</th><th>用途</th></tr>
+<tr><td><code>pay_user</code></td><td>商户（含下级，upid 字段建立树）</td></tr>
+<tr><td><code>pay_order</code></td><td>订单（trade_no 是主键）</td></tr>
+<tr><td><code>pay_qrcode</code></td><td>收款码（码 owner 用 uid 字段）</td></tr>
+<tr><td><code>pay_alipay_bill</code></td><td>上传的账单（含软删除字段）</td></tr>
+<tr><td><code>pay_record</code></td><td>资金流水（每条余额变动）</td></tr>
+<tr><td><code>pay_license</code></td><td>APK 激活码</td></tr>
+<tr><td><code>pay_service_order</code></td><td>系统续费订单</td></tr>
+<tr><td><code>pay_mail_pending</code></td><td>邮件推送待确认</td></tr>
+<tr><td><code>pay_tg_pending_order</code></td><td>TG 待确认订单</td></tr>
+<tr><td><code>pay_config</code></td><td>系统配置（k/v）</td></tr>
+</table>
+
+<h3>关键字段</h3>
+<table>
+<tr><th>表.字段</th><th>含义</th></tr>
+<tr><td><code>pay_user.upid</code></td><td>上级 uid（0=顶级）</td></tr>
+<tr><td><code>pay_user.sub_level</code></td><td>层级（1/2/3）</td></tr>
+<tr><td><code>pay_user.rate</code></td><td>分润率（下级收款时上级拿的 %）</td></tr>
+<tr><td><code>pay_user.service_expire</code></td><td>服务到期时间</td></tr>
+<tr><td><code>pay_user.apk_quota</code></td><td>APK 额度（默认 3）</td></tr>
+<tr><td><code>pay_order.ext</code></td><td>JSON，含 qrcode_id 和 qrcode_uid</td></tr>
+<tr><td><code>pay_order.profitmoney</code></td><td>代收金额</td></tr>
+</table>
+
+<h2>十一、核心业务链路</h2>
+
+<h3>链路 1：收单</h3>
+<pre><code>商户 API → submit.php → Channel.php 选通道
+       → mapay_plugin::pickWithChildren（找码：本人优先→下级）
+       → 写 pay_order.ext = {qrcode_id, qrcode_uid}
+       → 跳 paypage/mapay.php → 展示收款码</code></pre>
+
+<h3>链路 2：APK 上报 → 订单完成</h3>
+<pre><code>APK 监听微信/支付宝到账 → POST paypage/notify_listen.php
+       → 验签 → 匹配 order（uid + 金额 + 10min 内）
+       → 码 owner ≠ 订单 uid？→ 扣码 owner 余额
+       → 上级按 rate 分成 → 加上级余额
+       → Order::complete → 回调商户
+       → 触发 telegram/hook_order_paid.php（异步）</code></pre>
+
+<h3>链路 3：推送</h3>
+<pre><code>hook_order_paid.php:
+  pushUid = 码 owner（10002）
+  ├─ 码级邮件配置？→ 用码级
+  ├─ sub_push_email？→ 用下级推送资料
+  ├─ pay_user_botconfig？→ 商户邮件
+  └─ TG 推送</code></pre>
+
+<h3>链路 4：邮件确认</h3>
+<pre><code>邮件点「确认到账」→ mail_confirm.php?token=xx&action=ok
+  → MailOrder::verify(token)
+  → Order::complete(trade_no)
+  → do_notify(notify_url)</code></pre>
+
+<h2>十二、注意事项</h2>
+<div class="box box-danger">
+<ol>
+<li><b>绝不传</b> <code>config.php</code> 和 <code>telegram/config.php</code></li>
+<li>上传时<b>不要覆盖</b>这两个文件</li>
+<li><code>_dev_login.php</code> 和 <code>_test*.php</code> 上线前<b>必删</b></li>
+<li>数据库备份优先级：<code>pay_user</code> &gt; <code>pay_order</code> &gt; <code>pay_record</code></li>
+</ol>
+</div>
+
+</div></div></body></html>

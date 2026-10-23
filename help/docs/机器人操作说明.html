@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>机器人操作说明 · 信达支付</title>
+
+<style>
+body { background: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 40px 20px; color: #334155; line-height: 1.8; }
+.container { max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+h1 { color: #0f172a; font-size: 26px; margin-top: 0; padding-bottom: 20px; border-bottom: 2px solid #f1f5f9; }
+h2 { color: #1e293b; font-size: 18px; margin-top: 30px; border-left: 4px solid #3b82f6; padding-left: 10px; }
+h3 { color: #1e293b; font-size: 16px; margin-top: 20px; }
+p, li { font-size: 15px; color: #475569; }
+a { color: #3b82f6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { background: #f1f5f9; color: #e11d48; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 14px; }
+pre { background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 8px; overflow-x: auto; }
+</style>
+</head>
+<body>
+<a href="/help/index.html" class="back-float" style="position:fixed;top:20px;left:20px;background:#fff;color:#3b82f6!important;padding:10px 20px;border-radius:30px;font-size:14px;font-weight:bold;text-decoration:none!important;box-shadow:0 4px 15px rgba(0,0,0,0.08);border:1px solid #e2e8f0;z-index:9999;display:flex;align-items:center;">← 返回目录</a>
+
+
+<style>
+.back-float {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: #ffffff;
+    color: #3b82f6 !important;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+    z-index: 9999;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.back-float:hover {
+    background: #eff6ff;
+    transform: translateX(-3px);
+    box-shadow: 0 6px 20px rgba(59,130,246,0.15);
+}
+</style>
+
+
+<div class="container">
+<h1>信达支付 · 机器人操作说明</h1>
+
+<blockquote>本文档适用于：平台默认机器人 @xindawangluo1_bot、商户自建机器人。</blockquote>
+
+<h2>一、命令总览</h2>
+
+<h3>1.1 基础命令</h3>
+
+<table>
+<thead><tr><th>命令</th><th>支持写法</th><th>说明</th></tr></thead><tbody>
+<tr><td>获取 ID</td><td>ID / /id / 获取个人ID / 获取ID / 我的ID</td><td>显示你的 TG 数字 ID</td></tr>
+<tr><td>命令帮助</td><td>命令 / 帮助 / /help / 菜单 / ? / 功能</td><td>显示完整命令列表</td></tr>
+<tr><td>启动</td><td>/start / start / 开始</td><td>欢迎语 + 菜单</td></tr>
+</tbody></table>
+
+<h3>1.2 加密货币</h3>
+
+<table>
+<thead><tr><th>命令</th><th>支持写法</th><th>说明</th></tr></thead><tbody>
+<tr><td>TRON 查询</td><td>查 T地址 TRxxx / 查T地址 TRxxx / T地址 TRxxx / TRxxx</td><td>余额 + 最近 10 笔 USDT</td></tr>
+<tr><td>添加监控</td><td>监控 T地址 地址 备注 / 监控 地址 备注</td><td>监控 TRON 地址变动</td></tr>
+<tr><td>监控列表</td><td>监控列表 / 我的监控 / 监听列表 / 地址监控</td><td>查看所有监控</td></tr>
+<tr><td>取消监控</td><td>取消监控 T地址 地址 / 取消监控 地址</td><td>取消某个监控</td></tr>
+<tr><td>OKX 商家汇率</td><td>Z0 / 商家汇率 / OKX商家</td><td>OKX 商家汇率 TOP10</td></tr>
+<tr><td>USDT 汇率</td><td>查汇率 / usdt汇率 / 实时汇率</td><td>USDT/CNY 实时价</td></tr>
+<tr><td>法币汇率</td><td>外汇 / 法币汇率 / 查外汇</td><td>央行外汇牌价</td></tr>
+<tr><td>ETH 查询</td><td>查ETH 0x地址 / ETH 0x地址</td><td>以太坊余额</td></tr>
+</tbody></table>
+
+<h3>1.3 工具</h3>
+
+<table>
+<thead><tr><th>命令</th><th>支持写法</th><th>说明</th></tr></thead><tbody>
+<tr><td>计算器</td><td>1+1 / 算式 2*3 / 计算 4/2</td><td>直接算式或加前缀</td></tr>
+<tr><td>IP 查询</td><td>查IP 8.8.8.8 / IP8.8.8.8 / 查 IP: 8.8.8.8</td><td>IP 归属地</td></tr>
+<tr><td>天气</td><td>天气 北京 / 查天气 上海 / tq 广州</td><td>天气预报</td></tr>
+<tr><td>二维码</td><td>二维码 内容 / 生成二维码 xxx / qr xxx</td><td>生成二维码图片</td></tr>
+<tr><td>翻译</td><td>翻译 hello / fy world / translate test</td><td>中英互译</td></tr>
+<tr><td>身份证</td><td>查身份证 18位号 / 身份证 18位号</td><td>解析籍贯/生日/性别</td></tr>
+<tr><td>车牌</td><td>车牌 京A / 查车牌 粤B</td><td>车牌归属地</td></tr>
+<tr><td>区号</td><td>区号 北京 / 查区号 上海</td><td>城市区号</td></tr>
+<tr><td>邮编</td><td>邮编 北京 / 查邮编 上海</td><td>城市邮编</td></tr>
+</tbody></table>
+
+<h2>二、商户绑定主机器人</h2>
+
+<p>商户可使用平台默认机器人（@xindawangluo1_bot）接收订单推送。</p>
+
+<h3>2.1 绑定到私聊</h3>
+
+<ol>
+<li>TG 私聊 @xindawangluo1_bot</li>
+<li>发送：/绑定 你的UID</li>
+<li>收到&quot;已绑定&quot;即成功</li>
+</ol>
+
+<h3>2.2 绑定到群</h3>
+
+<ol>
+<li>把 @xindawangluo1_bot 拉进群</li>
+<li>给管理员权限（能发消息即可）</li>
+<li>群里发送：/绑定群 你的UID</li>
+<li>收到&quot;已绑定&quot;即成功</li>
+</ol>
+
+<h2>三、商户自建机器人</h2>
+
+<p>见《机器人创建.md》文档。</p>
+
+<h3>3.1 创建流程</h3>
+
+<ol>
+<li>@BotFather → /newbot → 拿到 Token</li>
+<li>@userinfobot → 拿个人 TG ID</li>
+<li>商户后台 → 机器人管理 → 填写</li>
+<li>保存 → 测试推送</li>
+</ol>
+
+<h3>3.2 获取群 ID</h3>
+
+<ol>
+<li>把自建 bot 拉进群</li>
+<li>群里发 /id</li>
+<li>机器人回复群 ID</li>
+</ol>
+
+<h2>四、订单推送示例</h2>
+
+<p>~~</p>
+<p>🔔 新订单到账</p>
+<p>━━━━━━━━━━━━━━━━━━</p>
+<p>📦 商品：移动话费充值</p>
+<p>💰 金额：￥100.00</p>
+<p>🔑 订单：2026101309301234567</p>
+<p>🕐 时间：10-13 09:30:12</p>
+<p>━━━━━━━━━━━━━━━━━━</p>
+<p>~~</p>
+
+<h2>五、登录安全提醒</h2>
+
+<p>开启后每次有人登录你的商户账号，机器人会立即推送：</p>
+
+<p>~~</p>
+<p>🔐 登录安全提醒</p>
+<p>━━━━━━━━━━━━━━━━━━</p>
+<p>👤 账号：your@email.com</p>
+<p>🕐 时间：2026-10-13 08:25:50</p>
+<p>📍 IP：103.41.131.72</p>
+<p>🌏 地区：台湾</p>
+<p>💻 设备：Windows / Chrome</p>
+<p>🔑 方式：密码登录</p>
+<p>━━━━━━━━━━━━━━━━━━</p>
+<p>⚠️ 如非本人操作，请立即修改密码！</p>
+<p>~~</p>
+
+<p>设置方法：</p>
+<ol>
+<li>商户后台 → 机器人管理</li>
+<li>找到&quot;登录安全提醒&quot;面板</li>
+<li>填 Token + Chat ID → 保存</li>
+</ol>
+
+<h2>六、常见问题</h2>
+
+<h3>Q1：命令没反应？</h3>
+
+<ol>
+<li>群里：需要 @机器人 再发命令（如 @xindawangluo1_bot 查 T地址 TRxxx）</li>
+<li>私聊：直接发即可</li>
+<li>检查拼写：中文/英文命令都要准确</li>
+</ol>
+
+<h3>Q2：查 TRON 返回&quot;地址未激活&quot;？</h3>
+
+<ul>
+<li>TRON 地址首次收到转账后才激活</li>
+<li>新地址无余额是正常的</li>
+</ul>
+
+<h3>Q3：监控地址会持续推送吗？</h3>
+
+<ul>
+<li>是的，一旦监控，地址有 USDT 转入/转出就会推给你</li>
+<li>取消：取消监控 T地址 地址</li>
+</ul>
+
+<h3>Q4：可以同时绑定多个群吗？</h3>
+
+<ul>
+<li>目前一个商户支持绑定多个群，都用同一个 bot 推送</li>
+<li>群 ID 只能填一个；多个群请把 bot 拉进总群</li>
+</ul>
+
+<hr>
+
+<h1>信达支付系统 · TG 推送限流说明与解决方案</h1>
+
+<blockquote>生成时间：2026-10-13</blockquote>
+
+<h2>一、TG 官方限制（实测）</h2>
+
+<table>
+<thead><tr><th>维度</th><th>限制</th></tr></thead><tbody>
+<tr><td>单群消息频率</td><td>约 20 条 / 分钟</td></tr>
+<tr><td>单 bot 全局</td><td>约 30 条 / 秒</td></tr>
+<tr><td>触发惩罚</td><td>首次 30-60 秒</td></tr>
+<tr><td>编辑消息</td><td>同样受限</td></tr>
+</tbody></table>
+
+<p>报错样例：{&quot;ok&quot;:false,&quot;error_code&quot;:429,&quot;description&quot;:&quot;Too Many Requests: retry after 41&quot;}</p>
+
+<h2>二、系统解决方案</h2>
+
+<h3>方案 1：Redis 队列 + 每群独立限速</h3>
+
+<p>商户下单 → 秒写入 Redis → Worker 单线程消费（每群 ≥3.5 秒/条）→ TG 永不限流</p>
+
+<h3>方案 2：多码绑多群</h3>
+
+<p>商户上传 N 个收款码，每码绑不同群，订单按码分流。</p>
+
+<p><strong>容量 = N × 17 条/分钟</strong></p>
+
+<h3>方案 3：组合方案（终极）</h3>
+
+<p>Redis 队列 + 多群分流 + 每群独立限速</p>
+
+<h2>三、容量估算</h2>
+
+<table>
+<thead><tr><th>群数量</th><th>每分钟</th><th>每天</th></tr></thead><tbody>
+<tr><td>1 个群</td><td>17 条</td><td>约 2.4 万单</td></tr>
+<tr><td>4 个群</td><td>68 条</td><td>约 9.8 万单</td></tr>
+<tr><td>10 个群</td><td>170 条</td><td>约 24 万单</td></tr>
+</tbody></table>
+
+<h2>四、商户操作步骤</h2>
+
+<ol>
+<li>创建 TG 群 → 拉 bot 进群 → 设管理员</li>
+<li>群里发 <code>/id</code> 获取群 ID（格式 <code>-100xxxxxxxxxx</code>）</li>
+<li>商户后台 → 收款方式管理 → 上传码 → 绑定群 + 操作人 TG ID</li>
+<li>保存</li>
+<li>每多绑 1 个群，容量增加 17 条/分钟</li>
+</ol>
+
+<h2>五、常见问题</h2>
+
+<p><strong>Q1：点【确认到账】提示&quot;无权操作&quot;？</strong></p>
+<p>A：你的 TG ID 不在该群操作人列表。群里发 <code>/加操作人 @你的用户名</code> 添加。</p>
+
+<p><strong>Q2：订单消息延迟？</strong></p>
+<p>A：队列排队，最多 3.5 秒 × 队列长度。增加群数量可减少延迟。</p>
+
+<p><strong>Q3：订单推送失败？</strong></p>
+<p>A：检查 bot 是否被踢出群、是否被禁言、群 ID 是否正确。查日志：<code>queue/logs/worker.log</code></p>
+
+<p><strong>Q4：为什么不能一次推很多条？</strong></p>
+<p>A：TG 官方限制，任何 bot 都无法绕过。唯一方案：多群分流 + 队列。</p>
+
+<h2>六、注意事项</h2>
+
+<ol>
+<li>不要试图绕过限流，TG 检测到会封 bot</li>
+<li>不要多个 bot 打同一个群，会叠加限流</li>
+<li>每群至少留 1 个操作人</li>
+<li>群 ID 是负数（-100xxxxxxxxxx）</li>
+<li>操作人 TG ID 是正数（7xxxxxxxxx）</li>
+</ol>
+
+<hr>
+<p>文档完</p>
+
+
+</div>
+</body>
+</html>

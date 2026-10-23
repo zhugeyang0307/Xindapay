@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1677ff"/>
+      <stop offset="100%" stop-color="#0d5cd6"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="115" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="180" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
+
+  <text x="256" y="290" font-family="'PingFang SC', 'Microsoft YaHei', -apple-system, sans-serif" font-size="220" font-weight="900" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">X</text>
+
+  <circle cx="360" cy="360" r="48" fill="#fbbf24" stroke="#ffffff" stroke-width="8" filter="url(#shadow)"/>
+  <path d="M335 360 L352 377 L385 340" stroke="#ffffff" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

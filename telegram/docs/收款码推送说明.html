@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>收款码推送配置说明 · 信达支付</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+     max-width:900px;margin:0 auto;padding:40px 24px;line-height:1.8;color:#1a2a4a;
+     background:#fff;-webkit-font-smoothing:antialiased}
+h1{font-size:28px;font-weight:800;margin:0 0 24px;padding-bottom:16px;
+   border-bottom:3px solid #1e88e5;color:#0a1e3f;letter-spacing:-.3px}
+h2{font-size:22px;font-weight:800;margin:36px 0 18px;padding-left:12px;
+   border-left:4px solid #1e88e5;color:#0a1e3f}
+h3{font-size:17px;font-weight:700;margin:26px 0 12px;color:#1e88e5}
+h4{font-size:15px;font-weight:700;margin:20px 0 10px;color:#3a4a5e}
+p{margin:12px 0;font-size:14.5px}
+ul,ol{margin:12px 0;padding-left:26px;font-size:14.5px}
+li{margin:6px 0}
+code{background:#f5f7fa;padding:2px 8px;border-radius:4px;font-family:Menlo,Consolas,monospace;
+     font-size:13px;color:#c7254e}
+pre{background:#f7f9fc;border:1px solid #eef0f5;border-radius:8px;padding:16px 18px;
+    overflow-x:auto;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#2a3a4e}
+pre code{background:none;padding:0;color:#2a3a4e}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+th,td{border:1px solid #e2e8f0;padding:10px 14px;text-align:left}
+th{background:#f7f9fc;font-weight:700;color:#0a1e3f}
+tr:nth-child(even) td{background:#fafbfc}
+blockquote{border-left:4px solid #00c9a7;background:#f0fdf9;margin:16px 0;
+           padding:12px 18px;color:#3a4a5e;border-radius:0 8px 8px 0;font-size:14px}
+a{color:#1e88e5;text-decoration:none}
+a:hover{text-decoration:underline}
+hr{border:none;border-top:1px solid #eef0f5;margin:32px 0}
+strong{font-weight:700;color:#0a1e3f}
+</style>
+</head>
+<body>
+<h1>信达支付 · 收款码推送配置说明</h1>
+
+<blockquote>适用于：商户后台 → 收款码管理 → 添加收款方式</blockquote>
+
+<h2>一、核心概念</h2>
+
+<p>每张收款码可以配置<strong>一个推送目标</strong>，订单支付后会推送到这个目标，由该目标的人点【✅确认到账】。</p>
+
+<table>
+<thead><tr><th>推送目标类型</th><th>填法</th><th>效果</th></tr></thead><tbody>
+<tr><td><strong>个人私聊</strong></td><td>正数，如 <code>7772671784</code></td><td>订单推给这个人的 TG 私聊</td></tr>
+<tr><td><strong>TG 群</strong></td><td>负数，如 <code>-1003942712010</code></td><td>订单推到群里</td></tr>
+</tbody></table>
+
+<h2>二、归属地区（选填）</h2>
+
+<p>每个收款码可以标注一个<strong>归属地区</strong>（省 + 市），用于后续的<strong>智能路由分配</strong>——比如你有多张码分别属于不同地区，系统可以按客户 IP 归属地自动分配最近的收款码。</p>
+
+<h3>怎么填</h3>
+
+<ul>
+<li><strong>省 / 直辖市</strong>：下拉选择（34 个选项：北京/上海/广东/...）</li>
+<li><strong>市 / 区</strong>：手动输入（如"深圳"、"朝阳"、"浦东新区"）</li>
+</ul>
+
+<h3>示例</h3>
+
+<pre><code>收款码 1：广东 · 深圳
+收款码 2：上海 · 浦东
+收款码 3：北京 · 朝阳
+</code></pre>
+
+<p>客户扫码时，如果系统按 IP 路由分配收款码，广东省的客户优先匹配"广东"的码，上海的客户优先匹配"上海"的码。</p>
+
+<blockquote>
+<strong>💡 提示：</strong>归属地区是<strong>选填</strong>字段，留空不影响收款功能，只是不参与地区匹配。如果只有一张收款码或不需要地区路由，可以不填。
+</blockquote>
+
+<h2>三、配置推送目标（个人）</h2>
+
+<h3>最简配置（推荐）</h3>
+
+<p><strong>只填一个字段</strong>：</p>
+
+<pre><code>备注：张三-微信经营码
+Telegram账户：@zhangsan
+推送目标：7772671784         ← 只填这个
+操作人 TG ID：[留空]
+</code></pre>
+
+<p><strong>系统自动处理</strong>：</p>
+<ul>
+<li>订单推送到 7772671784 私聊</li>
+<li>7772671784 自动获得&quot;点确认&quot;权限</li>
+<li><strong>不需要手动填&quot;操作人 TG ID&quot;</strong></li>
+</ul>
+
+<h3>效果图</h3>
+
+<p>TG 私聊（7772671784 账号）会收到：</p>
+
+<pre><code>🔔 新订单到账 · @zhangsan
+━━━━━━━━━━━━━━━━━━
+📦 商品：VIP会员
+💰 金额：￥100.00
+🔑 订单：2026101312345678901
+👤 私聊：@zhangsan
+🕐 时间：10-13 17:00:00
+━━━━━━━━━━━━━━━━━━
+[✅ 确认到账] [❌ 忽略]
+</code></pre>
+
+<p>点【✅确认到账】→ 系统立即回调商户系统。</p>
+
+<h2>四、配置推送目标（群）</h2>
+
+<h3>群推送需要 2 个字段</h3>
+
+<pre><code>推送目标：-1003942712010     ← 负数=群
+操作人 TG ID：7772671784     ← 群里谁可以点确认
+</code></pre>
+
+<p><strong>注意</strong>：</p>
+<ul>
+<li>群填<strong>负数</strong>，操作人填<strong>正数</strong></li>
+<li>操作人必须是该群成员</li>
+<li>未填操作人的群，只有商户本人能点</li>
+</ul>
+
+<h2>五、如何获取你的 TG ID</h2>
+
+<h3>方法 1：找 @userinfobot</h3>
+
+<ol>
+<li>TG 搜索 <code>@userinfobot</code></li>
+<li>私聊发&quot;你好&quot;</li>
+<li>它返回你的 ID（如 <code>7772671784</code>）</li>
+</ol>
+
+<h3>方法 2：用你自己的 bot</h3>
+
+<ol>
+<li>私聊你的自建 bot（如 @IPimessage_bot）</li>
+<li>发 <code>/id</code></li>
+<li>机器人返回你的 TG ID</li>
+</ol>
+
+<h3>方法 3：找 @xindawangluo1_bot</h3>
+
+<ol>
+<li>私聊 @xindawangluo1_bot</li>
+<li>发 <code>/id</code></li>
+<li>返回你的 ID</li>
+</ol>
+
+<h2>六、如何获取群 ID</h2>
+
+<ol>
+<li>把 bot 拉进群</li>
+<li>给 bot 管理员权限</li>
+<li>群里发 <code>/id</code>（可能需要 @bot）</li>
+<li>机器人返回群 ID（如 <code>-1003942712010</code>）</li>
+</ol>
+
+<h2>七、多个收款码如何分配</h2>
+
+<p><strong>每个收款码可以绑不同的推送目标</strong>：</p>
+
+<table>
+<thead><tr><th>码</th><th>推送目标</th><th>谁点确认</th></tr></thead><tbody>
+<tr><td>张三-微信</td><td>7772671784</td><td>张三</td></tr>
+<tr><td>李四-微信</td><td>8295499833</td><td>李四</td></tr>
+<tr><td>王五-支付宝</td><td>8775809783</td><td>王五</td></tr>
+<tr><td>财务群</td><td>-1003942712010</td><td>群成员</td></tr>
+</tbody></table>
+
+<p><strong>订单会按扫码的码自动路由</strong>：</p>
+<ul>
+<li>客户扫张三的码 → 推给张三</li>
+<li>客户扫李四的码 → 推给李四</li>
+<li><strong>互不干扰</strong></li>
+</ul>
+
+<h2>八、常见问题</h2>
+
+<p><strong>Q1：只填推送目标，不填操作人，能点确认吗？</strong></p>
+<p>A：<strong>能</strong>。系统会自动把推送目标（正数）作为操作人。</p>
+
+<p><strong>Q2：填了群 ID，但没人能点？</strong></p>
+<p>A：群必须填&quot;操作人 TG ID&quot;，或让操作人在群里发 <code>/加操作人 @xxx</code> 添加。</p>
+
+<p><strong>Q3：换人了怎么改？</strong></p>
+<p>A：收款码管理 → 编辑 → 改推送目标 → 保存。下次订单就推给新的人。</p>
+
+<p><strong>Q4：一个码能推给多个人吗？</strong></p>
+<p>A：目前一个码只能填一个目标。要推给多个人 → 把 bot 拉进群，把他们都拉进群，填群 ID。</p>
+
+<p><strong>Q5：推送的目标必须先用过 bot 吗？</strong></p>
+<p>A：<strong>必须</strong>。TG 规定用户必须先和 bot 私聊过，bot 才能主动推消息。让目标用户去 <code>@你的bot</code> 点 START 即可。</p>
+
+<p><strong>Q6：收款码限速怎么办？</strong></p>
+<p>A：TG 单群限 20 条/分钟，私聊限 60 条/分钟。系统已内置 Redis 队列自动限速，多码绑不同目标可扩容。详见《TG 推送限流说明》。</p>
+
+<h2>九、操作步骤总结</h2>
+
+<pre><code>1. 打开商户后台 → 收款码管理
+2. 点&quot;添加收款方式&quot;
+3. 上传二维码图片
+4. 填备注（如&quot;张三-微信&quot;）
+5. 填推送目标：
+   - 个人：填正数 TG ID（如 7772671784）
+   - 群：填负数群 ID + 操作人 TG ID
+5.5 选填"归属地区"（省 + 市，用于 IP 智能路由，可不填）
+6. 保存
+7. 完成！客户扫这个码付款，订单自动推给目标
+</code></pre>
+
+<hr>
+
+<p>文档完 · 2026-10-13</p>
+
+
+</body>
+</html>

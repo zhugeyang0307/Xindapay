@@ -1,0 +1,9 @@
+{
+    "name": "xinda/pay",
+    "require": {
+        "hejunjie/ip138": "^1.0",
+        "hejunjie/china-division": "^1.0",
+        "hejunjie/mobile-locator": "^1.0",
+        "hejunjie/encrypted-request": "^2.0"
+    }
+}

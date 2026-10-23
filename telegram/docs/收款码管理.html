@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>收款码推送配置说明 · 信达支付</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+     max-width:900px;margin:0 auto;padding:40px 24px;line-height:1.8;color:#1a2a4a;
+     background:#fff;-webkit-font-smoothing:antialiased}
+h1{font-size:28px;font-weight:800;margin:0 0 24px;padding-bottom:16px;
+   border-bottom:3px solid #1e88e5;color:#0a1e3f;letter-spacing:-.3px}
+h2{font-size:22px;font-weight:800;margin:36px 0 18px;padding-left:12px;
+   border-left:4px solid #1e88e5;color:#0a1e3f}
+h3{font-size:17px;font-weight:700;margin:26px 0 12px;color:#1e88e5}
+h4{font-size:15px;font-weight:700;margin:20px 0 10px;color:#3a4a5e}
+p{margin:12px 0;font-size:14.5px}
+ul,ol{margin:12px 0;padding-left:26px;font-size:14.5px}
+li{margin:6px 0}
+code{background:#f5f7fa;padding:2px 8px;border-radius:4px;font-family:Menlo,Consolas,monospace;
+     font-size:13px;color:#c7254e}
+pre{background:#f7f9fc;border:1px solid #eef0f5;border-radius:8px;padding:16px 18px;
+    overflow-x:auto;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#2a3a4e}
+pre code{background:none;padding:0;color:#2a3a4e}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+th,td{border:1px solid #e2e8f0;padding:10px 14px;text-align:left}
+th{background:#f7f9fc;font-weight:700;color:#0a1e3f}
+tr:nth-child(even) td{background:#fafbfc}
+blockquote{border-left:4px solid #00c9a7;background:#f0fdf9;margin:16px 0;
+           padding:12px 18px;color:#3a4a5e;border-radius:0 8px 8px 0;font-size:14px}
+a{color:#1e88e5;text-decoration:none}
+a:hover{text-decoration:underline}
+hr{border:none;border-top:1px solid #eef0f5;margin:32px 0}
+strong{font-weight:700;color:#0a1e3f}
+</style>
+</head>
+<body>
+<h1>信达支付 · 收款码推送配置说明</h1>
+
+<blockquote>适用于：商户后台 → 收款码管理 → 添加收款方式</blockquote>
+
+<h2>一、核心概念</h2>
+
+<p>每张收款码可以配置<strong>一个推送目标</strong>，订单支付后会推送到这个目标，由该目标的人点【✅确认到账】。</p>
+
+<table>
+<thead><tr><th>推送目标类型</th><th>填法</th><th>效果</th></tr></thead><tbody>
+<tr><td><strong>个人私聊</strong></td><td>正数，如 <code>7772671784</code></td><td>订单推给这个人的 TG 私聊</td></tr>
+<tr><td><strong>TG 群</strong></td><td>负数，如 <code>-1003942712010</code></td><td>订单推到群里</td></tr>
+</tbody></table>
+
+<h2>二、归属地区（选填）</h2>
+
+<p>每个收款码可以标注一个<strong>归属地区</strong>（省 + 市），用于后续的<strong>智能路由分配</strong>——比如你有多张码分别属于不同地区，系统可以按客户 IP 归属地自动分配最近的收款码。</p>
+
+<h3>怎么填</h3>
+
+<ul>
+<li><strong>省 / 直辖市</strong>：下拉选择（34 个选项：北京/上海/广东/...）</li>
+<li><strong>市 / 区</strong>：手动输入（如"深圳"、"朝阳"、"浦东新区"）</li>
+</ul>
+
+<h3>示例</h3>
+
+<pre><code>收款码 1：广东 · 深圳
+收款码 2：上海 · 浦东
+收款码 3：北京 · 朝阳
+</code></pre>
+
+<p>客户扫码时，如果系统按 IP 路由分配收款码，广东省的客户优先匹配"广东"的码，上海的客户优先匹配"上海"的码。</p>
+
+<blockquote>
+<strong>💡 提示：</strong>归属地区是<strong>选填</strong>字段，留空不影响收款功能，只是不参与地区匹配。如果只有一张收款码或不需要地区路由，可以不填。
+</blockquote>
+
+<h2>三、配置推送目标（个人）</h2>
+
+<h3>最简配置（推荐）</h3>
+
+<p><strong>只填一个字段</strong>：</p>
+
+<pre><code>备注：张三-微信经营码
+Telegram账户：@zhangsan
+推送目标：7772671784         ← 只填这个
+操作人 TG ID：[留空]
+</code></pre>
+
+<p><strong>系统自动处理</strong>：</p>
+<ul>
+<li>订单推送到 7772671784 私聊</li>
+<li>7772671784 自动获得&quot;点确认&quot;权限</li>
+<li><strong>不需要手动填&quot;操作人 TG ID&quot;</strong></li>
+</ul>
+
+<h3>效果图</h3>
+
+<p>TG 私聊（7772671784 账号）会收到：</p>
+
+<pre><code>🔔 新订单到账 · @zhangsan
+━━━━━━━━━━━━━━━━━━
+📦 商品：VIP会员
+💰 金额：￥100.00
+🔑 订单：2026101312345678901
+👤 私聊：@zhangsan
+🕐 时间：10-13 17:00:00
+━━━━━━━━━━━━━━━━━━
+[✅ 确认到账] [❌ 忽略]
+</code></pre>
+
+<p>点【✅确认到账】→ 系统立即回调商户系统。</p>
+
+<h2>四、配置推送目标（群）</h2>
+
+<h3>群推送需要 2 个字段</h3>
+
+<pre><code>推送目标：-1003942712010     ← 负数=群
+操作人 TG ID：7772671784     ← 群里谁可以点确认
+</code></pre>
+
+<p><strong>注意</strong>：</p>
+<ul>
+<li>群填<strong>负数</strong>，操作人填<strong>正数</strong></li>
+<li>操作人必须是该群成员</li>
+<li>未填操作人的群，只有商户本人能点</li>
+</ul>
+
+<h2>五、如何获取你的 TG ID</h2>
+
+<h3>方法 1：找 @userinfobot</h3>
+
+<ol>
+<li>TG 搜索 <code>@userinfobot</code></li>
+<li>私聊发&quot;你好&quot;</li>
+<li>它返回你的 ID（如 <code>7772671784</code>）</li>
+</ol>
+
+<h3>方法 2：用你自己的 bot</h3>
+
+<ol>
+<li>私聊你的自建 bot（如 @IPimessage_bot）</li>
+<li>发 <code>/id</code></li>
+<li>机器人返回你的 TG ID</li>
+</ol>
+
+<h3>方法 3：找 @xindawangluo1_bot</h3>
+
+<ol>
+<li>私聊 @xindawangluo1_bot</li>
+<li>发 <code>/id</code></li>
+<li>返回你的 ID</li>
+</ol>
+
+<h2>六、如何获取群 ID</h2>
+
+<ol>
+<li>把 bot 拉进群</li>
+<li>给 bot 管理员权限</li>
+<li>群里发 <code>/id</code>（可能需要 @bot）</li>
+<li>机器人返回群 ID（如 <code>-1003942712010</code>）</li>
+</ol>
+
+<h2>七、多个收款码如何分配</h2>
+
+<p><strong>每个收款码可以绑不同的推送目标</strong>：</p>
+
+<table>
+<thead><tr><th>码</th><th>推送目标</th><th>谁点确认</th></tr></thead><tbody>
+<tr><td>张三-微信</td><td>7772671784</td><td>张三</td></tr>
+<tr><td>李四-微信</td><td>8295499833</td><td>李四</td></tr>
+<tr><td>王五-支付宝</td><td>8775809783</td><td>王五</td></tr>
+<tr><td>财务群</td><td>-1003942712010</td><td>群成员</td></tr>
+</tbody></table>
+
+<p><strong>订单会按扫码的码自动路由</strong>：</p>
+<ul>
+<li>客户扫张三的码 → 推给张三</li>
+<li>客户扫李四的码 → 推给李四</li>
+<li><strong>互不干扰</strong></li>
+</ul>
+
+<h2>八、常见问题</h2>
+
+<p><strong>Q1：只填推送目标，不填操作人，能点确认吗？</strong></p>
+<p>A：<strong>能</strong>。系统会自动把推送目标（正数）作为操作人。</p>
+
+<p><strong>Q2：填了群 ID，但没人能点？</strong></p>
+<p>A：群必须填&quot;操作人 TG ID&quot;，或让操作人在群里发 <code>/加操作人 @xxx</code> 添加。</p>
+
+<p><strong>Q3：换人了怎么改？</strong></p>
+<p>A：收款码管理 → 编辑 → 改推送目标 → 保存。下次订单就推给新的人。</p>
+
+<p><strong>Q4：一个码能推给多个人吗？</strong></p>
+<p>A：目前一个码只能填一个目标。要推给多个人 → 把 bot 拉进群，把他们都拉进群，填群 ID。</p>
+
+<p><strong>Q5：推送的目标必须先用过 bot 吗？</strong></p>
+<p>A：<strong>必须</strong>。TG 规定用户必须先和 bot 私聊过，bot 才能主动推消息。让目标用户去 <code>@你的bot</code> 点 START 即可。</p>
+
+<p><strong>Q6：收款码限速怎么办？</strong></p>
+<p>A：TG 单群限 20 条/分钟，私聊限 60 条/分钟。系统已内置 Redis 队列自动限速，多码绑不同目标可扩容。详见《TG 推送限流说明》。</p>
+
+<h2>九、操作步骤总结</h2>
+
+<pre><code>1. 打开商户后台 → 收款码管理
+2. 点&quot;添加收款方式&quot;
+3. 上传二维码图片
+4. 填备注（如&quot;张三-微信&quot;）
+5. 填推送目标：
+   - 个人：填正数 TG ID（如 7772671784）
+   - 群：填负数群 ID + 操作人 TG ID
+5.5 选填"归属地区"（省 + 市，用于 IP 智能路由，可不填）
+6. 保存
+7. 完成！客户扫这个码付款，订单自动推给目标
+</code></pre>
+
+<hr>
+
+<p>文档完 · 2026-10-13</p>
+
+
+</body>
+</html>
+    <!-- ============ 1. 收款码是什么 ============ -->
+    <section class="block" id="s1">
+    <div class="block-head"><h2>1. 收款码是什么</h2></div>
+    <div class="block-body">
+    <p>收款码 = <b>你（或你的下级）绑定的实际收款工具</b>。客户下单后，系统从你可用的收款码里挑一个展示给客户，客户扫这个码付款。</p>
+
+    <h3>它是怎么工作的？</h3>
+    <pre>
+【客户】扫码付款 → 【你的微信/支付宝】收到钱
+        ↓
+    【手机上的监听 App】监听到账
+        ↓
+    上报到【系统】→ 订单完成
+        ↓
+    【你】收到通知 → 点【确认到账】
+    </pre>
+
+    <h3>为什么需要上传收款码？</h3>
+    <ul>
+      <li><b>让系统认识你的收款工具</b>：系统需要知道"这笔钱进了哪个账号"才能完成订单</li>
+      <li><b>风控需要</b>：客户 IP 归属地和收款码地区一致时，微信/支付宝风控更宽松</li>
+      <li><b>分流需要</b>：多个码可以按权重分流，单码被风控时其他码顶上</li>
+    </ul>
+
+    <div class="note green">
+      <b>💡 一个商户可以绑定多个收款码</b>：微信 × N + 支付宝 × N + 聚合码 × N。系统会按"本人优先 → 下级补充"的顺序自动选。
+    </div>
+    </div>
+    </section>
+
+    <!-- ============ 2. 支持哪些类型 ============ -->
+    <section class="block" id="s2">
+    <div class="block-head"><h2>2. 支持哪些类型</h2></div>
+    <div class="block-body">
+    <p>系统支持<b> 3 大平台 · 16 种收款方式</b>：</p>
+
+    <h3>🟢 微信（6 种）</h3>
+    <table>
+    <tr><th>类型</th><th>说明</th><th>数量</th></tr>
+    <tr><td>微信赞赏码</td><td>微信 → 我 → 服务 → 收付款 → 赞赏码</td><td>不限</td></tr>
+    <tr><td>微信个人码</td><td>微信 → 收付款 → 二维码收款</td><td>不限</td></tr>
+    <tr><td>微信经营码</td><td>微信支付商业版 → 收款码</td><td>不限</td></tr>
+    <tr><td>微信银行转账</td><td>填银行卡 + 户名（无图片）</td><td>不限</td></tr>
+    <tr><td>微信手机号</td><td>填手机号（无图片）</td><td>不限</td></tr>
+    </table>
+
+    <h3>🔵 支付宝（7 种）</h3>
+    <table>
+    <tr><th>类型</th><th>说明</th><th>数量</th></tr>
+    <tr><td>支付宝名片</td><td>支付宝 → 搜索「收款名片」</td><td>不限</td></tr>
+    <tr><td>支付宝个人码</td><td>支付宝 → 收钱 → 保存图片</td><td>不限</td></tr>
+    <tr><td>支付宝经营码</td><td>支付宝 → 商家服务 → 收款码</td><td>不限</td></tr>
+    <tr><td>经营收款单</td><td>支付宝 → 搜索「收款单」</td><td>不限</td></tr>
+    <tr><td>AA 收款</td><td>支付宝 → 搜索「AA收款」</td><td>不限</td></tr>
+    <tr><td>小荷包</td><td>支付宝 → 搜索「小荷包」</td><td>不限</td></tr>
+    <tr><td>支付宝账号转账</td><td>填支付宝账号（无图片）</td><td>不限</td></tr>
+    <tr><td>支付宝口令</td><td>支付宝 → 向 TA 要钱 → 口令</td><td>不限</td></tr>
+    </table>
+
+    <h3>🟣 聚合码（3 种）</h3>
+    <table>
+    <tr><th>类型</th><th>说明</th><th>数量</th></tr>
+    <tr><td>聚合码·微信</td><td>收银机/服务商导出微信聚合码</td><td>不限</td></tr>
+    <tr><td>聚合码·支付宝</td><td>收银机/服务商导出支付宝聚合码</td><td>不限</td></tr>
+    <tr><td>聚合码·通用</td><td>微信+支付宝通用聚合码</td><td>不限</td></tr>
+    </table>
+
+    <div class="note">
+      <b>⚠️ 聚合码上传注意</b>：必须上传<b>原图</b>，不要截图裁剪，不要加白边。否则识别可能失败。
+    </div>
+
+    <div class="note green">
+      <b>✅ 数量不限</b>：可以自由添加任意数量的收款码。
+    </div>
+
+    <div class="note red">
+      <b>⚠️ 请及时清理</b>：已失效 / 不能收款的码请尽快<b>删除或停用</b>，避免被系统派单导致订单失败。<br>
+      <b>❌ 不支持</b>：虚拟币地址、境外支付码、非微信/支付宝/聚合码的其他类型。
+    </div>
+    </div>
+    </section>
+    <!-- ============ 3. 添加收款码 ============ -->
+    <section class="block" id="s3">
+    <div class="block-head"><h2>3. 添加收款码（图文）</h2></div>
+    <div class="block-body">
+
+    <h3>入口位置</h3>
+    <p>后台左侧菜单 → <b>收款工具 → 收款码管理</b></p>
+
+    <div class="shot">
+      <div class="shot-tag">后台截图</div>
+      <div class="shot-inner" style="padding:0;">
+        <div class="mock-title" style="padding:14px 16px;margin:0;"><span style="color:#07c160;font-size:18px;">📱</span> 收款码管理</div>
+        <div style="padding:12px 16px;border-bottom:1px solid #eef2f7;text-align:right;">
+          <span class="mock-btn green">➕ 新增收款码</span>
+        </div>
+        <div style="padding:8px 16px;font-size:12px;color:#94a3b8;background:#fafbfd;">共 2 个收款码（微信 ×1 · 支付宝 ×1）</div>
+        <div class="mock-row" style="font-weight:700;background:#f7fafd;font-size:12px;color:#555;">
+          <div style="width:40px;">ID</div>
+          <div style="flex:1;">类型</div>
+          <div style="width:80px;">状态</div>
+          <div style="width:100px;">操作</div>
+        </div>
+        <div class="mock-row">
+          <div style="width:40px;">#119</div>
+          <div style="flex:1;">微信个人码 · 张三</div>
+          <div style="width:80px;"><span style="color:#07c160;">✅ 启用</span></div>
+          <div style="width:100px;"><span class="mock-btn">编辑</span> <span class="mock-btn red">停用</span></div>
+        </div>
+        <div class="mock-row">
+          <div style="width:40px;">#120</div>
+          <div style="flex:1;">支付宝个人码 · 李四</div>
+          <div style="width:80px;"><span style="color:#07c160;">✅ 启用</span></div>
+          <div style="width:100px;"><span class="mock-btn">编辑</span> <span class="mock-btn red">停用</span></div>
+        </div>
+      </div>
+      <!-- 标注 -->
+      <div class="mk" style="top:60px;right:24px;">1</div>
+      <div class="tipbox" style="top:95px;right:60px;">① 点这里 <b>新增收款码</b></div>
+    </div>
+
+    <h3>完整操作步骤</h3>
+
+    <div class="step"><div class="num">1</div><div class="text">
+      <b>打开新增弹窗</b>点右上角「➕ 新增收款码」按钮。
+    </div></div>
+
+    <div class="step"><div class="num">2</div><div class="text">
+      <b>选择平台</b>微信 / 支付宝 / 聚合码（点一下卡片就选中，边框变蓝）。
+    </div></div>
+
+    <div class="step"><div class="num">3</div><div class="text">
+      <b>选择收款码模式</b>下拉框选择具体类型（如"微信赞赏码"/"支付宝个人码"等）。<br>
+      选了之后上方会显示<b>蓝色的"从哪里获取"教程</b>，照着操作微信/支付宝即可。
+    </div></div>
+
+    <div class="step"><div class="num">4</div><div class="text">
+      <b>上传二维码图片</b>（图片类）或 <b>填写账号</b>（账号/口令类）：
+      <ul style="margin-top:6px;">
+        <li>图片类：点「选择文件」上传二维码</li>
+        <li>账号类：填卡号/手机号/支付宝账号</li>
+        <li>口令类：粘贴支付宝口令文本</li>
+      </ul>
+    </div></div>
+
+    <div class="step"><div class="num">5</div><div class="text">
+      <b>填写备注</b>（推荐填）方便自己识别，如"张三-微信"、"公司备用支付宝"。
+    </div></div>
+
+    <div class="step"><div class="num">6</div><div class="text">
+      <b>配置限额（可选）</b>：
+      <ul style="margin-top:6px;">
+        <li><b>单笔最低/最高金额</b>：只接收这个区间的订单</li>
+        <li><b>金额浮动比例</b>：防止客户总付整数被风控</li>
+        <li><b>每日笔数/金额限制</b>：达到后该码当天不再被派单</li>
+      </ul>
+      留空或 0 = 不限制。
+    </div></div>
+
+    <div class="step"><div class="num">7</div><div class="text">
+      <b>归属地区 + 绑定 IP（可选，但强烈推荐）</b>：<br>
+      点「🔍 用我的 IP」自动填入真实 IP + 识别归属地；<br>
+      也可手动选省份。详见 <a href="#s6">第 6 章</a>。
+    </div></div>
+
+    <div class="step"><div class="num">8</div><div class="text">
+      <b>点「✅ 提交」</b>保存。码出现在列表里，状态=启用。
+    </div></div>
+
+    <h3>图片类 vs 账号类 vs 口令类</h3>
+    <table>
+    <tr><th>类型</th><th>需要填</th><th>举例</th></tr>
+    <tr><td>图片类（大多数）</td><td>二维码图片 + 备注</td><td>微信赞赏码、支付宝个人码</td></tr>
+    <tr><td>账号类</td><td>收款账号 + 户名 + 开户行</td><td>微信银行、支付宝账号转账</td></tr>
+    <tr><td>口令类</td><td>口令文本（粘贴整段）</td><td>支付宝口令</td></tr>
+    </table>
+
+    <div class="note">
+      <b>📷 图片上传技巧</b>：
+      <ul>
+        <li>用<b>原图</b>（不要截图、不要裁剪）</li>
+        <li>PNG 或 JPG 格式</li>
+        <li>大小 1MB 以内</li>
+        <li>不要加文字、白边、水印</li>
+      </ul>
+    </div>
+    </div>
+    </section>
+    <!-- ============ 4. 字段逐个说明 ============ -->
+    <section class="block" id="s4">
+    <div class="block-head"><h2>4. 字段逐个说明</h2></div>
+    <div class="block-body">
+
+    <h3>必填字段</h3>
+    <table>
+    <tr><th>字段</th><th>是否必填</th><th>说明</th></tr>
+    <tr><td>平台</td><td>✅ 必填</td><td>微信 / 支付宝 / 聚合码（点卡片选）</td></tr>
+    <tr><td>收款码模式</td><td>✅ 必填</td><td>具体类型（微信赞赏码等）</td></tr>
+    <tr><td>二维码图片</td><td>图片类必填</td><td>上传原图，不要截图裁剪</td></tr>
+    <tr><td>收款账号</td><td>账号类必填</td><td>银行卡号 / 手机号 / 支付宝账号</td></tr>
+    <tr><td>口令内容</td><td>口令类必填</td><td>粘贴支付宝口令文本</td></tr>
+    </table>
+
+    <h3>推荐字段</h3>
+    <table>
+    <tr><th>字段</th><th>推荐度</th><th>作用</th></tr>
+    <tr><td>备注</td><td>⭐⭐⭐⭐⭐</td><td>自己识别用，如"张三-微信"</td></tr>
+    <tr><td>归属地区</td><td>⭐⭐⭐⭐⭐</td><td>客户 IP 同地区优先匹配</td></tr>
+    <tr><td>绑定 IP</td><td>⭐⭐⭐⭐⭐</td><td>上传时记 IP，之后系统自动识别归属地</td></tr>
+    <tr><td>邮件推送邮箱</td><td>⭐⭐⭐⭐</td><td>到账时通知这个邮箱</td></tr>
+    <tr><td>操作员 TG ID</td><td>⭐⭐⭐</td><td>到账时通知这个 TG 号</td></tr>
+    </table>
+
+    <h3>限额字段（选填）</h3>
+    <table>
+    <tr><th>字段</th><th>说明</th><th>举例</th></tr>
+    <tr><td>单笔最低金额</td><td>低于此金额不派单</td><td>填 10 = 只收 ≥10 元</td></tr>
+    <tr><td>单笔最高金额</td><td>高于此金额不派单</td><td>填 5000 = 只收 ≤5000 元</td></tr>
+    <tr><td>金额浮动比例</td><td>订单金额随机浮动 ±N%</td><td>5 = 200 元订单 → 190~210 元</td></tr>
+    <tr><td>每日笔数限制</td><td>当天累计到 N 笔后停用</td><td>填 50</td></tr>
+    <tr><td>每日金额限制</td><td>当天累计到 N 元后停用</td><td>填 10000</td></tr>
+    </table>
+
+    <div class="note">
+      <b>💡 限额设计建议</b>：
+      <ul>
+        <li><b>新号/敏感号</b>：单笔上限设低（如 500），日限设紧（如 20 笔）</li>
+        <li><b>老号/信任号</b>：可以放宽（单笔 5000，日限 100 笔）</li>
+        <li><b>浮动</b>：建议开 3-5%，防整数金额风控</li>
+      </ul>
+    </div>
+
+    <h3>可选字段</h3>
+    <table>
+    <tr><th>字段</th><th>说明</th></tr>
+    <tr><td>Telegram 账户</td><td>填 @username，有订单时 @ 一下</td></tr>
+    <tr><td>推送目标（群或人）</td><td>群：-100xxxxx；人：7xxxxxx</td></tr>
+    <tr><td>操作员 TG 数字 ID</td><td>只有该 ID 能点【确认到账】</td></tr>
+    </table>
+    </div>
+    </section>
+
+    <!-- ============ 5. 管理已有收款码 ============ -->
+    <section class="block" id="s5">
+    <div class="block-head"><h2>5. 管理已有收款码</h2></div>
+    <div class="block-body">
+
+    <h3>列表页操作</h3>
+    <div class="shot">
+      <div class="shot-tag">收款码列表 · 操作区</div>
+      <div class="shot-inner" style="padding:0;">
+        <div class="mock-row">
+          <div style="width:60px;font-weight:700;">#119</div>
+          <div style="flex:1;">微信个人码 · 张三<br><small style="color:#888;">今日 5 笔 / ¥1,200</small></div>
+          <div style="width:100px;"><span style="color:#07c160;font-weight:700;">✅ 启用</span></div>
+          <div style="width:180px;">
+            <span class="mock-btn" style="background:#1677ff;">编辑</span>
+            <span class="mock-btn" style="background:#f59e0b;">测试</span>
+            <span class="mock-btn red">停用</span>
+          </div>
+        </div>
+        <div class="mock-row">
+          <div style="width:60px;font-weight:700;">#120</div>
+          <div style="flex:1;">支付宝个人码 · 李四<br><small style="color:#888;">今日 0 笔</small></div>
+          <div style="width:100px;"><span style="color:#e74c3c;font-weight:700;">⛔ 停用</span></div>
+          <div style="width:180px;">
+            <span class="mock-btn" style="background:#1677ff;">编辑</span>
+            <span class="mock-btn green">启用</span>
+          </div>
+        </div>
+      </div>
+      <div class="mk" style="top:36px;right:20px;">1</div>
+      <div class="mk" style="top:36px;right:120px;">2</div>
+      <div class="tipbox" style="top:70px;right:20px;">① <b>停用/启用</b>：一键切换，停用后系统不再派单</div>
+      <div class="tipbox" style="top:120px;right:20px;">② <b>编辑</b>：改备注、限额、地区等</div>
+    </div>
+
+    <h3>每个码可以做的事</h3>
+    <table>
+    <tr><th>操作</th><th>效果</th></tr>
+    <tr><td>✅ 启用 / 停用</td><td>停用后立即不再被派单（不删除数据）</td></tr>
+    <tr><td>📝 编辑</td><td>修改备注、限额、地区、邮件等</td></tr>
+    <tr><td>🗑 删除</td><td>永久删除（谨慎用，建议用停用代替）</td></tr>
+    </table>
+
+    <h3>每个码的使用数据</h3>
+    <p>列表里显示每个码的：</p>
+    <ul>
+      <li><b>今日笔数</b>：今天用这个码收了几笔</li>
+      <li><b>今日金额</b>：今天用这个码收了多少</li>
+      <li><b>累计使用次数</b>：总共用了多少次</li>
+    </ul>
+
+    <div class="note green">
+      <b>💡 系统自动选码的优先级</b>：
+      <pre style="background:#f0fdf4;color:#166534;border-left:3px solid #16a34a;margin-top:8px;">
+1. 商户配的路由规则（见「收款码智能路由」）
+2. 客户 IP 省份匹配（本人码优先）
+3. 多个候选按权重随机
+4. 都没命中 → 找下级码（BFS 最多 3 层）</pre>
+    </div>
+    </div>
+    </section>
+    <!-- ============ 6. 绑定 IP 与地区 ============ -->
+    <section class="block" id="s6">
+    <div class="block-head"><h2>6. 绑定 IP 与地区（推荐）</h2></div>
+    <div class="block-body">
+
+    <p>上传收款码时可以给它<b>绑定一个 IP</b>，系统会自动识别这个 IP 的归属地（省/市/运营商），下单时按客户 IP 匹配。</p>
+
+    <h3>为什么重要？</h3>
+    <ul>
+      <li>📈 客户 IP 与收款码归属地一致 → 微信/支付宝风控更宽松 → <b>支付成功率提升 15~20%</b></li>
+      <li>🔒 精准管控：哪个地区的客户走哪个码，一目了然</li>
+      <li>🎯 结合「收款码智能路由」可以做出精细的分流策略</li>
+    </ul>
+
+    <h3>操作步骤</h3>
+    <div class="step"><div class="num">1</div><div class="text">
+      <b>打开新增码弹窗</b>收款工具 → 收款码管理 → ➕ 新增
+    </div></div>
+    <div class="step"><div class="num">2</div><div class="text">
+      <b>滚到「绑定 IP（选填）」</b>在「归属地区」下方。
+    </div></div>
+    <div class="step"><div class="num">3</div><div class="text">
+      <b>点「🔍 用我的 IP」</b>自动填入你当前 IP + 显示归属地<br>
+      <small style="color:#94a3b8;">⚠️ 如果你开了 VPN / 代理，请手动输入真实 IP</small>
+    </div></div>
+    <div class="step"><div class="num">4</div><div class="text">
+      <b>保存后</b>系统自动把 IP 归属地写入码的 <code>bind_province</code> / <code>bind_city</code>
+    </div></div>
+
+    <h3>效果预览</h3>
+    <div class="shot">
+      <div class="shot-tag">绑定 IP 效果</div>
+      <div class="shot-inner">
+        <div style="font-size:13px;color:#666;margin-bottom:6px;">绑定 IP（选填）</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <input value="113.108.182.1" style="flex:1;padding:9px 12px;border:1px solid #d9e2ec;border-radius:8px;font-size:13px;" readonly>
+          <button style="padding:9px 16px;border-radius:8px;border:none;background:#1677ff;color:#fff;font-weight:700;font-size:13px;">🔍 用我的 IP</button>
+        </div>
+        <div style="padding:10px 14px;background:#f0fdf4;border-radius:8px;font-size:12px;color:#166534;border-left:3px solid #16a34a;line-height:1.7;">
+          ✅ 已填入：<b>113.108.182.1</b> · 广东 深圳 · 电信（已自动选省：广东）<br>
+          <span style="color:#94a3b8;">保存后系统会自动识别此 IP 的归属地省份</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>匹配逻辑（下单时）</h3>
+    <pre>
+客户下单
+    ↓
+系统查客户 IP → 得到省份（如：广东）
+    ↓
+候选码里筛选：
+    · 码的 region_province = 广东？→ 命中
+    · 码的 bind_province  = 广东？→ 命中
+    ↓
+命中码全部作为候选，按权重随机选一个
+    </pre>
+
+    <div class="note green">
+      <b>💡 两种地区配置都行</b>：
+      <ul>
+        <li><b>手填 province</b>：确定性高，但需要手动选</li>
+        <li><b>绑定 IP 自动识别</b>：省事，但 IP 变了不会自动更新</li>
+      </ul>
+      建议<b>只用一种</b>，避免混乱。
+    </div>
+
+    <div class="note">
+      <b>IP 归属地识别不准？</b>
+      <ul>
+        <li>VPN / 代理 IP 会被识别为代理所在地</li>
+        <li>4G/5G 手机 IP 可能跨省（运营商出口）</li>
+        <li>CDN 会显示 CDN 机房 IP</li>
+      </ul>
+      遇到识别偏差 → 到「IP 检测」页核对，或手动选省份。
+    </div>
+    </div>
+    </section>
+
+    <!-- ============ 7. 常见问题 ============ -->
+    <section class="block" id="s7">
+    <div class="block-head"><h2>7. 常见问题</h2></div>
+    <div class="block-body">
+
+    <h3>Q1：上传二维码失败 / 识别不了？</h3>
+    <ul>
+      <li>确认是<b>原图</b>（不要截图/裁剪/加白边）</li>
+      <li>格式 PNG / JPG / JPEG，大小 1MB 以内</li>
+      <li>聚合码必须原图，不要加任何修饰</li>
+      <li>如果是微信"经营码"，要选"微信经营码"类型而不是"个人码"</li>
+    </ul>
+
+    <h3>Q2：添加了码，但下单还是选不到？</h3>
+    <ul>
+      <li>检查码的状态 = <b>启用</b>（不是停用）</li>
+      <li>检查金额是否在单笔最低/最高区间内</li>
+      <li>检查是否已达每日笔数/金额限制</li>
+      <li>到「功能测试中心 → 收款码选择测试」跑一遍看匹配结果</li>
+    </ul>
+
+    <h3>Q3：能同时上传几个码？</h3>
+    <table>
+    <tr><th>类型</th><th>上限</th></tr>
+    <tr><td>微信/支付宝个人码、经营码等</td><td>不限</td></tr>
+    <tr><td>微信银行、微信手机号、支付宝账号</td><td>不限</td></tr>
+    <tr><td>支付宝口令</td><td>不限</td></tr>
+    <tr><td>聚合码（3 种合计）</td><td>不限</td></tr>
+    </table>
+
+    <h3>Q4：多个码同时启用，客户下单会走哪个？</h3>
+    <ol>
+      <li>先看你配的「收款码智能路由」规则</li>
+      <li>没规则 → 客户 IP 与码归属地匹配的优先</li>
+      <li>多个候选 → 按 weight（默认 100）加权随机</li>
+      <li>都没命中 → 系统找下级码（最多 3 层）</li>
+    </ol>
+
+    <h3>Q5：怎么让某个码不被用但又不想删？</h3>
+    <p>点列表里的「⛔ 停用」按钮，码不删除但不再被派单。想启用时点「✅ 启用」。</p>
+
+    <h3>Q6：金额浮动是干嘛的？</h3>
+    <p>让同一个码收到的金额不总是整数。比如订单 100 元，浮动 5% → 展示 95~105 元。<b>防止风控识别异常</b>。</p>
+
+    <h3>Q7：每日限额到了会怎样？</h3>
+    <p>该码当天不再被系统派单，其他码正常。次日 0 点自动重置。</p>
+
+    <h3>Q8：一个码能同时绑定多个地区吗？</h3>
+    <p>不能。一个码只能配 1 个省 + 1 个市。如果需要"这码同时服务多省"，建议配「收款码智能路由」规则。</p>
+
+    <h3>Q9：收款码被微信/支付宝封了怎么办？</h3>
+    <ul>
+      <li>立即到「收款码管理」把该码<b>停用</b></li>
+      <li>上传新码补位（微信/支付宝重新申请）</li>
+      <li>如果是下级码被封，通知下级尽快换码</li>
+    </ul>
+
+    <h3>Q10：收款码有数量限制吗？</h3>
+    <p><b>没有限制，可以自由添加。</b>但建议：</p>
+    <ul>
+      <li>定期检查已停用 / 已失效的码，<b>及时删除</b>避免被系统派单导致订单失败</li>
+      <li>暂时不用的码，用<b>「停用」</b>代替删除（保留历史数据）</li>
+      <li>码太多不好管理时，可以用「收款码智能路由」做分流</li>
+    </ul>
+
+    </div>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

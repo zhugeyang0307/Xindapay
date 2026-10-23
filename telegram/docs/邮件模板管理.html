@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>邮件模板管理 · 信达支付</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f7fa;color:#1a2a4a;line-height:1.75;font-size:14px}
+a{color:#1677ff;text-decoration:none}
+code{background:#eef2f7;color:#c7254e;padding:2px 6px;border-radius:4px;font-family:Consolas,Monaco,monospace;font-size:13px}
+.topbar{position:fixed;top:0;left:0;right:0;height:60px;background:linear-gradient(135deg,#8e44ad,#5b21b6);color:#fff;display:flex;align-items:center;padding:0 24px;z-index:100;box-shadow:0 2px 12px rgba(91,33,182,.2)}
+.topbar .logo{font-size:18px;font-weight:800;letter-spacing:2px}
+.topbar .subtitle{margin-left:12px;font-size:13px;opacity:.85;padding-left:12px;border-left:1px solid rgba(255,255,255,.3)}
+.topbar .right{margin-left:auto}.topbar .right a{color:#fff;font-size:13px;padding:6px 14px;border:1px solid rgba(255,255,255,.35);border-radius:20px}
+.layout{display:flex;max-width:1280px;margin:80px auto 40px;padding:0 20px;gap:24px;align-items:flex-start}
+.sidebar{width:220px;flex-shrink:0;background:#fff;border-radius:12px;padding:16px 0;box-shadow:0 2px 12px rgba(15,23,42,.06);position:sticky;top:80px}
+.toc-cat{padding:12px 20px 6px;font-size:11px;color:#7a8699;font-weight:800;letter-spacing:1.5px}
+.toc-item{display:block;padding:8px 20px 8px 28px;font-size:13.5px;color:#475569;border-left:3px solid transparent}
+.toc-item:hover{background:#faf5ff;color:#5b21b6}
+.main{flex:1;min-width:0}
+.page-header{background:#fff;border-radius:12px;padding:28px 32px;margin-bottom:20px;box-shadow:0 2px 12px rgba(15,23,42,.06)}
+.page-header h1{font-size:24px;font-weight:800;color:#5b21b6;margin-bottom:8px}
+.page-header p{color:#7a8699;font-size:13.5px}
+.block{background:#fff;border-radius:12px;margin-bottom:20px;box-shadow:0 2px 12px rgba(15,23,42,.06);overflow:hidden}
+.block-head{padding:20px 32px;border-bottom:1px solid #eef2f7;background:#faf5ff}
+.block-head h2{font-size:18px;font-weight:800;color:#5b21b6;padding-left:12px;border-left:4px solid #8e44ad;line-height:1.3}
+.block-body{padding:24px 32px}
+.block-body h3{font-size:15px;font-weight:700;color:#1a2a4a;margin:20px 0 10px}
+.block-body p{margin:8px 0;color:#475569;font-size:14px;line-height:1.75}
+.block-body ul,.block-body ol{margin:8px 0 8px 22px;color:#475569}
+.block-body li{margin:5px 0}
+.note{background:#fff7e6;border-left:3px solid #f59e0b;padding:10px 14px;border-radius:6px;color:#92400e;font-size:13px;margin:12px 0}
+.note.red{background:#fef2f2;border-left-color:#dc2626;color:#991b1b}
+.note.green{background:#f0fdf4;border-left-color:#16a34a;color:#166534}
+.note.blue{background:#eff6ff;border-left-color:#2563eb;color:#1e40af}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th{background:#faf5ff;color:#1a2a4a;font-weight:700;text-align:left;padding:10px 12px;border-bottom:2px solid #d8b4fe}
+td{padding:10px 12px;border-bottom:1px solid #eef2f7;color:#475569;vertical-align:top}
+.step{display:flex;gap:14px;margin:16px 0;padding:16px;background:#fafbfd;border-radius:10px;border-left:3px solid #8e44ad}
+.step .num{flex-shrink:0;width:32px;height:32px;background:#8e44ad;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+.step .text{flex:1;color:#475569;font-size:13.5px;line-height:1.7}
+.step .text b{color:#1a2a4a;display:block;margin-bottom:4px;font-size:14px}
+footer{text-align:center;padding:30px 0;color:#94a3b8;font-size:12.5px}
+@media(max-width:820px){.layout{flex-direction:column;padding:0 12px;margin-top:72px}.sidebar{width:100%;position:static}.block-head,.block-body{padding:16px 20px}}
+</style></head>
+<body>
+<header class="topbar">
+  <span class="logo">信达支付</span>
+  <span class="subtitle">邮件模板管理</span>
+  <div class="right"><a href="/help/">📚 返回帮助中心</a></div>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="toc-cat">📑 目录</div>
+    <a class="toc-item" href="#s1">1. 模板是什么</a>
+    <a class="toc-item" href="#s2">2. 创建模板</a>
+    <a class="toc-item" href="#s3">3. 用模板建活动</a>
+    <a class="toc-item" href="#s4">4. 管理已有模板</a>
+    <a class="toc-item" href="#s5">5. HTML 编写参考</a>
+    <a class="toc-item" href="#s6">6. 常见问题</a>
+  </aside>
+  <main class="main">
+    <div class="page-header">
+      <h1>🎨 邮件模板管理</h1>
+      <p>保存模板 · 一键导入活动 · 复用 HTML</p>
+    </div>
+
+    <section class="block" id="s1">
+    <div class="block-head"><h2>1. 模板是什么</h2></div>
+    <div class="block-body">
+    <p>模板 = 保存好的 HTML 邮件正文，下次发营销邮件时一键复用，不用每次重写。</p>
+    <h3>为什么要用模板？</h3>
+    <ul>
+      <li>🕐 <b>省时间</b>：常用邮件存成模板，下次点一下就用</li>
+      <li>📋 <b>统一风格</b>：所有营销邮件保持一致的品牌形象</li>
+      <li>🔄 <b>可复用</b>：一个模板能建多个活动</li>
+    </ul>
+    <div class="note green"><b>💡 场景</b>：新品通知模板、优惠券模板、节日祝福模板、老客户召回模板。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s2">
+    <div class="block-head"><h2>2. 创建模板</h2></div>
+    <div class="block-body">
+    <p>后台 → <b>邮件营销 → 邮件模板</b>（<code>/user/mail_marketing/templates.php</code>）</p>
+
+    <h3>操作步骤</h3>
+    <div class="step"><div class="num">1</div><div class="text">
+      <b>点左侧「➕ 新建模板」</b>（右侧表单自动清空）
+    </div></div>
+    <div class="step"><div class="num">2</div><div class="text">
+      <b>填模板名 *</b>如"双十一促销模板"（仅自己可见，方便管理）
+    </div></div>
+    <div class="step"><div class="num">3</div><div class="text">
+      <b>填默认邮件主题</b>（选填）用此模板建活动时，主题会自动填入
+    </div></div>
+    <div class="step"><div class="num">4</div><div class="text">
+      <b>编辑 HTML 正文 *</b>两种方式：<br>
+      · <b>直接编辑</b>：在文本框里写 HTML<br>
+      · <b>导入 HTML</b>：点「📁 导入 HTML 文件」选本地 .html 文件（自动填入）
+    </div></div>
+    <div class="step"><div class="num">5</div><div class="text">
+      <b>点「创建模板」</b>保存。左侧列表出现新模板。
+    </div></div>
+    </div>
+    </section>
+
+    <section class="block" id="s3">
+    <div class="block-head"><h2>3. 用模板建活动</h2></div>
+    <div class="block-body">
+    <p>3 种方式，随便选：</p>
+
+    <h3>方式 1：从模板列表直接建（最快）</h3>
+    <ol>
+      <li>模板列表里找到该模板</li>
+      <li>点「✈️ 用此模板建活动」</li>
+      <li>跳到「新建活动」页，正文 + 主题自动填入</li>
+      <li>填收件人 → 提交</li>
+    </ol>
+
+    <h3>方式 2：建活动时从下拉选</h3>
+    <ol>
+      <li>新建活动页 → 正文区上方有「从模板导入」下拉</li>
+      <li>选一个模板 → 覆盖当前正文（会提示确认）</li>
+      <li>继续填收件人</li>
+    </ol>
+
+    <h3>方式 3：导入本地 HTML</h3>
+    <ol>
+      <li>新建活动页 → 点「📁 导入 HTML」</li>
+      <li>选本地 .html 文件（UTF-8 编码）</li>
+      <li>内容自动填入正文框</li>
+    </ol>
+
+    <div class="note blue"><b>💡 最佳实践</b>：把常用邮件存成模板（方式 1），以后建活动 1 秒搞定。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s4">
+    <div class="block-head"><h2>4. 管理已有模板</h2></div>
+    <div class="block-body">
+    <h3>模板列表</h3>
+    <p>每个模板显示：</p>
+    <ul>
+      <li>模板名 + 默认主题</li>
+      <li>更新时间</li>
+      <li><b>被引用次数</b>（有多少活动用了它）</li>
+    </ul>
+
+    <h3>操作按钮</h3>
+    <table>
+    <tr><th>按钮</th><th>作用</th></tr>
+    <tr><td>用此模板建活动</td><td>跳到新建活动页并预填</td></tr>
+    <tr><td>查看引用</td><td>列出所有使用该模板的活动</td></tr>
+    <tr><td>编辑</td><td>点模板名进入编辑</td></tr>
+    <tr><td>删除 ×</td><td>删除模板（不影响已创建的活动）</td></tr>
+    </table>
+
+    <div class="note"><b>💡 删除模板不删活动</b>：活动创建后已有正文副本，删模板不影响已有活动。</div>
+
+    <h3>编辑模板</h3>
+    <ol>
+      <li>点模板名 或 右侧列表点该模板</li>
+      <li>修改内容 → 点「保存修改」</li>
+      <li>下次用此模板建活动，会用最新版本</li>
+    </ol>
+    </div>
+    </section>
+
+    <section class="block" id="s5">
+    <div class="block-head"><h2>5. HTML 编写参考</h2></div>
+    <div class="block-body">
+    <h3>基本结构</h3>
+    <pre style="background:#1e1e2e;color:#e4e4e7;padding:16px;border-radius:8px;font-size:13px;line-height:1.6;">
+&lt;div style="max-width:600px;margin:0 auto;font-family:sans-serif;"&gt;
+  &lt;h1 style="color:#0d47a1;"&gt;标题&lt;/h1&gt;
+  &lt;p&gt;正文内容...&lt;/p&gt;
+  &lt;a href="https://your-site.com/sale" 
+     style="display:inline-block;background:#1677ff;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;"&gt;
+    立即抢购
+  &lt;/a&gt;
+&lt;/div&gt;</pre>
+
+    <h3>注意事项</h3>
+    <ul>
+      <li>✅ <b>用内联样式</b>（<code>style="..."</code>），不要用 <code>&lt;style&gt;</code> 标签</li>
+      <li>✅ <b>宽度 600px</b>（兼容大多数邮箱）</li>
+      <li>✅ <b>图片用绝对 URL</b>（不能是相对路径）</li>
+      <li>✅ <b>链接要完整</b>（含 <code>https://</code>）</li>
+      <li>❌ 不要用 JS（邮箱会屏蔽）</li>
+      <li>❌ 不要用表单（邮箱不支持）</li>
+    </ul>
+
+    <h3>可以用模板变量</h3>
+    <p>正文里可写 <code>{email}</code> 占位符，发送时会自动替换成收件人邮箱。</p>
+
+    <div class="note"><b>💡 快速生成 HTML</b>：用 W3School HTML 编辑器、VS Code，或直接用 Figma 导出 HTML。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s6">
+    <div class="block-head"><h2>6. 常见问题</h2></div>
+    <div class="block-body">
+
+    <h3>Q1：导入 HTML 没反应？</h3>
+    <ul>
+      <li>确认文件扩展名是 .html 或 .htm</li>
+      <li>确认文件编码是 UTF-8（不是 GBK）</li>
+      <li>文件里不能有 &lt;script&gt; 标签（会被过滤）</li>
+    </ul>
+
+    <h3>Q2：模板能分享给别人吗？</h3>
+    <p>不能。模板是账号私有，其他商户看不到。</p>
+
+    <h3>Q3：模板数量有限制吗？</h3>
+    <p>不限。存多少都行，列表页最多显示 500 个。</p>
+
+    <h3>Q4：删了模板，用该模板建的活动会怎样？</h3>
+    <p>不受影响。活动创建时已复制正文副本，独立存在。</p>
+
+    <h3>Q5：为什么我导入 HTML 后排版乱了？</h3>
+    <ul>
+      <li>HTML 里用了 <code>&lt;style&gt;</code> 标签（邮箱不认）</li>
+      <li>用了外部 CSS 引用</li>
+      <li>解决办法：把样式改成内联 <code>style="..."</code></li>
+    </ul>
+
+    <h3>Q6：模板里能加图片吗？</h3>
+    <p>可以，但要：</p>
+    <ul>
+      <li>图片上传到某个公网可访问的地址</li>
+      <li>用绝对 URL：<code>&lt;img src="https://cdn.example.com/pic.jpg"&gt;</code></li>
+      <li>不要超过 200KB（邮箱会屏蔽超大图）</li>
+    </ul>
+
+    <h3>Q7：多个模板能合并吗？</h3>
+    <p>不能。但可以复制一个模板的内容到另一个模板里。</p>
+
+    </div>
+    </section>
+
+  </main>
+</div>
+<footer>信达支付系统 · 帮助中心 · <a href="/">返回官网</a></footer>
+</body>
+</html>

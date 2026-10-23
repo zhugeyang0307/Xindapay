@@ -1,0 +1,194 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>变更记录 - XindaPay</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7;color:#1a2a4a;background:#f5f7fa}
+.wrap{display:flex;min-height:100vh}
+.side{width:260px;background:#1e293b;color:#cbd5e1;padding:24px 0;position:fixed;height:100vh;overflow-y:auto}
+.side h2{color:#fff;padding:0 24px 16px;font-size:16px;border-bottom:1px solid #334155;margin-bottom:16px}
+.side a{display:block;padding:8px 24px;color:#cbd5e1;text-decoration:none;font-size:14px;border-left:3px solid transparent}
+.side a:hover{background:#334155;color:#fff;border-left-color:#60a5fa}
+.main{flex:1;margin-left:260px;padding:40px 60px;max-width:1100px}
+h1{font-size:28px;color:#0f172a;margin-bottom:8px;padding-bottom:16px;border-bottom:3px solid #3b82f6}
+h2{font-size:22px;color:#1e40af;margin:36px 0 16px;padding-left:12px;border-left:5px solid #3b82f6}
+h3{font-size:17px;color:#0f172a;margin:24px 0 12px}
+p{margin:10px 0;color:#334155}
+code{background:#f1f5f9;color:#e11d48;padding:2px 6px;border-radius:4px;font-family:Menlo,Consolas,monospace;font-size:13px}
+pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:8px;overflow-x:auto;margin:12px 0;font-size:13px;line-height:1.5}
+pre code{background:none;color:inherit;padding:0}
+table{width:100%;border-collapse:collapse;margin:16px 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid #e2e8f0;font-size:14px}
+th{background:#f1f5f9;color:#334155;font-weight:600}
+tr:hover td{background:#f8fafc}
+ul,ol{margin:10px 0 10px 24px;color:#334155}
+li{margin:4px 0}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;margin-right:4px}
+.tag-red{background:#fee2e2;color:#b91c1c}
+.tag-green{background:#dcfce7;color:#15803d}
+.tag-blue{background:#dbeafe;color:#1d4ed8}
+.tag-yellow{background:#fef3c7;color:#a16207}
+.box{background:#fff;border-radius:10px;padding:20px;margin:16px 0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.box-info{border-left:4px solid #3b82f6}
+.box-warn{border-left:4px solid #f59e0b;background:#fffbeb}
+.box-danger{border-left:4px solid #ef4444;background:#fef2f2}
+</style>
+</head><body><div class="wrap">
+<div class="side">
+<h2>📚 XindaPay 文档</h2>
+<a href="项目结构说明.html">🏗 项目结构说明</a>
+<a href="部署说明.html">🚀 部署说明</a>
+<a href="运维手册.html">🔧 运维手册</a>
+<a href="商户操作手册.html">👨‍💼 商户操作手册</a>
+<a href="下级操作手册.html">👥 下级操作手册</a>
+<a href="CHANGELOG.html">📝 变更记录</a>
+</div>
+<div class="main">
+<h1>📝 变更记录 CHANGELOG</h1>
+<p style="color:#94a3b8;font-size:13px;">所有重要改动都记录在此，按时间倒序</p>
+
+<h2>[2026-10-17] 本次会话改动</h2>
+
+<h3>✨ 新增功能</h3>
+<table>
+<tr><th>模块</th><th>文件</th><th>说明</th></tr>
+<tr><td>服务期</td><td><code>includes/lib/Service.php</code></td><td>月费/试用/额度管理（新建）</td></tr>
+<tr><td>服务期</td><td><code>user/service.php</code></td><td>商户续费页（新建）</td></tr>
+<tr><td>服务期</td><td><code>user/ajax_service.php</code></td><td>续费下单接口（新建）</td></tr>
+<tr><td>服务期</td><td><code>admin/service.php</code></td><td>平台系统服务管理（新建）</td></tr>
+<tr><td>子商户</td><td><code>user/sub_list.php</code></td><td>下级树形列表（新建）</td></tr>
+<tr><td>子商户</td><td><code>user/sub_create.php</code></td><td>创建下级（新建）</td></tr>
+<tr><td>子商户</td><td><code>user/sub_edit.php</code></td><td>编辑下级（分润/权限/加余额）（新建）</td></tr>
+<tr><td>子商户</td><td><code>user/sub_push.php</code></td><td>下级填推送资料（新建）</td></tr>
+<tr><td>子商户</td><td><code>user/sub_review.php</code></td><td>上级审批推送（新建）</td></tr>
+<tr><td>子商户</td><td><code>user/sub_qrcodes.php</code></td><td>下级收款码管理（新建）</td></tr>
+<tr><td>子商户</td><td><code>user/sub_orders.php</code></td><td>下级订单查看（新建）</td></tr>
+<tr><td>子商户</td><td><code>user/sub_bills.php</code></td><td>下级账单核对 + 软删除（新建）</td></tr>
+<tr><td>对账</td><td><code>user/bill_sub.php</code></td><td>对账中心汇总（新建）</td></tr>
+<tr><td>帮助</td><td><code>help/docs/商户手册.html</code></td><td>商户完整手册（新建）</td></tr>
+<tr><td>帮助</td><td><code>help/docs/下级推送指南.html</code></td><td>下级操作教程（新建）</td></tr>
+<tr><td>文档</td><td><code>docs/*.html</code></td><td>6 份运维/操作手册（新建）</td></tr>
+</table>
+
+<h3>🔧 修改功能</h3>
+<table>
+<tr><th>文件</th><th>改动</th></tr>
+<tr><td><code>includes/lib/api/Pay.php</code></td><td>加服务期检查（收款前）</td></tr>
+<tr><td><code>includes/lib/Order.php</code></td><td>加码商代收扣款 + 上级按 rate 分成 + 自动触发 hook</td></tr>
+<tr><td><code>includes/lib/MailOrder.php</code></td><td>SMTP 优先用上级</td></tr>
+<tr><td><code>includes/functions.php</code></td><td>注册钩子 + 抽成改 0</td></tr>
+<tr><td><code>plugins/mapay/mapay_plugin.php</code></td><td>pickWithChildren 改 public（供 mapay.php 调用）</td></tr>
+<tr><td><code>paypage/mapay.php</code></td><td>兜底选码走 pickWithChildren（找下级码）</td></tr>
+<tr><td><code>paypage/license.php</code></td><td>额度检查 + 跟随服务期</td></tr>
+<tr><td><code>paypage/notify_listen.php</code></td><td>加服务期检查</td></tr>
+<tr><td><code>user/ajax.php</code></td><td>注册后自动开试用</td></tr>
+<tr><td><code>user/ajax_apk.php</code></td><td>加 claim 分支（领激活码）</td></tr>
+<tr><td><code>user/license.php</code></td><td>重写（领取激活码页）</td></tr>
+<tr><td><code>user/head.php</code></td><td>菜单重排 + 下级登录自动隐藏冗余菜单</td></tr>
+<tr><td><code>user/bill_detail.php</code></td><td>支持 ?uid=下级 + 权限校验</td></tr>
+<tr><td><code>user/bill_reconcile.php</code></td><td>支持 ?uid=下级 + 权限校验</td></tr>
+<tr><td><code>telegram/hook_order_paid.php</code></td><td>加 pushUid（优先码 owner）+ sub_push_email 分支 + 动态 MAIL_HOOK_BASE</td></tr>
+<tr><td><code>telegram/usdt_callback.php</code></td><td>加 SVC 服务期分支</td></tr>
+<tr><td><code>telegram/lib/Cmds.php</code></td><td>APK 命令重写</td></tr>
+<tr><td><code>telegram/lib/ApkTutorial.php</code></td><td>重写</td></tr>
+<tr><td><code>telegram/lib/DeepSeek.php</code></td><td>文案调整</td></tr>
+<tr><td><code>admin/head.php</code></td><td>菜单重排</td></tr>
+<tr><td><code>admin/ulist.php</code></td><td>删插件市场引用</td></tr>
+<tr><td><code>buy_apk.php</code></td><td>重写（营销页）</td></tr>
+<tr><td><code>help/index.html</code></td><td>卡片导航更新</td></tr>
+<tr><td><code>help/docs/商户对接文档.html</code></td><td>重写（V1/V2 完整 demo）</td></tr>
+<tr><td><code>help/docs/listener.html</code></td><td>重写</td></tr>
+</table>
+
+<h3>🚫 禁用/删除</h3>
+<table>
+<tr><th>文件/功能</th><th>说明</th></tr>
+<tr><td><code>user/sub_switch.php</code></td><td>禁止上级模拟登录下级（只留"返回"）</td></tr>
+<tr><td><code>user/plugin_market.php</code></td><td>删除</td></tr>
+<tr><td><code>admin/plugin_market.php</code></td><td>删除</td></tr>
+<tr><td><code>admin/ajax_plugin_market.php</code></td><td>删除</td></tr>
+</table>
+
+<h3>🐛 Bug 修复</h3>
+<table>
+<tr><th>问题</th><th>修复</th></tr>
+<tr><td>Apache 下 hook 不自动触发</td><td><code>PHP_BINARY</code> 是 httpd.exe，改探测 php.exe 路径</td></tr>
+<tr><td>用户下单找不到下级码</td><td><code>mapay.php</code> 兜底走 <code>pickWithChildren</code></td></tr>
+<tr><td>账单核对 addtime 字段不存在</td><td>改用 <code>date</code> 字段</td></tr>
+<tr><td>XdbSearcher.php PHP 8.2 弃用警告</td><td><code>${var}</code> → <code>{$var}</code></td></tr>
+<tr><td>EasypayClient/MossClient use Exception 警告</td><td>删除无效 use 语句</td></tr>
+<tr><td>Order.php hook 代码重复两遍</td><td>清掉旧版</td></tr>
+</table>
+
+<h3>🗄 数据库变更</h3>
+<pre><code>-- pay_user 加字段
+ALTER TABLE pay_user
+  ADD COLUMN service_expire DATETIME NULL,
+  ADD COLUMN service_trial_end DATETIME NULL,
+  ADD COLUMN apk_quota INT UNSIGNED NOT NULL DEFAULT 3,
+  ADD COLUMN sub_level TINYINT NOT NULL DEFAULT 1,
+  ADD COLUMN sub_push_tg VARCHAR(32),
+  ADD COLUMN sub_push_email VARCHAR(64),
+  ADD COLUMN sub_push_smtp_host VARCHAR(100),
+  ADD COLUMN sub_push_smtp_user VARCHAR(100),
+  ADD COLUMN sub_push_smtp_pwd VARCHAR(255),
+  ADD COLUMN sub_push_smtp_secure VARCHAR(10) DEFAULT 'ssl',
+  ADD COLUMN sub_push_status TINYINT DEFAULT 0;
+
+-- pay_alipay_bill 加软删
+ALTER TABLE pay_alipay_bill
+  ADD COLUMN is_deleted TINYINT NOT NULL DEFAULT 0,
+  ADD COLUMN deleted_by INT UNSIGNED DEFAULT 0,
+  ADD COLUMN deleted_at DATETIME NULL;
+
+-- 系统配置
+INSERT INTO pay_config (k,v) VALUES
+  ('sys_month_price','100'), ('sys_trial_days','2'),
+  ('sys_grace_days','0'), ('sys_apk_quota','3'),
+  ('sys_extra_device_price','50')
+ON DUPLICATE KEY UPDATE v=VALUES(v);</code></pre>
+
+<h2>[之前已完成] 早前版本</h2>
+<table>
+<tr><th>模块</th><th>文件</th></tr>
+<tr><td>智能路由</td><td><code>route/*</code></td></tr>
+<tr><td>邮件追踪</td><td><code>mail_track/*</code></td></tr>
+<tr><td>邮件营销</td><td><code>user/mail_marketing/*</code></td></tr>
+<tr><td>收款码地区匹配</td><td><code>plugins/mapay/_region_helper.php</code></td></tr>
+<tr><td>通道选择（含路由钩子）</td><td><code>includes/lib/Channel.php</code></td></tr>
+</table>
+
+<h2>数据库字段速查</h2>
+<table>
+<tr><th>表.字段</th><th>说明</th></tr>
+<tr><td><code>pay_user.upid</code></td><td>上级 uid（0=顶级）</td></tr>
+<tr><td><code>pay_user.sub_level</code></td><td>层级 1/2/3</td></tr>
+<tr><td><code>pay_user.rate</code></td><td>分润率 %（下级收款时上级拿）</td></tr>
+<tr><td><code>pay_user.service_expire</code></td><td>服务到期时间</td></tr>
+<tr><td><code>pay_user.apk_quota</code></td><td>APK 额度（默认 3）</td></tr>
+<tr><td><code>pay_user.sub_push_status</code></td><td>推送资料状态（0待审/1通过/2拒绝）</td></tr>
+<tr><td><code>pay_order.ext</code></td><td>JSON：{qrcode_id, qrcode_uid}</td></tr>
+<tr><td><code>pay_order.profitmoney</code></td><td>代收金额</td></tr>
+<tr><td><code>pay_record.action</code></td><td>1=加，2=减</td></tr>
+<tr><td><code>pay_record.date</code></td><td>时间（不是 addtime！）</td></tr>
+<tr><td><code>pay_qrcode.uid</code></td><td>码 owner</td></tr>
+<tr><td><code>pay_alipay_bill.is_deleted</code></td><td>软删标记</td></tr>
+</table>
+
+<h2>待办（未完成）</h2>
+<ul>
+<li>对账单导出 CSV（双方存档用）</li>
+<li>对账状态锁（核对完标记"已确认"）</li>
+<li>真实 USDT 付款全链路测试</li>
+<li>上线部署</li>
+</ul>
+
+<h2>联系</h2>
+<table>
+<tr><th>角色</th><th>联系</th></tr>
+<tr><td>项目负责</td><td>—</td></tr>
+<tr><td>开发</td><td>—</td></tr>
+<tr><td>运维</td><td>—</td></tr>
+</table>
+
+</div></div></body></html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>员工码商使用指南</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f4f6fb; color: #334155; line-height: 1.7; font-size: 15px; padding: 16px; padding-bottom: 40px; }
+    .card { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); margin-bottom: 20px; }
+    h1 { font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 12px; text-align: center; }
+    h2 { font-size: 18px; font-weight: 800; color: #1677ff; margin-top: 28px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #eff6ff; padding-bottom: 8px; }
+    h3 { font-size: 16px; font-weight: 700; color: #1e293b; margin-top: 20px; margin-bottom: 8px; }
+    p { margin-bottom: 12px; color: #475569; }
+    ul, ol { padding-left: 20px; margin-bottom: 16px; color: #475569; }
+    li { margin-bottom: 8px; }
+    .highlight { background: #f0f7ff; border-left: 4px solid #1677ff; padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 14px; margin: 16px 0; color: #1e40af; }
+    .warn { background: #fff7ed; border-left: 4px solid #f59e0b; padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 14px; margin: 16px 0; color: #92400e; }
+    .btn-link { display: inline-block; background: #1677ff; color: #fff; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; margin-top: 8px; }
+    .img-placeholder { background: #f1f5f9; border-radius: 8px; padding: 20px; text-align: center; color: #94a3b8; font-size: 13px; margin: 12px 0; border: 1px dashed #cbd5e1; }
+</style>
+</head>
+<body>
+
+<div class="card">
+    <h1>👨‍💻 员工（码商）工作台使用指南</h1>
+    <p style="text-align: center; color: #64748b; font-size: 14px;">专为下级收款员打造，快速上手，高效接单</p>
+</div>
+
+<div class="card">
+    <h2>📱 将系统变成手机 APP（PWA）</h2>
+    <p>不需要去应用商店下载，直接把网页添加到手机桌面，享受全屏无广告的 App 体验。</p>
+    
+    <h3>🍎 苹果 iPhone (Safari 浏览器)</h3>
+    <ol>
+        <li>使用 <b>Safari 浏览器</b> 打开你的专属后台链接。</li>
+        <li>点击屏幕底部中间的 <b>【分享】</b> 按钮（一个方框带向上箭头的图标）。</li>
+        <li>向上滑动菜单，找到并点击 <b>【添加到主屏幕】</b>。</li>
+        <li>点击右上角的【添加】，桌面就会出现“信达支付”的图标。</li>
+    </ol>
+
+    <h3>🤖 安卓手机 (Chrome 或 夸克/UC浏览器)</h3>
+    <ol>
+        <li>使用浏览器打开你的专属后台链接。</li>
+        <li>点击浏览器底部的 <b>【菜单】</b> 按钮（通常是三条杠或三个点）。</li>
+        <li>在菜单中找到并点击 <b>【添加到主屏幕】</b> 或 <b>【安装应用】</b>。</li>
+        <li>确认后，桌面就会生成独立的 App 图标。</li>
+    </ol>
+    <div class="highlight">
+        💡 <b>优势：</b>变成 App 后，顶部没有浏览器地址栏，底部会有原生导航栏。不仅看起来专业，还能防止误触退出。
+    </div>
+</div>
+
+<div class="card">
+    <h2>🔐 下级（员工）权限与功能说明</h2>
+    <p>为了保护商户与员工的双方利益，系统对员工后台进行了严格精简，仅保留接单核心功能：</p>
+    
+    <ul>
+        <li>✅ <b>我的订单 / 查单</b>：随时查看自己名下产生的收款订单。</li>
+        <li>✅ <b>上传对账单</b>：每日收款结束后，上传账单给上级核对清算。</li>
+        <li>✅ <b>收款码管理</b>：添加、查看自己名下的个人微信/支付宝/聚合码。</li>
+        <li>✅ <b>接收设置（TG/邮箱）</b>：配置后，有新订单会直接推送到你的手机。</li>
+        <li>✅ <b>IP/TG 工具</b>：一键获取自己手机的当前 IP 和 TG 数字 ID。</li>
+        <li>✅ <b>激活码领取</b>：查看上级分配给自己的 APK 监听额度。</li>
+    </ul>
+
+    <div class="warn">
+        ⚠️ <b>无法使用的功能：</b><br>
+        员工无法使用「下级商户管理」、「服务续费」、「结算中心」、「API 对接」等高级管理功能。余额提现与分润统一由上级商户进行划拨和管理。
+    </div>
+</div>
+
+<div class="card">
+    <h2>🔔 如何设置接单语音播报？</h2>
+    <ol>
+        <li>打开底部导航栏的 <b>【我的】</b>。</li>
+        <li>找到 <b>【新订单语音播报】</b> 开关并打开。</li>
+        <li>手机浏览器会弹出“请求通知权限”，请务必点击 <b>【允许】</b>。</li>
+        <li>开启后，只要后台开着，有订单进来就会响铃并弹窗。</li>
+    </ol>
+</div>
+
+<div class="card">
+    <h2>🆔 如何快速获取 TG ID 和 IP？</h2>
+    <p>进入底部导航栏的 <b>【我的】</b> -> 点击 <b>【IP/TG 工具】</b>：</p>
+    <ul>
+        <li><b>获取 IP：</b>页面会直接显示你当前的公网 IP，点击即可一键复制。</li>
+        <li><b>获取 TG ID：</b>点击页面上的【打开官方机器人】按钮，跳转到 Telegram，发送 <code>/id</code> 即可秒回你的专属数字 ID。拿到后填回【接收设置】即可。</li>
+    </ul>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>追踪测试</title>
+</head>
+<body style="margin:0;padding:0;background:#f2f5fa;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f2f5fa;padding:30px 12px;">
+<tr><td align="center">
+
+<table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(13,71,161,.10);">
+
+  <!-- 顶栏 -->
+  <tr>
+    <td style="background:linear-gradient(135deg,#1e88e5,#0d47a1);padding:24px 32px;text-align:center;">
+      <div style="color:#ffffff;font-size:20px;font-weight:800;letter-spacing:2px;">信达支付</div>
+      <div style="color:#b3d4fc;font-size:12px;margin-top:4px;letter-spacing:1px;">追踪测试 · TRACKING TEST</div>
+    </td>
+  </tr>
+
+  <!-- 标题 -->
+  <tr>
+    <td style="padding:40px 32px 0;text-align:center;">
+      <div style="font-size:56px;line-height:1;">🧪</div>
+      <h1 style="color:#0d47a1;font-size:24px;font-weight:800;margin:20px 0 8px;">
+        邮件追踪测试
+      </h1>
+      <p style="color:#6b7c93;font-size:14px;margin:0;line-height:1.8;">
+        这封邮件用来测试完整追踪链路：<br>
+        <b>打开 → 点击 → 落地页 → 转化</b>
+      </p>
+    </td>
+  </tr>
+
+  <!-- 测试步骤说明 -->
+  <tr>
+    <td style="padding:24px 32px;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f0f7ff;border-radius:12px;">
+        <tr>
+          <td style="padding:20px 24px;">
+            <div style="color:#1a2a4a;font-size:14px;font-weight:700;margin-bottom:12px;">📋 测试步骤</div>
+            <div style="color:#5a6a7e;font-size:13px;line-height:2.1;">
+              <b style="color:#1e88e5;">① 打开邮件</b> → 系统记录 open 事件<br>
+              <b style="color:#1e88e5;">② 点下面的按钮</b> → 系统记录 click 事件<br>
+              <b style="color:#1e88e5;">③ 落地页会带 mt_rid</b> → 自动上报 landing<br>
+              <b style="color:#1e88e5;">④ 落地页点「下单成功」</b> → 上报 purchase<br>
+              <b style="color:#1e88e5;">⑤ 回后台详情页刷新</b> → 看到所有事件
+            </div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- 主 CTA -->
+  <tr>
+    <td style="padding:8px 32px 16px;text-align:center;">
+      <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+        <tr>
+          <td align="center" style="background:linear-gradient(135deg,#1e88e5,#0d47a1);border-radius:50px;">
+            <a href="https://pay.yunzexinda.com/?test_tracking=1"
+               style="display:inline-block;padding:18px 68px;color:#ffffff;font-size:18px;font-weight:800;
+                      text-decoration:none;letter-spacing:2px;border-radius:50px;">
+              🎯 点击测试追踪
+            </a>
+          </td>
+        </tr>
+      </table>
+      <div style="color:#a5b4c9;font-size:12px;margin-top:12px;">
+        点击后系统会记录「点击」事件，并带上追踪参数
+      </div>
+    </td>
+  </tr>
+
+  <!-- 副按钮 -->
+  <tr>
+    <td style="padding:0 32px 24px;text-align:center;">
+      <a href="https://www.baidu.com"
+         style="color:#1e88e5;font-size:13px;text-decoration:underline;">
+        或点这里跳转到百度（也可记录点击）
+      </a>
+    </td>
+  </tr>
+
+  <!-- 追踪像素说明 -->
+  <tr>
+    <td style="padding:0 32px 24px;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fafbfd;border-radius:10px;">
+        <tr>
+          <td style="padding:16px 20px;">
+            <div style="color:#3a4a5e;font-size:12.5px;line-height:1.9;">
+              <b>🔍 追踪原理：</b><br>
+              · 打开：邮件底部有 1×1 像素，加载即记录<br>
+              · 点击：所有链接自动加跳转追踪<br>
+              · 落地页：SDK 自动读 mt_rid 上报<br>
+              · 转化：落地页调 mtTrack.event() 上报
+            </div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- 页脚 -->
+  <tr>
+    <td style="padding:24px 32px 32px;text-align:center;border-top:1px solid #eef0f5;">
+      <div style="color:#86909c;font-size:12px;line-height:1.8;">
+        此邮件由信达支付系统发送，仅供测试<br>
+        <a href="https://pay.yunzexinda.com/unsubscribe"
+           style="color:#a5b4c9;text-decoration:underline;">退订</a>
+      </div>
+    </td>
+  </tr>
+
+</table>
+
+</td></tr>
+</table>
+
+</body>
+</html>

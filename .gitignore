@@ -1,0 +1,19 @@
+# local/project generated files
+.agent-cache/
+.vscode/
+*.log
+*.bak
+*.bak.*
+*.tmp
+*.orig
+*.save
+*.key
+*.pem
+.env
+.env.*
+!.env.example
+
+# local generated artifacts
+xinda_listener.apk
+fix_all.tar.gz
+pay_db_20261020.sql

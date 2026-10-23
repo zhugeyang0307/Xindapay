@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>邮件营销系统 · 信达支付</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f7fa;color:#1a2a4a;line-height:1.75;font-size:14px}
+a{color:#1677ff;text-decoration:none}
+code{background:#eef2f7;color:#c7254e;padding:2px 6px;border-radius:4px;font-family:Consolas,Monaco,monospace;font-size:13px}
+.topbar{position:fixed;top:0;left:0;right:0;height:60px;background:linear-gradient(135deg,#e67e22,#c2410c);color:#fff;display:flex;align-items:center;padding:0 24px;z-index:100;box-shadow:0 2px 12px rgba(194,65,12,.2)}
+.topbar .logo{font-size:18px;font-weight:800;letter-spacing:2px}
+.topbar .subtitle{margin-left:12px;font-size:13px;opacity:.85;padding-left:12px;border-left:1px solid rgba(255,255,255,.3)}
+.topbar .right{margin-left:auto}.topbar .right a{color:#fff;font-size:13px;padding:6px 14px;border:1px solid rgba(255,255,255,.35);border-radius:20px}
+.layout{display:flex;max-width:1280px;margin:80px auto 40px;padding:0 20px;gap:24px;align-items:flex-start}
+.sidebar{width:220px;flex-shrink:0;background:#fff;border-radius:12px;padding:16px 0;box-shadow:0 2px 12px rgba(15,23,42,.06);position:sticky;top:80px}
+.toc-cat{padding:12px 20px 6px;font-size:11px;color:#7a8699;font-weight:800;letter-spacing:1.5px}
+.toc-item{display:block;padding:8px 20px 8px 28px;font-size:13.5px;color:#475569;border-left:3px solid transparent}
+.toc-item:hover{background:#fff7e6;color:#c2410c}
+.main{flex:1;min-width:0}
+.page-header{background:#fff;border-radius:12px;padding:28px 32px;margin-bottom:20px;box-shadow:0 2px 12px rgba(15,23,42,.06)}
+.page-header h1{font-size:24px;font-weight:800;color:#c2410c;margin-bottom:8px}
+.page-header p{color:#7a8699;font-size:13.5px}
+.block{background:#fff;border-radius:12px;margin-bottom:20px;box-shadow:0 2px 12px rgba(15,23,42,.06);overflow:hidden}
+.block-head{padding:20px 32px;border-bottom:1px solid #eef2f7;background:#fff7ed}
+.block-head h2{font-size:18px;font-weight:800;color:#c2410c;padding-left:12px;border-left:4px solid #e67e22;line-height:1.3}
+.block-body{padding:24px 32px}
+.block-body h3{font-size:15px;font-weight:700;color:#1a2a4a;margin:20px 0 10px}
+.block-body p{margin:8px 0;color:#475569;font-size:14px;line-height:1.75}
+.block-body ul,.block-body ol{margin:8px 0 8px 22px;color:#475569}
+.block-body li{margin:5px 0}
+.note{background:#fff7e6;border-left:3px solid #f59e0b;padding:10px 14px;border-radius:6px;color:#92400e;font-size:13px;margin:12px 0}
+.note.red{background:#fef2f2;border-left-color:#dc2626;color:#991b1b}
+.note.green{background:#f0fdf4;border-left-color:#16a34a;color:#166534}
+.note.blue{background:#eff6ff;border-left-color:#2563eb;color:#1e40af}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th{background:#fff7ed;color:#1a2a4a;font-weight:700;text-align:left;padding:10px 12px;border-bottom:2px solid #fdba74}
+td{padding:10px 12px;border-bottom:1px solid #eef2f7;color:#475569;vertical-align:top}
+.step{display:flex;gap:14px;margin:16px 0;padding:16px;background:#fafbfd;border-radius:10px;border-left:3px solid #e67e22}
+.step .num{flex-shrink:0;width:32px;height:32px;background:#e67e22;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+.step .text{flex:1;color:#475569;font-size:13.5px;line-height:1.7}
+.step .text b{color:#1a2a4a;display:block;margin-bottom:4px;font-size:14px}
+footer{text-align:center;padding:30px 0;color:#94a3b8;font-size:12.5px}
+@media(max-width:820px){.layout{flex-direction:column;padding:0 12px;margin-top:72px}.sidebar{width:100%;position:static}.block-head,.block-body{padding:16px 20px}}
+</style></head>
+<body>
+<header class="topbar">
+  <span class="logo">信达支付</span>
+  <span class="subtitle">邮件营销系统</span>
+  <div class="right"><a href="/help/">📚 返回帮助中心</a></div>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="toc-cat">📑 目录</div>
+    <a class="toc-item" href="#s1">1. 功能概览</a>
+    <a class="toc-item" href="#s2">2. 前置准备</a>
+    <a class="toc-item" href="#s3">3. 创建活动</a>
+    <a class="toc-item" href="#s4">4. 收件人来源</a>
+    <a class="toc-item" href="#s5">5. 发送策略</a>
+    <a class="toc-item" href="#s6">6. 追踪数据</a>
+    <a class="toc-item" href="#s7">7. 数据导出</a>
+    <a class="toc-item" href="#s8">8. 常见问题</a>
+  </aside>
+  <main class="main">
+    <div class="page-header">
+      <h1>📣 邮件营销系统</h1>
+      <p>群发营销邮件 · 实时看打开/点击/转化</p>
+    </div>
+
+    <section class="block" id="s1">
+    <div class="block-head"><h2>1. 功能概览</h2></div>
+    <div class="block-body">
+    <p>用你自己的 SMTP 向客户群发营销邮件，追踪每封邮件的 <b>打开 / 点击 / 落地页 / 转化</b>。</p>
+    <h3>和「邮件推送」的区别</h3>
+    <table>
+    <tr><th>功能</th><th>邮件推送</th><th>邮件营销</th></tr>
+    <tr><td>触发</td><td>订单到账自动发</td><td>你手动群发</td></tr>
+    <tr><td>收件人</td><td>你自己（1 个）</td><td>客户列表（批量）</td></tr>
+    <tr><td>带确认按钮</td><td>✅ 有</td><td>❌ 无（纯营销）</td></tr>
+    <tr><td>追踪</td><td>不追踪</td><td>✅ 打开/点击/转化</td></tr>
+    </table>
+    <div class="note green"><b>💡 场景</b>：新店开业通知、优惠券推送、老客户召回、节日祝福 + 促销。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s2">
+    <div class="block-head"><h2>2. 前置准备</h2></div>
+    <div class="block-body">
+    <p>必须先配好 SMTP 发件邮箱（同「邮件推送」）：</p>
+    <div class="step"><div class="num">1</div><div class="text">
+      <b>打开「邮件推送」页面</b>后台 → 推送 → 邮件推送
+    </div></div>
+    <div class="step"><div class="num">2</div><div class="text">
+      <b>配置 SMTP</b>服务器 + 端口 + 用户名（授权码）
+    </div></div>
+    <div class="step"><div class="num">3</div><div class="text">
+      <b>点「发送测试邮件」</b>确认能发出
+    </div></div>
+    <div class="step"><div class="num">4</div><div class="text">
+      <b>回到「邮件营销」页</b>顶部会显示你的发件邮箱
+    </div></div>
+    <div class="note red"><b>⚠️ 没配 SMTP 无法群发。</b>先在邮件推送页配好。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s3">
+    <div class="block-head"><h2>3. 创建活动</h2></div>
+    <div class="block-body">
+    <p>后台 → <b>邮件营销 → 邮件营销</b>（<code>/user/mail_marketing/index.php</code>）→ 点「➕ 新建活动」</p>
+
+    <h3>填写内容</h3>
+    <table>
+    <tr><th>字段</th><th>必填</th><th>说明</th></tr>
+    <tr><td>活动名</td><td>✅</td><td>仅自己可见，如"双十一促销"</td></tr>
+    <tr><td>邮件主题</td><td>✅</td><td>收件人看到的标题</td></tr>
+    <tr><td>发件人显示名</td><td>选填</td><td>如"XX 商城"，默认显示你的邮箱</td></tr>
+    <tr><td>邮件正文</td><td>✅</td><td>HTML 富文本，支持图片/链接</td></tr>
+    <tr><td>收件人</td><td>✅</td><td>手动输入 或 从订单拉取</td></tr>
+    </table>
+
+    <h3>正文来源 3 种方式</h3>
+    <ol>
+      <li><b>直接编辑</b>：在文本框里写 HTML</li>
+      <li><b>从模板导入</b>：选已有模板一键填入（见「邮件模板管理」）</li>
+      <li><b>导入本地 HTML</b>：点「导入 HTML」选本地 .html 文件</li>
+    </ol>
+
+    <div class="note"><b>💡 链接自动追踪</b>：正文里的所有 <code>&lt;a&gt;</code> 链接会被系统自动改写，加追踪参数，<b>不需你手动处理</b>。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s4">
+    <div class="block-head"><h2>4. 收件人来源</h2></div>
+    <div class="block-body">
+    <h3>方式 1：手动粘贴</h3>
+    <p>在文本框里输入，每行一个或用逗号/分号分隔，如：</p>
+    <pre style="background:#1e1e2e;color:#e4e4e7;padding:16px;border-radius:8px;font-size:13px;line-height:1.6;">
+customer1@example.com
+customer2@example.com
+customer3@example.com, customer4@example.com</pre>
+    <ul>
+      <li>系统会<b>自动去重</b> + <b>格式校验</b></li>
+      <li>无效邮箱会在下方红字提示</li>
+    </ul>
+
+    <h3>方式 2：从订单拉取</h3>
+    <p>点「加载历史买家邮箱」→ 勾选（支持全选）→ 自动加入收件人。</p>
+    <p>取的是你名下所有<b>已支付订单</b>的买家邮箱（去重）。</p>
+
+    <h3>邮箱验证规则</h3>
+    <table>
+    <tr><th>规则</th><th>说明</th></tr>
+    <tr><td>格式合法</td><td>正则匹配 email 格式</td></tr>
+    <tr><td>非测试域名</td><td>拒绝 example.com、test.com、mailinator.com 等</td></tr>
+    <tr><td>域名有 MX 记录</td><td>checkdnsrr 检查，确保能收件</td></tr>
+    </table>
+    <div class="note red"><b>⚠️ 违反验证的邮箱会被拒收</b>，需修正后重新提交。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s5">
+    <div class="block-head"><h2>5. 发送策略</h2></div>
+    <div class="block-body">
+    <p>创建活动后跳到详情页，在「发送控制」区选策略：</p>
+    <table>
+    <tr><th>模式</th><th>批量</th><th>间隔</th><th>适用</th></tr>
+    <tr><td>⚡ 极速</td><td>20 封/批</td><td>0.3 秒/封</td><td>Gmail/QQ 等宽松邮箱</td></tr>
+    <tr><td>✅ 标准（推荐）</td><td>10 封/批</td><td>1 秒/封</td><td>大多数场景</td></tr>
+    <tr><td>🐢 慢速稳发</td><td>5 封/批</td><td>3 秒/封</td><td>收件人 100+ 时推荐</td></tr>
+    <tr><td>📤 全部一次提交</td><td>100 封/批</td><td>—</td><td>≤100 人</td></tr>
+    <tr><td>🔧 自定义</td><td>自定</td><td>自定</td><td>高级用户</td></tr>
+    </table>
+
+    <h3>发送步骤</h3>
+    <div class="step"><div class="num">1</div><div class="text"><b>选模式</b>页面底部显示预计耗时</div></div>
+    <div class="step"><div class="num">2</div><div class="text"><b>点「🚀 开始发送」</b>实时日志显示每批进度</div></div>
+    <div class="step"><div class="num">3</div><div class="text"><b>中途可停</b>点「⏹ 停止」，当前批次完成后停</div></div>
+    <div class="step"><div class="num">4</div><div class="text"><b>发完自动刷新</b>页面显示最终统计</div></div>
+
+    <div class="note red"><b>⚠️ 发送过程不要关闭页面</b>，否则会中断。</div>
+
+    <h3>追加收件人</h3>
+    <p>详情页底部 → 「追加收件人」→ 输入新邮箱 → 选「追加到末尾」或「优先发送」→ 点「➕ 添加」。</p>
+    </div>
+    </section>
+
+    <section class="block" id="s6">
+    <div class="block-head"><h2>6. 追踪数据</h2></div>
+    <div class="block-body">
+    <h3>4 种事件类型（自动追踪）</h3>
+    <table>
+    <tr><th>类型</th><th>触发</th><th>统计指标</th></tr>
+    <tr><td>👁 打开</td><td>收件人打开邮件（加载像素）</td><td>打开率</td></tr>
+    <tr><td>🖱 点击</td><td>点击邮件里的链接</td><td>点击率 + 具体链接</td></tr>
+    <tr><td>🌐 落地页</td><td>跳到目标页后加载 SDK</td><td>落地页访问数</td></tr>
+    <tr><td>⭐ 转化</td><td>页面调 <code>mtTrack.event()</code></td><td>转化数 + 自定义数据</td></tr>
+    </table>
+
+    <h3>详情页统计区</h3>
+    <p>顶部 6 张卡片显示：</p>
+    <ul>
+      <li>收件人总数 / 已发送</li>
+      <li>打开率（唯一打开人数 ÷ 已发送数）</li>
+      <li>点击率（唯一点击人数 ÷ 已发送数）</li>
+      <li>落地页访问（去重人数）</li>
+      <li>转化成功（去重人数）</li>
+    </ul>
+
+    <h3>追踪明细表</h3>
+    <p>显示每次事件：时间、类型、收件人、IP、点击的链接、设备与浏览器。</p>
+    <p>可按类型筛选：全部 / 仅打开 / 仅点击 / 仅落地页 / 仅转化。</p>
+
+    <div class="note blue"><b>💡 追踪原理</b>：
+    <ul style="margin-top:6px;">
+      <li>邮件里加 1×1 透明像素 → 收件人打开时上报「打开」</li>
+      <li>正文里 <code>&lt;a&gt;</code> 链接被重写成追踪链接 → 点击时上报，再 302 跳转</li>
+      <li>落地页里加 <code>mt_rid</code> 参数 → SDK 读参数上报「落地页」</li>
+    </ul>
+    </div>
+    </div>
+    </section>
+
+    <section class="block" id="s7">
+    <div class="block-head"><h2>7. 数据导出</h2></div>
+    <div class="block-body">
+    <p>详情页右上角两个导出按钮：</p>
+    <table>
+    <tr><th>按钮</th><th>导出内容</th></tr>
+    <tr><td>📥 下载记录</td><td>收件人列表（状态/发送时间/是否打开/是否点击/错误）</td></tr>
+    <tr><td>📥 导出明细 CSV</td><td>追踪事件明细（时间/事件/邮箱/IP/链接/设备）</td></tr>
+    </table>
+    <div class="note red"><b>⚠️ 数据只保留 7 天</b>：7 天后系统自动清除。请及时导出备份。</div>
+    </div>
+    </section>
+
+    <section class="block" id="s8">
+    <div class="block-head"><h2>8. 常见问题</h2></div>
+    <div class="block-body">
+
+    <h3>Q1：点「开始发送」没反应？</h3>
+    <ul>
+      <li>检查 SMTP 是否配好（邮件推送页）</li>
+      <li>检查有没有未发送的收件人</li>
+      <li>F12 Console 看有无 JS 报错</li>
+    </ul>
+
+    <h3>Q2：发送失败率高？</h3>
+    <ul>
+      <li>看收件人列表的失败原因（鼠标悬停红色"失败"标签）</li>
+      <li>常见原因：邮箱不存在 / SMTP 限流 / 被当垃圾邮件</li>
+      <li>换「慢速稳发」模式再试</li>
+    </ul>
+
+    <h3>Q3：打开率很低？</h3>
+    <ul>
+      <li>很多邮箱默认屏蔽远程图片，追踪像素加载不了</li>
+      <li>真实打开率通常比统计值高</li>
+      <li>打开率 10-30% 属正常，低于 5% 检查是否进垃圾邮件</li>
+    </ul>
+
+    <h3>Q4：能发多少封？</h3>
+    <ul>
+      <li>系统限制：单批最多 100，每封间隔 ≥ 0.3 秒</li>
+      <li>实际上限取决于你的 SMTP（Gmail 免费 500/天，QQ 50/天）</li>
+    </ul>
+
+    <h3>Q5：收件人会看到追踪吗？</h3>
+    <ul>
+      <li>打开追踪：看不见（1×1 透明像素）</li>
+      <li>链接追踪：看不见（302 秒跳）</li>
+      <li>落地页 URL 会多一个 <code>?mt_rid=xxx</code>（无感）</li>
+    </ul>
+
+    <h3>Q6：创建后能改正文吗？</h3>
+    <p>可以，但已发送的部分不会重发。修改只对新追加的收件人生效。</p>
+
+    <h3>Q7：活动能删除吗？</h3>
+    <p>可以，列表页点「删除」。删除会清空该活动的所有收件人 + 追踪数据，<b>不可恢复</b>。</p>
+
+    </div>
+    </section>
+
+  </main>
+</div>
+<footer>信达支付系统 · 帮助中心 · <a href="/">返回官网</a></footer>
+</body>
+</html>
